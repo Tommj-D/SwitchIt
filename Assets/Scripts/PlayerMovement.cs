@@ -2,18 +2,37 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public float moveSpeed = 5f; // Velocit� di movimento orizzontale
-    public float jumpForce = 7f; // Forza del salto
+    
+    private PlayerControls controls; // riferimento alla classe PlayerControls generata
 
-    public Transform groundCheck; // Punto di controllo per il terreno
-    public LayerMask groundLayer; // Layer del terreno              
 
-    private Rigidbody2D rb; // Riferimento al Rigidbody2D del giocatore
-    private float moveInput; // Input di movimento orizzontale
-    private bool jumpPressed; // Stato del tasto di salto
-    private bool isGrounded; // Stato di contatto con il terreno
+    private Rigidbody2D rb; // riferimento al componente Rigidbody2D
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
+    private float moveInput; // input di movimento orizzontale va da -1 a 1
+
+    [SerializeField] private float moveSpeed = 10f; //velocit� di movimento orizzontale
+    [SerializeField] private float jumpForce = 5f;
+
+    [SerializeField] private Transform groundCheckDown; // riferimento al GameObject
+    [SerializeField] private Transform groundCheckUp; // riferimento al GameObject
+
+    [SerializeField] private float checkRadius = 0.3f; // raggio del cerchio per verificare collisione
+    [SerializeField] private LayerMask groundLayer; // layer dei terreni
+    private bool isGrounded; // indica se il giocatore è a terra
+
+    private bool isGravityInverted = false; // indica se la gravità è invertita
+
+
+
+    // Awake is called when the script instance is being loaded
+    private void Awake()
+    {
+        controls = new PlayerControls();
+    }
+
+
+    // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -22,13 +41,70 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        moveInput = Input.GetAxisRaw("Horizontal");
-        Debug.Log(moveInput);
+        Transform activeGroundCheck = null;
+        if (isGravityInverted==false)
+        {
+            activeGroundCheck = groundCheckDown;
+        }
+        else
+        {
+            activeGroundCheck = groundCheckUp;
+        }
+
+        // Aggiorna stato a terra
+        if (activeGroundCheck != null)
+        {
+
+            isGrounded = Physics2D.OverlapCircle(activeGroundCheck.position, checkRadius, groundLayer);
+        }
+
+        // Movimento orizzontale
+        Vector2 move = controls.Player.Move.ReadValue<Vector2>();
+        moveInput = move.x;
+
+        // Salto
+        if (isGrounded && controls.Player.Jump.WasPressedThisFrame())
+        {
+            if(isGravityInverted==false)
+                rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+            else
+                rb.linearVelocity = new Vector2(rb.linearVelocity.x, -jumpForce);
+        }
     }
 
-    // Movimenti personaggio
-    void FixedUpdate()
+    // FixedUpdate is called at fixed intervals and is used for physics updates
+    private void FixedUpdate()
     {
+        //Applica velocità orizzontale mantenendo la velocità verticale
         rb.linearVelocity = new Vector2(moveInput * moveSpeed, rb.linearVelocity.y);
+    }
+
+
+    // Called when the object becomes enabled and active
+    private void OnEnable()
+    {
+        if (controls != null)
+            controls.Enable(); // Enable input actions
+    }
+
+    // Called when the object becomes disabled or inactive
+    private void OnDisable()
+    {
+        if (controls != null)
+            controls.Disable(); // Disable input actions
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        if (groundCheckDown != null)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(groundCheckDown.position, checkRadius);
+        }
+        if (groundCheckUp != null)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(groundCheckUp.position, checkRadius);
+        }
     }
 }
