@@ -118,6 +118,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""InvertGravity"",
+                    ""type"": ""Button"",
+                    ""id"": ""ed849c7a-d92d-4564-9d4e-c63fdfd11557"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -252,6 +261,17 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""action"": ""SwitchWorld"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bbd56151-10e5-4c17-9418-373e26b8dee2"",
+                    ""path"": ""<Keyboard>/g"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""InvertGravity"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -263,6 +283,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
         m_Player_SwitchWorld = m_Player.FindAction("SwitchWorld", throwIfNotFound: true);
+        m_Player_InvertGravity = m_Player.FindAction("InvertGravity", throwIfNotFound: true);
     }
 
     ~@PlayerControls()
@@ -346,6 +367,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Move;
     private readonly InputAction m_Player_Jump;
     private readonly InputAction m_Player_SwitchWorld;
+    private readonly InputAction m_Player_InvertGravity;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -369,6 +391,10 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/SwitchWorld".
         /// </summary>
         public InputAction @SwitchWorld => m_Wrapper.m_Player_SwitchWorld;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/InvertGravity".
+        /// </summary>
+        public InputAction @InvertGravity => m_Wrapper.m_Player_InvertGravity;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -404,6 +430,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @SwitchWorld.started += instance.OnSwitchWorld;
             @SwitchWorld.performed += instance.OnSwitchWorld;
             @SwitchWorld.canceled += instance.OnSwitchWorld;
+            @InvertGravity.started += instance.OnInvertGravity;
+            @InvertGravity.performed += instance.OnInvertGravity;
+            @InvertGravity.canceled += instance.OnInvertGravity;
         }
 
         /// <summary>
@@ -424,6 +453,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @SwitchWorld.started -= instance.OnSwitchWorld;
             @SwitchWorld.performed -= instance.OnSwitchWorld;
             @SwitchWorld.canceled -= instance.OnSwitchWorld;
+            @InvertGravity.started -= instance.OnInvertGravity;
+            @InvertGravity.performed -= instance.OnInvertGravity;
+            @InvertGravity.canceled -= instance.OnInvertGravity;
         }
 
         /// <summary>
@@ -485,5 +517,12 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnSwitchWorld(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "InvertGravity" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnInvertGravity(InputAction.CallbackContext context);
     }
 }

@@ -4,6 +4,15 @@ public class WorldVisibility : MonoBehaviour
 {
     [SerializeField] private bool isFantasyObject = true;
 
+    private SpriteRenderer sr;
+    private Collider2D col;
+
+    private void Awake()
+    {
+        sr = GetComponent<SpriteRenderer>();
+        col = GetComponent<Collider2D>();
+    }
+
     private void OnEnable()
     {
         // Iscriviti all'evento
@@ -16,30 +25,30 @@ public class WorldVisibility : MonoBehaviour
         WorldSwitch.OnWorldChanged -= HandleWorldChanged;
     }
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-
-    }
-
     // Questo metodo viene chiamato ogni volta che il mondo cambia
     private void HandleWorldChanged(bool isFantasyActive)
     {
+        bool shouldBeVisible = false;
+
         if (isFantasyObject)
         {
-            // Se è un oggetto fantasy, attivalo solo quando isFantasyActive==true
-            gameObject.SetActive(isFantasyActive);
+            if (isFantasyActive)
+                shouldBeVisible = true;
+            else
+                shouldBeVisible = false;
         }
         else
         {
-            // Se non è un oggetto fantasy (quindi "reale"), attivalo quando isFantasyActive==false
-            gameObject.SetActive(!isFantasyActive);
+            if (!isFantasyActive)
+                shouldBeVisible = true;
+            else
+                shouldBeVisible = false;
         }
 
-        // Update is called once per frame
-        void Update()
-        {
+        if (sr != null)
+            sr.enabled = shouldBeVisible;
 
-        }
+        if (col != null)
+            col.enabled = shouldBeVisible;
     }
 }

@@ -70,6 +70,13 @@ public class PlayerMovement : MonoBehaviour
             else
                 rb.linearVelocity = new Vector2(rb.linearVelocity.x, -jumpForce);
         }
+
+        //Cambio gravità
+        if(controls.Player.InvertGravity.WasPressedThisFrame())
+        {
+            isGravityInverted = !isGravityInverted;
+            rb.gravityScale *= -1f;
+        }
     }
 
     // FixedUpdate is called at fixed intervals and is used for physics updates
