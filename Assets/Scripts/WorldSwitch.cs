@@ -12,7 +12,7 @@ public class WorldSwitch : MonoBehaviour
     [SerializeField] private Color realWorldColor = Color.cyan;
     [SerializeField] private Color fantasyWorldColor = Color.magenta;
 
-    private bool isFantasyWorldActive = false;
+    public static bool isFantasyWorldActive = false;
 
     // EVENTO: notifico agli listener quale mondo è attivo
     public static event Action<bool> OnWorldChanged;
@@ -60,6 +60,7 @@ public class WorldSwitch : MonoBehaviour
                 isFantasyWorldActive = false;
                 if (mainCamera != null)
                     mainCamera.backgroundColor = realWorldColor;
+
             }
             else
             {

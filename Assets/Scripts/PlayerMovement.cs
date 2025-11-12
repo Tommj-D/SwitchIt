@@ -17,11 +17,15 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Transform groundCheckDown; // riferimento al GameObject
     [SerializeField] private Transform groundCheckUp; // riferimento al GameObject
 
-    [SerializeField] private float checkRadius = 0.3f; // raggio del cerchio per verificare collisione
+    [SerializeField] private float checkRadius = 0.15f; // raggio del cerchio per verificare collisione
     [SerializeField] private LayerMask groundLayer; // layer dei terreni
     private bool isGrounded; // indica se il giocatore è a terra
 
     private bool isGravityInverted = false; // indica se la gravità è invertita
+    [SerializeField] private float gravityCooldown = 0.5f; // mezzo secondo di attesa
+    private float lastGravitySwitchTime = -10f; //inizializza così da permettere il primo switch subito
+
+    private float baseGravityScale; // per salvare la gravità originale
 
 
 
@@ -36,6 +40,7 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        baseGravityScale = rb.gravityScale;
     }
 
     // Update is called once per frame
@@ -72,10 +77,14 @@ public class PlayerMovement : MonoBehaviour
         }
 
         //Cambio gravità
-        if(controls.Player.InvertGravity.WasPressedThisFrame())
+        if(controls.Player.InvertGravity.WasPressedThisFrame()&&WorldSwitch.isFantasyWorldActive)
         {
-            isGravityInverted = !isGravityInverted;
-            rb.gravityScale *= -1f;
+            if (Time.time - lastGravitySwitchTime >= gravityCooldown)
+            {
+                isGravityInverted = !isGravityInverted;
+                rb.gravityScale *= -1f;
+                lastGravitySwitchTime = Time.time;
+            }
         }
     }
 
@@ -92,6 +101,9 @@ public class PlayerMovement : MonoBehaviour
     {
         if (controls != null)
             controls.Enable(); // Enable input actions
+
+        //Mi iscrivo all’evento del cambio mondo
+        WorldSwitch.OnWorldChanged += HandleWorldChange;
     }
 
     // Called when the object becomes disabled or inactive
@@ -99,6 +111,18 @@ public class PlayerMovement : MonoBehaviour
     {
         if (controls != null)
             controls.Disable(); // Disable input actions
+
+        //Mi disiscrivo per sicurezza
+        WorldSwitch.OnWorldChanged -= HandleWorldChange;
+    }
+
+    private void HandleWorldChange(bool isFantasyActive)
+    {
+        if (!isFantasyActive && isGravityInverted)
+        {
+            isGravityInverted = false;
+            rb.gravityScale = baseGravityScale;
+        }
     }
 
     private void OnDrawGizmosSelected()
