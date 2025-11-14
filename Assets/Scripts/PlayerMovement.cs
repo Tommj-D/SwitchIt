@@ -1,4 +1,5 @@
-    using UnityEngine;
+using UnityEngine;
+using System.Collections;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -11,7 +12,7 @@ public class PlayerMovement : MonoBehaviour
 
     private float moveInput; // input di movimento orizzontale va da -1 a 1
 
-    [SerializeField] private float moveSpeed = 10f; //velocit� di movimento orizzontale
+    [SerializeField] private float moveSpeed = 10f; //velocita di movimento orizzontale
     [SerializeField] private float jumpForce = 5f;
 
     [SerializeField] private Transform groundCheckDown; // riferimento al GameObject
@@ -28,6 +29,10 @@ public class PlayerMovement : MonoBehaviour
     private float baseGravityScale; // per salvare la gravità originale
 
 
+    //Per animazione di blink
+    [SerializeField] private float minBlinkTime = 3f;
+    [SerializeField] private float maxBlinkTime = 6f;
+    private float nextBlinkTime;
 
     // Awake is called when the script instance is being loaded
     private void Awake()
@@ -42,6 +47,9 @@ public class PlayerMovement : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>(); // Ottieni il componente Animator
         baseGravityScale = rb.gravityScale;
+
+        //Per animazione blink
+        ScheduleNextBlink();
     }
 
     // Update is called once per frame
@@ -89,9 +97,18 @@ public class PlayerMovement : MonoBehaviour
         }
 
         //Aggiorna animazioni
+        float horizontalSpeed = Mathf.Abs(rb.linearVelocity.x);
         // Imposta velocità orizzontale per Idle/Run
-        anim.SetFloat("Speed", Mathf.Abs(rb.linearVelocity.x));
+        anim.SetFloat("Speed", horizontalSpeed);
 
+        // Controlla se il personaggio è fermo
+        bool isIdle = horizontalSpeed < 0.01f && isGrounded; // fermo e a terra
+
+        if (isIdle && Time.time >= nextBlinkTime)
+        {
+            anim.SetTrigger("Blink");
+            ScheduleNextBlink();
+        }
     }
 
     // FixedUpdate is called at fixed intervals and is used for physics updates
@@ -101,6 +118,11 @@ public class PlayerMovement : MonoBehaviour
         rb.linearVelocity = new Vector2(moveInput * moveSpeed, rb.linearVelocity.y);
     }
 
+    // Imposta il prossimo Blink casuale
+    private void ScheduleNextBlink()
+    {
+        nextBlinkTime = Time.time + Random.Range(minBlinkTime, maxBlinkTime);
+    }
 
     // Called when the object becomes enabled and active
     private void OnEnable()
