@@ -8,7 +8,8 @@ public class PlayerMovement : MonoBehaviour
 
 
     private Rigidbody2D rb; // riferimento al componente Rigidbody2D
-    Animator anim;
+    private Animator anim; // riferimento al componente Animator
+    private SpriteRenderer sr; // riferimento al componente SpriteRenderer
 
     private float moveInput; // input di movimento orizzontale va da -1 a 1
 
@@ -46,6 +47,7 @@ public class PlayerMovement : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>(); // Ottieni il componente Animator
+        sr = GetComponent<SpriteRenderer>(); // Ottieni il componente SpriteRenderer
         baseGravityScale = rb.gravityScale;
 
         //Per animazione blink
@@ -72,11 +74,24 @@ public class PlayerMovement : MonoBehaviour
             isGrounded = Physics2D.OverlapCircle(activeGroundCheck.position, checkRadius, groundLayer);
         }
 
-        // Movimento orizzontale
+        // Movimento orizzontale ///
         Vector2 move = controls.Player.Move.ReadValue<Vector2>();
         moveInput = move.x;
 
-        // Salto
+        if (moveInput > 0.01f)
+        {
+            sr.flipX = false;
+        }
+        else if (moveInput < -0.01f)
+        {
+            sr.flipX = true;
+        }
+        //Aggiorna animazioni movimento orizziontale
+        float horizontalSpeed = Mathf.Abs(rb.linearVelocity.x);
+        // Imposta velocità orizzontale 
+        anim.SetFloat("Speed", horizontalSpeed);
+
+        /// Salto ///
         if (isGrounded && controls.Player.Jump.WasPressedThisFrame())
         {
             if(isGravityInverted==false)
@@ -84,9 +99,11 @@ public class PlayerMovement : MonoBehaviour
             else
                 rb.linearVelocity = new Vector2(rb.linearVelocity.x, -jumpForce);
         }
+        //Animazione salto
+        anim.SetBool("isJumping", !isGrounded);
 
-        //Cambio gravità
-        if(controls.Player.InvertGravity.WasPressedThisFrame()&&WorldSwitch.isFantasyWorldActive)
+        /// Cambio gravità ///
+        if (controls.Player.InvertGravity.WasPressedThisFrame()&&WorldSwitch.isFantasyWorldActive)
         {
             if (Time.time - lastGravitySwitchTime >= gravityCooldown)
             {
@@ -96,14 +113,10 @@ public class PlayerMovement : MonoBehaviour
             }
         }
 
-        //Aggiorna animazioni
-        float horizontalSpeed = Mathf.Abs(rb.linearVelocity.x);
-        // Imposta velocità orizzontale per Idle/Run
-        anim.SetFloat("Speed", horizontalSpeed);
 
+        /// Gestione animazione Blink ///
         // Controlla se il personaggio è fermo
         bool isIdle = horizontalSpeed < 0.01f && isGrounded; // fermo e a terra
-
         if (isIdle && Time.time >= nextBlinkTime)
         {
             anim.SetTrigger("Blink");
