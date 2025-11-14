@@ -1,4 +1,4 @@
-using UnityEngine;
+    using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -7,7 +7,7 @@ public class PlayerMovement : MonoBehaviour
 
 
     private Rigidbody2D rb; // riferimento al componente Rigidbody2D
-
+    Animator anim;
 
     private float moveInput; // input di movimento orizzontale va da -1 a 1
 
@@ -40,6 +40,7 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        anim = GetComponent<Animator>(); // Ottieni il componente Animator
         baseGravityScale = rb.gravityScale;
     }
 
@@ -86,6 +87,11 @@ public class PlayerMovement : MonoBehaviour
                 lastGravitySwitchTime = Time.time;
             }
         }
+
+        //Aggiorna animazioni
+        // Imposta velocità orizzontale per Idle/Run
+        anim.SetFloat("Speed", Mathf.Abs(rb.linearVelocity.x));
+
     }
 
     // FixedUpdate is called at fixed intervals and is used for physics updates
