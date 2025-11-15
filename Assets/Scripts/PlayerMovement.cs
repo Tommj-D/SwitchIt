@@ -23,6 +23,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float checkRadius = 0.15f; // raggio del cerchio per verificare collisione
     [SerializeField] private LayerMask groundLayer; // layer dei terreni
     private bool isGrounded; // indica se il giocatore è a terra
+    private bool canDoubleJump = false; // indica se il giocatore può fare un doppio salto
 
     private bool isGravityInverted = false; // indica se la gravità è invertita
     [SerializeField] private float gravityCooldown = 0.5f; // mezzo secondo di attesa
@@ -58,24 +59,11 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        /*Transform activeGroundCheck = null;
-        if (isGravityInverted==false)
-        {
-            activeGroundCheck = groundCheckDown;
-        }
-        else
-        {
-            activeGroundCheck = groundCheckUp;
-        }*/
-
-        // Aggiorna stato a terra
-        //if (activeGroundCheck != null)
+ 
+        isGrounded = Physics2D.OverlapCircle(groundCheckLeft.position, checkRadius, groundLayer) ||
+        Physics2D.OverlapCircle(groundCheckRight.position, checkRadius, groundLayer) ||
+        Physics2D.OverlapCircle(groundCheckCenter.position, checkRadius, groundLayer);
         
-            isGrounded = Physics2D.OverlapCircle(groundCheckLeft.position, checkRadius, groundLayer) ||
-            Physics2D.OverlapCircle(groundCheckRight.position, checkRadius, groundLayer) ||
-            Physics2D.OverlapCircle(groundCheckCenter.position, checkRadius, groundLayer);
-        
-
         // Movimento orizzontale ///
         Vector2 move = controls.Player.Move.ReadValue<Vector2>();
         moveInput = move.x;
@@ -94,14 +82,31 @@ public class PlayerMovement : MonoBehaviour
         anim.SetFloat("Speed", horizontalSpeed);
 
         /// Salto ///
-        if (isGrounded && controls.Player.Jump.WasPressedThisFrame())
+        if (controls.Player.Jump.WasPressedThisFrame())
         {
-            if(isGravityInverted==false)
-                rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
-            else
-                rb.linearVelocity = new Vector2(rb.linearVelocity.x, -jumpForce);
+            if (isGrounded)
+            {
+                if (!isGravityInverted)
+                    rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+                else
+                    rb.linearVelocity = new Vector2(rb.linearVelocity.x, -jumpForce);
+
+                anim.SetBool("isJumping", true); // Aggiorna animazione salto
+
+                canDoubleJump = true; // Abilita il doppio salto
+            }
+            else if (canDoubleJump)
+            {
+                if (!isGravityInverted)
+                    rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+                else
+                    rb.linearVelocity = new Vector2(rb.linearVelocity.x, -jumpForce);
+
+                canDoubleJump = false; // Consuma il doppio salto
+                anim.SetTrigger("DoubleJump"); // Attiva animazione doppio salto
+            }
         }
-        //Animazione salto
+
         anim.SetBool("isJumping", !isGrounded);
 
         /// Cambio gravità ///
