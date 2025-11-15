@@ -16,8 +16,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float moveSpeed = 10f; //velocita di movimento orizzontale
     [SerializeField] private float jumpForce = 5f;
 
-    [SerializeField] private Transform groundCheckDown; // riferimento al GameObject
-    [SerializeField] private Transform groundCheckUp; // riferimento al GameObject
+    [SerializeField] private Transform groundCheckLeft; // riferimento al GameObject
+    [SerializeField] private Transform groundCheckRight; // riferimento al GameObject
+    [SerializeField] private Transform groundCheckCenter; // riferimento al GameObject
 
     [SerializeField] private float checkRadius = 0.15f; // raggio del cerchio per verificare collisione
     [SerializeField] private LayerMask groundLayer; // layer dei terreni
@@ -57,7 +58,7 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Transform activeGroundCheck = null;
+        /*Transform activeGroundCheck = null;
         if (isGravityInverted==false)
         {
             activeGroundCheck = groundCheckDown;
@@ -65,14 +66,15 @@ public class PlayerMovement : MonoBehaviour
         else
         {
             activeGroundCheck = groundCheckUp;
-        }
+        }*/
 
         // Aggiorna stato a terra
-        if (activeGroundCheck != null)
-        {
-
-            isGrounded = Physics2D.OverlapCircle(activeGroundCheck.position, checkRadius, groundLayer);
-        }
+        //if (activeGroundCheck != null)
+        
+            isGrounded = Physics2D.OverlapCircle(groundCheckLeft.position, checkRadius, groundLayer) ||
+            Physics2D.OverlapCircle(groundCheckRight.position, checkRadius, groundLayer) ||
+            Physics2D.OverlapCircle(groundCheckCenter.position, checkRadius, groundLayer);
+        
 
         // Movimento orizzontale ///
         Vector2 move = controls.Player.Move.ReadValue<Vector2>();
@@ -168,15 +170,20 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
-        if (groundCheckDown != null)
+        if (groundCheckLeft != null)
         {
             Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(groundCheckDown.position, checkRadius);
+            Gizmos.DrawWireSphere(groundCheckLeft.position, checkRadius);
         }
-        if (groundCheckUp != null)
+        if (groundCheckRight != null)
         {
             Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(groundCheckUp.position, checkRadius);
+            Gizmos.DrawWireSphere(groundCheckRight.position, checkRadius);
+        }
+        if (groundCheckCenter != null)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(groundCheckCenter.position, checkRadius);
         }
     }
 }
