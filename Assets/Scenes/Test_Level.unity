@@ -621,7 +621,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CameraFollow
   target: {fileID: 895446634}
   smoothSpeed: 5
-  offset: {x: 2, y: 2, z: -10}
+  offset: {x: 2, y: -0.7, z: -10}
   useLimits: 1
   minPosition: {x: 0, y: 0}
   maxPosition: {x: 200, y: 7}
@@ -1059,7 +1059,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   moveSpeed: 5
-  jumpForce: 10
+  jumpForce: 11
   groundCheckLeft: {fileID: 878019832}
   groundCheckRight: {fileID: 1601412760}
   groundCheckCenter: {fileID: 462378371}
