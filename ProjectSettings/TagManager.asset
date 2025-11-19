@@ -7,6 +7,8 @@ TagManager:
   - RealWorld
   - FantasyWorld
   - Ground
+  - Death
+  - Enemy
   layers:
   - Default
   - TransparentFX

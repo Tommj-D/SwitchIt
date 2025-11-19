@@ -282,7 +282,7 @@ GameObject:
   - component: {fileID: 7089302845914921773}
   m_Layer: 3
   m_Name: SuspendedGround
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -342,7 +342,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -5.1147423, y: -0.23298335}
+  m_Offset: {x: -3.869957, y: -0.23298335}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -352,7 +352,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 12.7895355, y: 2.1016684}
+  m_Size: {x: 15.279106, y: 2.1016684}
   m_EdgeRadius: 0
 --- !u!1 &3710839284855942379
 GameObject:
