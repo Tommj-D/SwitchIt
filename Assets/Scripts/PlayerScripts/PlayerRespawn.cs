@@ -3,6 +3,8 @@ using System.Collections;
 
 public class PlayerRespawn : MonoBehaviour
 {
+    public ScreenFade screenFade;
+
     public Vector3 respawnPoint;
     public float respawnDelay = 1.5f;
     public GameObject deathParticle;
@@ -45,8 +47,10 @@ public class PlayerRespawn : MonoBehaviour
 
         // Blocca movimento e collisioni
         rb.linearVelocity = Vector2.zero;
-        rb.simulated = false;
         col.enabled = false;
+
+        var movement = GetComponent<PlayerMovement>();
+        if (movement != null) movement.enabled = false;
 
         // Particelle
         if (deathParticle != null)
@@ -87,13 +91,16 @@ public class PlayerRespawn : MonoBehaviour
         }
 
         // Rianima
-         if (animator != null)
+        if (animator != null)
              animator.SetTrigger("Respawn");
 
+        if (movement != null) movement.enabled = true;
+
         // Riattiva fisica e collisioni
-        rb.simulated = true;
         col.enabled = true;
 
         isDying = false;
     }
+
+    public bool IsDying() { return isDying; }
 }
