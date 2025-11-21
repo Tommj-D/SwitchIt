@@ -83,6 +83,10 @@ public class PlayerRespawn : MonoBehaviour
         // Respawn
         transform.position = respawnPoint;
 
+        // prima del respawn, resetta oggetti
+        if (RespawnManager.Instance != null)
+            RespawnManager.Instance.ResetAll();
+
         if (riggedBody != null) riggedBody.SetActive(false);
         if (fullSprite != null)
         {

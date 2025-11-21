@@ -116,7 +116,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88d698566322ab541bcf0af290501074, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
-  moveSpeed: 5
+  moveSpeed: 6
   jumpForce: 11
   groundCheckLeft: {fileID: 4233720710943708932}
   groundCheckRight: {fileID: 2927730786896659622}
@@ -330,6 +330,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2876eac4debf470419f62364888c48a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerRespawn
+  screenFade: {fileID: 0}
   respawnPoint: {x: 0, y: 0, z: 0}
   respawnDelay: 1.5
   deathParticle: {fileID: 7281521174109104282, guid: 80439d11f5194024793495e2956dbd06, type: 3}

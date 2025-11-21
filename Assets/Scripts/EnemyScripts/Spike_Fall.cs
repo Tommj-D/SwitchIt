@@ -14,6 +14,21 @@ public class Spike_Fall : MonoBehaviour
 
     private Vector3 originalPosition;
 
+    void Awake()
+    {
+        // salva la posizione iniziale qui 
+        originalPosition = transform.position;
+    }
+
+    void OnEnable()
+    {
+        // Quando l'oggetto viene riattivato, resetta stato e posizione
+        isFalling = false;
+        isShaking = false;
+        activated = false;
+        transform.position = originalPosition;
+    }
+
     void Start()
     {
         originalPosition = transform.position;
@@ -26,15 +41,12 @@ public class Spike_Fall : MonoBehaviour
         {
             Vector2 rand = Random.insideUnitCircle * shakeAmount;
             transform.position = originalPosition + new Vector3(rand.x, rand.y, 0f);
-            /*Vector3 shakePos = originalPosition + (Vector3)Random.insideUnitCircle * shakeAmount;
-            transform.position = shakePos;*/
         }
 
         // Caduta
         if (isFalling)
         {
             transform.Translate(Vector3.down * fallSpeed * Time.deltaTime);
-            //transform.Translate(0, -fallSpeed * Time.deltaTime, 0);
         }
     }
 
@@ -71,7 +83,7 @@ public class Spike_Fall : MonoBehaviour
             }
 
             // Distruggi la spina
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
     }
 }
