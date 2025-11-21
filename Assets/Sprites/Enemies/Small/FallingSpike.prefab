@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 6462344214565941395}
   m_Layer: 0
   m_Name: FallingSpike
-  m_TagString: Death
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

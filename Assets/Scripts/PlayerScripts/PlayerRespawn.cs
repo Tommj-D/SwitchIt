@@ -3,36 +3,29 @@ using System.Collections;
 
 public class PlayerRespawn : MonoBehaviour
 {
-
-    private PlayerControls controls; // riferimento alla classe PlayerControls generata
-
     public Vector3 respawnPoint;
     public float respawnDelay = 1.5f;
     public GameObject deathParticle;
 
+    public GameObject fullSprite;      
+    public GameObject riggedBody;
+
     private Animator animator;
+    private Rigidbody2D rb;
+    private Collider2D col;
+
     private bool isDying = false;
-
-    /*private void Awake()
-    {
-        // Inizializza i controlli
-        controls = new PlayerControls();
-        controls.Enable();
-    }
-
-    private void OnDisable()
-    {
-        controls.Disable();
-    }*/ //Disabilitato perchè in futuro vorrò fermare il gicatore quando muore
 
     private void Start()
     {
         animator = GetComponent<Animator>();
+        rb = GetComponent<Rigidbody2D>();
+        col = GetComponent<Collider2D>();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (!isDying && collision.gameObject.CompareTag("Death"))
+        if (!isDying && collision.gameObject.CompareTag("Enemy"))
         {
             StartCoroutine(DeathSequence());
         }
@@ -49,34 +42,57 @@ public class PlayerRespawn : MonoBehaviour
     private IEnumerator DeathSequence()
     {
         isDying = true;
-        /*GetComponent<Rigidbody2D>().linearVelocity = 0; // blocca eventuali movimenti
-        GetComponent<Collider2D>().enabled = false; // evita ulteriori collisioni durante morte
 
-        // Disabilita Controller
-        controls.Disable();*/  //Disabilitato perchè in futuro vorrò fermare il gicatore quando muore
+        // Blocca movimento e collisioni
+        rb.linearVelocity = Vector2.zero;
+        rb.simulated = false;
+        col.enabled = false;
 
-        //Lancia animazione di morte
-        if (animator != null)
-            animator.SetTrigger("Death");
-
-        //Particelle
+        // Particelle
         if (deathParticle != null)
             Instantiate(deathParticle, transform.position, Quaternion.identity);
 
-        //Aspetta l'animazione + tempo extra
+        if (fullSprite != null)
+        {
+            var sr = fullSprite.GetComponent<SpriteRenderer>();
+            if (sr != null)
+                sr.enabled = false;
+        }
+
+        if (riggedBody != null)
+        {
+            // Mantieni pos/rot/scale del player sul rig per evitare "salti"
+            riggedBody.transform.position = transform.position;
+            riggedBody.transform.rotation = transform.rotation;
+            riggedBody.transform.localScale = transform.localScale;
+
+            riggedBody.SetActive(true);
+        }
+
+        // Animazione morte
+        if (animator != null)
+            animator.SetTrigger("Die");
+
+        // Aspetta animazione
         yield return new WaitForSeconds(respawnDelay);
 
         // Respawn
         transform.position = respawnPoint;
 
-        //Animazione Respawn
-        if (animator != null)
-            animator.SetTrigger("Respawn");
+        if (riggedBody != null) riggedBody.SetActive(false);
+        if (fullSprite != null)
+        {
+            var sr = fullSprite.GetComponent<SpriteRenderer>();
+            if (sr != null) sr.enabled = true;
+        }
 
-        //GetComponent<Collider2D>().enabled = true; //Disabilitato perchè in futuro vorrò fermare il gicatore quando muore
+        // Rianima
+         if (animator != null)
+             animator.SetTrigger("Respawn");
 
-        /*// Riattiva controlli
-        controls.Enable();*///Disabilitato perchè in futuro vorrò fermare il gicatore quando muore
+        // Riattiva fisica e collisioni
+        rb.simulated = true;
+        col.enabled = true;
 
         isDying = false;
     }
