@@ -4,11 +4,12 @@ using System.Collections;
 public class PlayerRespawn : MonoBehaviour
 {
     public ScreenFade screenFade;
+    public SceneController sceneController;
 
     public Vector3 respawnPoint;
     public float respawnDelay = 1.5f;
+    
     public GameObject deathParticle;
-
     public GameObject fullSprite;      
     public GameObject riggedBody;
 
@@ -17,6 +18,7 @@ public class PlayerRespawn : MonoBehaviour
     private Collider2D col;
 
     private bool isDying = false;
+
 
     private void Start()
     {
@@ -33,6 +35,7 @@ public class PlayerRespawn : MonoBehaviour
         }
     }
 
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (!isDying && other.gameObject.CompareTag("Death"))
@@ -40,6 +43,7 @@ public class PlayerRespawn : MonoBehaviour
             StartCoroutine(DeathSequence());
         }
     }
+
 
     private IEnumerator DeathSequence()
     {
@@ -77,8 +81,16 @@ public class PlayerRespawn : MonoBehaviour
         if (animator != null)
             animator.SetTrigger("Die");
 
+
         // Aspetta animazione
         yield return new WaitForSeconds(respawnDelay);
+
+        //FADE OUT (schermo si scurisce) 
+        if (screenFade != null)
+        {
+            yield return screenFade.FadeOutCoroutine(sceneController.fadeDuration);
+        }
+
 
         // Respawn
         transform.position = respawnPoint;
@@ -94,17 +106,22 @@ public class PlayerRespawn : MonoBehaviour
             if (sr != null) sr.enabled = true;
         }
 
-        // Rianima
         if (animator != null)
              animator.SetTrigger("Respawn");
 
         if (movement != null) movement.enabled = true;
+        if (col != null) col.enabled = true;
 
-        // Riattiva fisica e collisioni
-        col.enabled = true;
+
+        //FADE IN (torna visibile)
+        if (screenFade != null)
+        {
+            yield return screenFade.FadeInCoroutine(sceneController.fadeDuration);
+        }
 
         isDying = false;
     }
+
 
     public bool IsDying() { return isDying; }
 }
