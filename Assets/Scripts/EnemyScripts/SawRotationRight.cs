@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class SawRotation : MonoBehaviour
+public class SawRotationRight : MonoBehaviour
 {
     public float rotationSpeed = 200f;
 
@@ -13,6 +13,6 @@ public class SawRotation : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.Rotate(0, 0, rotationSpeed * Time.deltaTime);
+        transform.Rotate(0, 0, -rotationSpeed * Time.deltaTime);
     }
 }
