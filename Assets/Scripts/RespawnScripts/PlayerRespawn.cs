@@ -47,6 +47,8 @@ public class PlayerRespawn : MonoBehaviour
 
     private IEnumerator DeathSequence()
     {
+        Debug.Log(">>> DeathSequence STARTED");
+
         isDying = true;
 
         // Blocca movimento e collisioni
@@ -58,7 +60,57 @@ public class PlayerRespawn : MonoBehaviour
 
         // Particelle
         if (deathParticle != null)
-            Instantiate(deathParticle, transform.position, Quaternion.identity);
+        {
+            GameObject p = Instantiate(deathParticle, transform.position, Quaternion.identity);
+            Debug.Log(">>> Death particle should have spawned now.");
+            p.name = "DeathParticle_Instance"; // rende più facile trovarla nella Hierarchy
+
+            // Forza trasformazioni "pulite"
+            p.transform.position = transform.position;
+            p.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+            p.transform.localScale = Vector3.one;
+
+            // Prendi il sistema particelle (root o child)
+            ParticleSystem ps = p.GetComponent<ParticleSystem>() ?? p.GetComponentInChildren<ParticleSystem>();
+            if (ps == null)
+            {
+                Debug.LogWarning("[Respawn] Nessun ParticleSystem trovato in prefab deathParticle!");
+            }
+            else
+            {
+                // Forza alcuni settings utili a debug/compatibilità
+                var main = ps.main;
+                main.simulationSpace = ParticleSystemSimulationSpace.World; // preferibile per effetti spawnati
+                main.useUnscaledTime = true; // IMPORTANTE: usa tempo non scalato
+
+                // Forza renderer sorting (metti il nome del tuo sorting layer se ne usi uno)
+                var prs = ps.GetComponent<ParticleSystemRenderer>();
+                if (prs != null)
+                {
+                    prs.sortingLayerName = "Default"; // prova anche "Foreground" o il layer del player
+                    prs.sortingOrder = 100; // molto alto per stare davanti
+                }
+
+                Debug.Log($"[Respawn] Spawn particle @ {p.transform.position}. active={p.activeSelf}. isPlaying={ps.isPlaying}");
+
+                // Clear + Simulate + Play per essere sicuri che parta subito
+                ps.Clear(true);
+                ps.Simulate(0f, true, true); // inizializza la simulazione
+                ps.Play(true);
+
+                Debug.Log($"[Respawn] Dopo Play: isPlaying={ps.isPlaying}, particleCount={ps.particleCount}");
+            }
+        }
+        /*if (deathParticle != null)
+        {
+            var p = Instantiate(deathParticle, transform.position, Quaternion.identity);
+
+            var ps = p.GetComponent<ParticleSystem>();
+            if (ps != null)
+            {
+                ps.Play(true); // forza l'avvio anche con timeScale = 0
+            }
+        }*/
 
         if (fullSprite != null)
         {

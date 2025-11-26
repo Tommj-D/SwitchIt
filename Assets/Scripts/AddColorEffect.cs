@@ -14,8 +14,13 @@ public class AddColorEffect : MonoBehaviour
     public float glowStrength = 1.0f;
     public float particlesStrength = 1.0f;
 
+    //Colori della runa e particelle prima che ci passo sopra
     public Color runeColor;
     public Color particlesColor;
+
+    //Colori della runa e particelle dopo che ci passo sopra
+    public Color runeColor_Then;
+    public Color particlesColor_Then;
 
     private Color runeColorLastFrame;
     private float glowStrengthLastFrame;
@@ -67,4 +72,12 @@ public class AddColorEffect : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (!other.CompareTag("Player")) return;
+
+        runeColor = runeColor_Then;
+        particlesColor = particlesColor_Then;
+
+    }
 }

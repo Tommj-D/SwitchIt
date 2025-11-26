@@ -331,6 +331,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerRespawn
   screenFade: {fileID: 0}
+  sceneController: {fileID: 0}
   respawnPoint: {x: 0, y: 0, z: 0}
   respawnDelay: 1.5
   deathParticle: {fileID: 7281521174109104282, guid: 80439d11f5194024793495e2956dbd06, type: 3}
@@ -418,6 +419,10 @@ PrefabInstance:
     - target: {fileID: 3567229250915425368, guid: c6134c85717d8ea4f901d38df046ac2f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5279418879429634893, guid: c6134c85717d8ea4f901d38df046ac2f, type: 3}
+      propertyPath: m_SortingOrder
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 8833763105905940498, guid: c6134c85717d8ea4f901d38df046ac2f, type: 3}
       propertyPath: m_Name
