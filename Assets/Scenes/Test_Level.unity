@@ -17753,6 +17753,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 954656997064861822, guid: e2d905dbd64c3ae4193b8e009d4fee6d, type: 3}
+      propertyPath: amount
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 954656997064861822, guid: e2d905dbd64c3ae4193b8e009d4fee6d, type: 3}
       propertyPath: needKey
       value: 0
       objectReference: {fileID: 0}
@@ -17760,6 +17764,10 @@ PrefabInstance:
       propertyPath: coinCount
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 954656997064861822, guid: e2d905dbd64c3ae4193b8e009d4fee6d, type: 3}
+      propertyPath: dropPrefab
+      value: 
+      objectReference: {fileID: 552320990840097361, guid: 75d901cb13887284ab5dab39edeaf5dd, type: 3}
     - target: {fileID: 1862018834470345803, guid: e2d905dbd64c3ae4193b8e009d4fee6d, type: 3}
       propertyPath: m_LocalPosition.x
       value: 106.08

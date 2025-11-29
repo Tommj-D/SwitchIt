@@ -48,4 +48,3 @@ public class Coin : MonoBehaviour
         }
     }
 }
-

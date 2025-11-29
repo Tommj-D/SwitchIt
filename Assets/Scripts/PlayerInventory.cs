@@ -4,6 +4,13 @@ public class PlayerInventory : MonoBehaviour
 {
     private int keyCount = 0;
 
+    private int coins = 0;
+
+    public void AddCoins(int amount)
+    {
+        coins += amount;
+    }
+
     // Aggiunge una chiave all'inventario
     public void AddKey()
     {
