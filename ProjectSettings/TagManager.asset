@@ -46,5 +46,17 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Word
+    uniqueID: 3798781991
+    locked: 0
+  - name: Hidden
+    uniqueID: 2555214323
+    locked: 0
+  - name: ForeGround
+    uniqueID: 438903465
+    locked: 0
+  - name: UI
+    uniqueID: 2960379461
+    locked: 0
   m_RenderingLayers:
   - Default
