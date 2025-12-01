@@ -1,0 +1,418 @@
+fileFormatVersion: 2
+guid: 4ab99cb7c05b9af46bfdd7ec45b5fb8c
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -2094817803016273812
+    second: set-medieval-sprite-torches-with-burning-fire-sequence-animation-ancient-wooden-brands-with-flame-cartoon-elements-pc-game-flaming-torchlight-lighting-flambeau-isolated-vector-icons_0
+  - first:
+      213: 8289564003243216006
+    second: set-medieval-sprite-torches-with-burning-fire-sequence-animation-ancient-wooden-brands-with-flame-cartoon-elements-pc-game-flaming-torchlight-lighting-flambeau-isolated-vector-icons_1
+  - first:
+      213: 6011899398413113679
+    second: set-medieval-sprite-torches-with-burning-fire-sequence-animation-ancient-wooden-brands-with-flame-cartoon-elements-pc-game-flaming-torchlight-lighting-flambeau-isolated-vector-icons_2
+  - first:
+      213: 639666434673413446
+    second: set-medieval-sprite-torches-with-burning-fire-sequence-animation-ancient-wooden-brands-with-flame-cartoon-elements-pc-game-flaming-torchlight-lighting-flambeau-isolated-vector-icons_3
+  - first:
+      213: -7218573903954444812
+    second: set-medieval-sprite-torches-with-burning-fire-sequence-animation-ancient-wooden-brands-with-flame-cartoon-elements-pc-game-flaming-torchlight-lighting-flambeau-isolated-vector-icons_4
+  - first:
+      213: 49557612778165503
+    second: set-medieval-sprite-torches-with-burning-fire-sequence-animation-ancient-wooden-brands-with-flame-cartoon-elements-pc-game-flaming-torchlight-lighting-flambeau-isolated-vector-icons_5
+  - first:
+      213: 8416806601153609578
+    second: set-medieval-sprite-torches-with-burning-fire-sequence-animation-ancient-wooden-brands-with-flame-cartoon-elements-pc-game-flaming-torchlight-lighting-flambeau-isolated-vector-icons_6
+  - first:
+      213: 1154095087678034808
+    second: set-medieval-sprite-torches-with-burning-fire-sequence-animation-ancient-wooden-brands-with-flame-cartoon-elements-pc-game-flaming-torchlight-lighting-flambeau-isolated-vector-icons_7
+  - first:
+      213: 5255089337505439266
+    second: set-medieval-sprite-torches-with-burning-fire-sequence-animation-ancient-wooden-brands-with-flame-cartoon-elements-pc-game-flaming-torchlight-lighting-flambeau-isolated-vector-icons_8
+  - first:
+      213: -8975903118532496768
+    second: set-medieval-sprite-torches-with-burning-fire-sequence-animation-ancient-wooden-brands-with-flame-cartoon-elements-pc-game-flaming-torchlight-lighting-flambeau-isolated-vector-icons_9
+  - first:
+      213: 5202970166055767634
+    second: set-medieval-sprite-torches-with-burning-fire-sequence-animation-ancient-wooden-brands-with-flame-cartoon-elements-pc-game-flaming-torchlight-lighting-flambeau-isolated-vector-icons_10
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: set-medieval-sprite-torches-with-burning-fire-sequence-animation-ancient-wooden-brands-with-flame-cartoon-elements-pc-game-flaming-torchlight-lighting-flambeau-isolated-vector-icons_0
+      rect:
+        serializedVersion: 2
+        x: 115
+        y: 105
+        width: 147
+        height: 505
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 12ae446f058eee74284fabd8669bdbea
+      internalID: -2094817803016273812
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: set-medieval-sprite-torches-with-burning-fire-sequence-animation-ancient-wooden-brands-with-flame-cartoon-elements-pc-game-flaming-torchlight-lighting-flambeau-isolated-vector-icons_1
+      rect:
+        serializedVersion: 2
+        x: 387
+        y: 105
+        width: 147
+        height: 521
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1e76043f12441d0469111cbd76036b5d
+      internalID: 8289564003243216006
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: set-medieval-sprite-torches-with-burning-fire-sequence-animation-ancient-wooden-brands-with-flame-cartoon-elements-pc-game-flaming-torchlight-lighting-flambeau-isolated-vector-icons_2
+      rect:
+        serializedVersion: 2
+        x: 658
+        y: 105
+        width: 147
+        height: 532
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6a98f26dc46122b4aa5bae22a2604d07
+      internalID: 6011899398413113679
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: set-medieval-sprite-torches-with-burning-fire-sequence-animation-ancient-wooden-brands-with-flame-cartoon-elements-pc-game-flaming-torchlight-lighting-flambeau-isolated-vector-icons_3
+      rect:
+        serializedVersion: 2
+        x: 929
+        y: 105
+        width: 147
+        height: 541
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 608211e02dc75bf4f90fe7e8f16fc3ba
+      internalID: 639666434673413446
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: set-medieval-sprite-torches-with-burning-fire-sequence-animation-ancient-wooden-brands-with-flame-cartoon-elements-pc-game-flaming-torchlight-lighting-flambeau-isolated-vector-icons_4
+      rect:
+        serializedVersion: 2
+        x: 1181
+        y: 749
+        width: 12
+        height: 1
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ff1f16478a988fd4daeeb0d338959f74
+      internalID: -7218573903954444812
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: set-medieval-sprite-torches-with-burning-fire-sequence-animation-ancient-wooden-brands-with-flame-cartoon-elements-pc-game-flaming-torchlight-lighting-flambeau-isolated-vector-icons_5
+      rect:
+        serializedVersion: 2
+        x: 1467
+        y: 749
+        width: 10
+        height: 1
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 06dc7b8701db0f34da93fc3ddc111c00
+      internalID: 49557612778165503
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: set-medieval-sprite-torches-with-burning-fire-sequence-animation-ancient-wooden-brands-with-flame-cartoon-elements-pc-game-flaming-torchlight-lighting-flambeau-isolated-vector-icons_6
+      rect:
+        serializedVersion: 2
+        x: 1457
+        y: 749
+        width: 30
+        height: 1
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a878720578afc9b48865d564a112c335
+      internalID: 8416806601153609578
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: set-medieval-sprite-torches-with-burning-fire-sequence-animation-ancient-wooden-brands-with-flame-cartoon-elements-pc-game-flaming-torchlight-lighting-flambeau-isolated-vector-icons_7
+      rect:
+        serializedVersion: 2
+        x: 1538
+        y: 749
+        width: 1
+        height: 1
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 87091e8a75515d4418c334802246194b
+      internalID: 1154095087678034808
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: set-medieval-sprite-torches-with-burning-fire-sequence-animation-ancient-wooden-brands-with-flame-cartoon-elements-pc-game-flaming-torchlight-lighting-flambeau-isolated-vector-icons_8
+      rect:
+        serializedVersion: 2
+        x: 1201
+        y: 105
+        width: 147
+        height: 547
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 67f8ab915be3b47479633501c833e2bb
+      internalID: 5255089337505439266
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: set-medieval-sprite-torches-with-burning-fire-sequence-animation-ancient-wooden-brands-with-flame-cartoon-elements-pc-game-flaming-torchlight-lighting-flambeau-isolated-vector-icons_9
+      rect:
+        serializedVersion: 2
+        x: 1472
+        y: 105
+        width: 147
+        height: 563
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3eb8b55f34c365b468d1bdb9cf326324
+      internalID: -8975903118532496768
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: set-medieval-sprite-torches-with-burning-fire-sequence-animation-ancient-wooden-brands-with-flame-cartoon-elements-pc-game-flaming-torchlight-lighting-flambeau-isolated-vector-icons_10
+      rect:
+        serializedVersion: 2
+        x: 1743
+        y: 104
+        width: 147
+        height: 563
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fa1927cac919a1747a23acae9e0dbd50
+      internalID: 5202970166055767634
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: bcacd2bcc261e9645b4b0e2c7fd255f3
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":0,"keepEmptyRects":false,"isAlternate":false}'
+    nameFileIdTable:
+      set-medieval-sprite-torches-with-burning-fire-sequence-animation-ancient-wooden-brands-with-flame-cartoon-elements-pc-game-flaming-torchlight-lighting-flambeau-isolated-vector-icons_0: -2094817803016273812
+      set-medieval-sprite-torches-with-burning-fire-sequence-animation-ancient-wooden-brands-with-flame-cartoon-elements-pc-game-flaming-torchlight-lighting-flambeau-isolated-vector-icons_1: 8289564003243216006
+      set-medieval-sprite-torches-with-burning-fire-sequence-animation-ancient-wooden-brands-with-flame-cartoon-elements-pc-game-flaming-torchlight-lighting-flambeau-isolated-vector-icons_10: 5202970166055767634
+      set-medieval-sprite-torches-with-burning-fire-sequence-animation-ancient-wooden-brands-with-flame-cartoon-elements-pc-game-flaming-torchlight-lighting-flambeau-isolated-vector-icons_2: 6011899398413113679
+      set-medieval-sprite-torches-with-burning-fire-sequence-animation-ancient-wooden-brands-with-flame-cartoon-elements-pc-game-flaming-torchlight-lighting-flambeau-isolated-vector-icons_3: 639666434673413446
+      set-medieval-sprite-torches-with-burning-fire-sequence-animation-ancient-wooden-brands-with-flame-cartoon-elements-pc-game-flaming-torchlight-lighting-flambeau-isolated-vector-icons_4: -7218573903954444812
+      set-medieval-sprite-torches-with-burning-fire-sequence-animation-ancient-wooden-brands-with-flame-cartoon-elements-pc-game-flaming-torchlight-lighting-flambeau-isolated-vector-icons_5: 49557612778165503
+      set-medieval-sprite-torches-with-burning-fire-sequence-animation-ancient-wooden-brands-with-flame-cartoon-elements-pc-game-flaming-torchlight-lighting-flambeau-isolated-vector-icons_6: 8416806601153609578
+      set-medieval-sprite-torches-with-burning-fire-sequence-animation-ancient-wooden-brands-with-flame-cartoon-elements-pc-game-flaming-torchlight-lighting-flambeau-isolated-vector-icons_7: 1154095087678034808
+      set-medieval-sprite-torches-with-burning-fire-sequence-animation-ancient-wooden-brands-with-flame-cartoon-elements-pc-game-flaming-torchlight-lighting-flambeau-isolated-vector-icons_8: 5255089337505439266
+      set-medieval-sprite-torches-with-burning-fire-sequence-animation-ancient-wooden-brands-with-flame-cartoon-elements-pc-game-flaming-torchlight-lighting-flambeau-isolated-vector-icons_9: -8975903118532496768
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -127,14 +127,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00b5a2535ff97b14d926270b36ffe78b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Chest
+  collectSound: {fileID: 0}
+  collectEffect: {fileID: 5914764255778144682, guid: 5dc75cd097621ed41afec20a0f34e562, type: 3}
   needKey: 1
-  coinPrefab: {fileID: 552320990840097361, guid: 75d901cb13887284ab5dab39edeaf5dd, type: 3}
-  coinCount: 6
-  spread: 0.5
-  minUpForce: 3
-  maxUpForce: 5
-  sideForce: 1.5
-  spawnDelay: 0.06
+  dropPrefab: {fileID: 552320990840097361, guid: 75d901cb13887284ab5dab39edeaf5dd, type: 3}
+  amount: 1
+  finalPosition: 1.5
+  duration: 0.4
+  waitingTime: 0.05
+  stayVisible: 0
+  visibleDuration: 1.5
+  finalFadeDuration: 0.5
 --- !u!61 &1388711709376630841
 BoxCollider2D:
   m_ObjectHideFlags: 0
