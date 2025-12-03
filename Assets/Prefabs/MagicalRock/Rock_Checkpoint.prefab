@@ -100,7 +100,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4152814846734120552}
   m_Layer: 0
-  m_Name: Rock_Ceckpoint
+  m_Name: Rock_Checkpoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
