@@ -9,6 +9,7 @@ TagManager:
   - Ground
   - Death
   - Enemy
+  - Hidden
   layers:
   - Default
   - TransparentFX
@@ -46,14 +47,17 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Word
-    uniqueID: 3798781991
-    locked: 0
   - name: Hidden
     uniqueID: 2555214323
     locked: 0
+  - name: Word
+    uniqueID: 3798781991
+    locked: 0
   - name: ForeGround
     uniqueID: 438903465
+    locked: 0
+  - name: Player
+    uniqueID: 2685689403
     locked: 0
   - name: UI
     uniqueID: 2960379461
