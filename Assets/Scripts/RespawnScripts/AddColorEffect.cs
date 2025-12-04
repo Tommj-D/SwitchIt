@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public class AddColorEffect : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class AddColorEffect : MonoBehaviour
         public Color startColor;
     }
 
+    public Light2D rockLight;
 
     public float glowStrength = 1.0f;
     public float particlesStrength = 1.0f;
@@ -17,10 +19,11 @@ public class AddColorEffect : MonoBehaviour
     //Colori della runa e particelle prima che ci passo sopra
     public Color runeColor;
     public Color particlesColor;
-
+   
     //Colori della runa e particelle dopo che ci passo sopra
     public Color runeColor_Then;
     public Color particlesColor_Then;
+    public Color rockLightColor;
 
     private Color runeColorLastFrame;
     private float glowStrengthLastFrame;
@@ -41,6 +44,7 @@ public class AddColorEffect : MonoBehaviour
         }
 
         partSystems = this.GetComponentsInChildren<ParticleSystemRenderer>().ToList();
+
     }
 
     void Update()
@@ -70,6 +74,12 @@ public class AddColorEffect : MonoBehaviour
             particlesColorLastFrame = particlesColor;
             particlesStrengthLastFrame = particlesStrength;
         }
+
+        if (rockLight != null)
+        {
+            float targetIntensity = glowStrength; 
+            rockLight.intensity = Mathf.Lerp(rockLight.intensity, targetIntensity, Time.deltaTime * 3f);
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -78,6 +88,6 @@ public class AddColorEffect : MonoBehaviour
 
         runeColor = runeColor_Then;
         particlesColor = particlesColor_Then;
-
+        rockLight.color = rockLightColor;
     }
 }
