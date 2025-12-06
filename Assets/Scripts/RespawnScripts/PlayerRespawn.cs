@@ -31,7 +31,29 @@ public class PlayerRespawn : MonoBehaviour
     {
         if (!isDying && collision.gameObject.CompareTag("Enemy"))
         {
-            StartCoroutine(DeathSequence());
+            Enemy enemy = collision.gameObject.GetComponent<Enemy>();
+            if (enemy != null)
+            {
+                // prendi il primo punto di contatto
+                ContactPoint2D contact = collision.GetContact(0);
+                // Se la normale ha componente y positiva vuol dire che l'oggetto "spinge" verso l'alto il player
+                // (cioè il player ha colpito l'enemy dall'alto)
+                if (contact.normal.y > 0.5f && enemy.isKillable)
+                {
+                    // stompa il nemico
+                    enemy.OnStomp();
+
+                    // piccolo rimbalzo del player (adatta il valore)
+                    rb.linearVelocity = new Vector2(rb.linearVelocity.x, 10f);
+
+                    // eventualmente riproduci suono, aumenta punteggio, ecc.
+                }
+                else
+                {
+                    // il player viene ucciso dal nemico
+                    StartCoroutine(DeathSequence());
+                }
+            }
         }
     }
 
@@ -125,4 +147,9 @@ public class PlayerRespawn : MonoBehaviour
     }
 
     public bool IsDying() { return isDying; }
-}
+     
+    public void Die()
+    {
+        StartCoroutine(DeathSequence());
+    }
+}  

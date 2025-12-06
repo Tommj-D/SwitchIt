@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 987537562488986220}
   - component: {fileID: 6462344214565941395}
   - component: {fileID: -2550453409393857365}
+  - component: {fileID: 6547034632009469431}
   m_Layer: 0
   m_Name: FallingSpike
   m_TagString: Enemy
@@ -221,3 +222,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f69593e4ea0657c4695cf7c10b3abc83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RespawnableObject
+--- !u!114 &6547034632009469431
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 926992412118901913}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70558f9814946a149862575a1fe635a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Enemy
+  isKillable: 0
