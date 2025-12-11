@@ -1,35 +1,111 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using System.Collections;
+using System.Collections.Generic;
 
 public class PlayerMovement : MonoBehaviour
 {
-    
-    private PlayerControls controls; // riferimento alla classe PlayerControls generata
+
+    //private PlayerControls controls; // riferimento alla classe PlayerControls generata
 
 
     private Rigidbody2D rb; // riferimento al componente Rigidbody2D
-    private Animator anim; // riferimento al componente Animator
+    /*private Animator anim; // riferimento al componente Animator
     private SpriteRenderer sr; // riferimento al componente SpriteRenderer
 
     private float moveInput; // input di movimento orizzontale va da -1 a 1
+    */
 
-    [SerializeField] private float moveSpeed = 10f; //velocita di movimento orizzontale
-    [SerializeField] private float jumpForce = 5f;
+    [Header("Movement")]
+    public float moveSpeed = 10f; //velocita di movimento orizzontale
+    private float horizontalMovement;
 
-    [SerializeField] private Transform groundCheckLeft; // riferimento al GameObject
+    [Header("Jumping")]
+    public float jumpPower = 5f;
+    public int maxJumps = 2; // numero massimo di salti ce il player può fare
+    private int jumpsRemaining;
+
+    [Header("GroundCheck")]
+    public Transform groundCheckPos; // punto di controllo a terra
+    public Vector2 groundCheckSize = new Vector2(0.5f, 0.05f); // dimensione del box di controllo
+    public LayerMask groundLayer;
+
+    [Header("Gravity")]
+    public float baseGravity = 2f;
+    public float maxFallSpeed = 18f;
+    public float fallSpeedMultiplier = 2f;
+
+    void Start()
+    {
+        rb = GetComponent<Rigidbody2D>();
+    }
+
+    void Update()
+    {
+        rb.linearVelocity = new Vector2(horizontalMovement * moveSpeed, rb.linearVelocity.y);
+        GroundCeck();
+        Gravity();
+    }
+
+    private void Gravity()
+    {
+        if (rb.linearVelocity.y < 0)
+        {
+            rb.gravityScale = baseGravity * fallSpeedMultiplier; // Aumenta la gravita' durante la caduta
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, Mathf.Max(rb.linearVelocity.y, -maxFallSpeed)); // Limita la velocita' di caduta
+        }
+        else
+        {
+            rb.gravityScale = baseGravity; // Gravita' normale
+        }
+    }
+
+    public void Move(InputAction.CallbackContext context)
+    {
+        horizontalMovement = context.ReadValue<Vector2>().x;
+    }
+
+    public void Jump(InputAction.CallbackContext context)
+    {
+        if (jumpsRemaining>0)
+        {
+            {
+                if (context.performed)
+                {
+                    rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpPower);
+                    jumpsRemaining--;
+                }
+                else if (context.canceled)
+                {
+                    rb.linearVelocity = new Vector2(rb.linearVelocity.x, rb.linearVelocity.y * 0.5f);
+                    jumpsRemaining--;
+                }
+            }
+        }
+    }
+
+    private void GroundCeck()
+    {
+        if(Physics2D.OverlapBox(groundCheckPos.position, groundCheckSize, 0, groundLayer))
+        {
+            jumpsRemaining = maxJumps;
+        }
+    }
+    
+    /*[SerializeField] private Transform groundCheckLeft; // riferimento al GameObject
     [SerializeField] private Transform groundCheckRight; // riferimento al GameObject
     [SerializeField] private Transform groundCheckCenter; // riferimento al GameObject
 
     [SerializeField] private float checkRadius = 0.15f; // raggio del cerchio per verificare collisione
     [SerializeField] private LayerMask groundLayer; // layer dei terreni
-    private bool isGrounded; // indica se il giocatore è a terra
-    private bool canDoubleJump = false; // indica se il giocatore può fare un doppio salto
+    private bool isGrounded; // indica se il giocatore � a terra
+    private bool canDoubleJump = false; // indica se il giocatore pu� fare un doppio salto
 
-    private bool isGravityInverted = false; // indica se la gravità è invertita
+    private bool isGravityInverted = false; // indica se la gravit� � invertita
     [SerializeField] private float gravityCooldown = 0.5f; // mezzo secondo di attesa
-    private float lastGravitySwitchTime = -10f; //inizializza così da permettere il primo switch subito
+    private float lastGravitySwitchTime = -10f; //inizializza cos� da permettere il primo switch subito
 
-    private float baseGravityScale; // per salvare la gravità originale
+    private float baseGravityScale; // per salvare la gravit� originale
 
 
     //Per animazione di blink
@@ -78,7 +154,7 @@ public class PlayerMovement : MonoBehaviour
         }
         //Aggiorna animazioni movimento orizziontale
         float horizontalSpeed = Mathf.Abs(rb.linearVelocity.x);
-        // Imposta velocità orizzontale 
+        // Imposta velocit� orizzontale 
         anim.SetFloat("Speed", horizontalSpeed);
 
         /// Salto ///
@@ -109,7 +185,7 @@ public class PlayerMovement : MonoBehaviour
 
         anim.SetBool("isJumping", !isGrounded);
 
-        /// Cambio gravità ///
+        /// Cambio gravit� ///
         if (controls.Player.InvertGravity.WasPressedThisFrame()&&WorldSwitch.isFantasyWorldActive)
         {
             if (Time.time - lastGravitySwitchTime >= gravityCooldown)
@@ -122,7 +198,7 @@ public class PlayerMovement : MonoBehaviour
 
 
         /// Gestione animazione Blink ///
-        // Controlla se il personaggio è fermo
+        // Controlla se il personaggio � fermo
         bool isIdle = horizontalSpeed < 0.01f && isGrounded; // fermo e a terra
         if (isIdle && Time.time >= nextBlinkTime)
         {
@@ -134,7 +210,7 @@ public class PlayerMovement : MonoBehaviour
     // FixedUpdate is called at fixed intervals and is used for physics updates
     private void FixedUpdate()
     {
-        //Applica velocità orizzontale mantenendo la velocità verticale
+        //Applica velocit� orizzontale mantenendo la velocit� verticale
         rb.linearVelocity = new Vector2(moveInput * moveSpeed, rb.linearVelocity.y);
     }
 
@@ -150,7 +226,7 @@ public class PlayerMovement : MonoBehaviour
         if (controls != null)
             controls.Enable(); // Enable input actions
 
-        //Mi iscrivo all’evento del cambio mondo
+        //Mi iscrivo all�evento del cambio mondo
         WorldSwitch.OnWorldChanged += HandleWorldChange;
     }
 
@@ -172,23 +248,11 @@ public class PlayerMovement : MonoBehaviour
             rb.gravityScale = baseGravityScale;
         }
     }
+    */
 
     private void OnDrawGizmosSelected()
     {
-        if (groundCheckLeft != null)
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(groundCheckLeft.position, checkRadius);
-        }
-        if (groundCheckRight != null)
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(groundCheckRight.position, checkRadius);
-        }
-        if (groundCheckCenter != null)
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(groundCheckCenter.position, checkRadius);
-        }
+        Gizmos.color = Color.white;
+        Gizmos.DrawCube(groundCheckPos.position, groundCheckSize);
     }
 }
