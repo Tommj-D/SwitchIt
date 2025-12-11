@@ -10,11 +10,11 @@ public class PlayerMovement : MonoBehaviour
 
 
     private Rigidbody2D rb; // riferimento al componente Rigidbody2D
-    /*private Animator anim; // riferimento al componente Animator
     private SpriteRenderer sr; // riferimento al componente SpriteRenderer
+    private Animator animator; // riferimento al componente Animator
 
+    private float nextBlinkTime;
     private float moveInput; // input di movimento orizzontale va da -1 a 1
-    */
 
     [Header("Movement")]
     public float moveSpeed = 10f; //velocita di movimento orizzontale
@@ -38,6 +38,8 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        sr = GetComponent<SpriteRenderer>();
+        animator = GetComponent<Animator>();
     }
 
     void Update()
@@ -45,6 +47,16 @@ public class PlayerMovement : MonoBehaviour
         rb.linearVelocity = new Vector2(horizontalMovement * moveSpeed, rb.linearVelocity.y);
         GroundCeck();
         Gravity();
+
+        ///ANIMAZIONI///
+        animator.SetFloat("Speed", rb.linearVelocity.x);
+        animator.SetBool("isJumping", jumpsRemaining < maxJumps);
+        if (rb.linearVelocity.x == 0 && jumpsRemaining == maxJumps && Time.time >= nextBlinkTime)
+        {
+            animator.SetTrigger("Blink");
+            nextBlinkTime = Time.time + Random.Range(3f, 6f);
+        }
+
     }
 
     private void Gravity()
@@ -63,6 +75,15 @@ public class PlayerMovement : MonoBehaviour
     public void Move(InputAction.CallbackContext context)
     {
         horizontalMovement = context.ReadValue<Vector2>().x;
+
+        if (horizontalMovement > 0.01f)
+        {
+            sr.flipX = false;
+        }
+        else if (horizontalMovement < -0.01f)
+        {
+            sr.flipX = true;
+        }
     }
 
     public void Jump(InputAction.CallbackContext context)
