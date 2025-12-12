@@ -12,6 +12,7 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody2D rb; // riferimento al componente Rigidbody2D
     private SpriteRenderer sr; // riferimento al componente SpriteRenderer
     private Animator animator; // riferimento al componente Animator
+    private ParticleSystem grassFX; // riferimento all'effetto particellare di erba che solleva il player
 
     private float nextBlinkTime;
     private float moveInput; // input di movimento orizzontale va da -1 a 1
@@ -40,6 +41,7 @@ public class PlayerMovement : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
+        grassFX = GetComponentInChildren<ParticleSystem>();
     }
 
     void Update()
@@ -80,10 +82,28 @@ public class PlayerMovement : MonoBehaviour
         if (horizontalMovement > 0.01f)
         {
             sr.flipX = false;
+            grassFX.transform.localScale = new Vector3(1, 1, 1);
+            if (rb.linearVelocity.y == 0)
+            {
+                grassFX.Play();
+                if(rb.linearVelocity.y != 0 && rb.linearVelocity.x == 0)
+                {
+                    grassFX.Stop();
+                }
+            }
         }
         else if (horizontalMovement < -0.01f)
         {
             sr.flipX = true;
+            grassFX.transform.localScale = new Vector3(-1, 1, 1);
+            if (rb.linearVelocity.y == 0)
+            {
+                grassFX.Play();
+                if (rb.linearVelocity.y != 0 && rb.linearVelocity.x == 0)
+                {
+                    grassFX.Stop();
+                }
+            }
         }
     }
 
