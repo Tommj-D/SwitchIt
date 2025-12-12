@@ -49,8 +49,9 @@ public class PlayerMovement : MonoBehaviour
         Gravity();
 
         ///ANIMAZIONI///
-        animator.SetFloat("Speed", rb.linearVelocity.x);
-        animator.SetBool("isJumping", jumpsRemaining < maxJumps);
+        animator.SetFloat("Speed", Mathf.Abs(rb.linearVelocity.x));
+        animator.SetFloat("VerticalSpeed", Mathf.Abs(rb.linearVelocity.y));                          
+
         if (rb.linearVelocity.x == 0 && jumpsRemaining == maxJumps && Time.time >= nextBlinkTime)
         {
             animator.SetTrigger("Blink");
@@ -93,6 +94,10 @@ public class PlayerMovement : MonoBehaviour
             {
                 if (context.performed)
                 {
+                    if (jumpsRemaining < maxJumps)
+                    {
+                        animator.SetTrigger("DoubleJump");
+                    }
                     rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpPower);
                     jumpsRemaining--;
                 }
@@ -110,6 +115,7 @@ public class PlayerMovement : MonoBehaviour
         if(Physics2D.OverlapBox(groundCheckPos.position, groundCheckSize, 0, groundLayer))
         {
             jumpsRemaining = maxJumps;
+            animator.SetBool("isJumping", false);
         }
     }
     
