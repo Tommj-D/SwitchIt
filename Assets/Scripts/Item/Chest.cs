@@ -153,6 +153,7 @@ public class Chest : MonoBehaviour
             // ---- AGGIUNTA AL PLAYER ----
             if (inv != null)
                 inv.AddCoins(1);
+            GameManager.instance.AddCoin(1);
 
             // attesa prima della prossima moneta
             yield return new WaitForSeconds(waitingTime);
