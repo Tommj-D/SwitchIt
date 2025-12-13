@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1397749486014303103}
   - component: {fileID: 5775091652432377084}
   - component: {fileID: 3817662410082568336}
-  - component: {fileID: -6360329441963223882}
+  - component: {fileID: 947807660684006445}
   m_Layer: 0
   m_Name: Coin
   m_TagString: Untagged
@@ -129,10 +129,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Coin
   collectEffect: {fileID: 5914764255778144682, guid: 5dc75cd097621ed41afec20a0f34e562, type: 3}
   collectSound: {fileID: 0}
-  destroyDelay: 0.1
   amplitude: 0.15
   frequency: 2
---- !u!61 &-6360329441963223882
+--- !u!61 &947807660684006445
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

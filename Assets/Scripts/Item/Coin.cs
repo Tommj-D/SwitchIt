@@ -1,14 +1,19 @@
+using System;
 using UnityEngine;
 
 public class Coin : MonoBehaviour, IItem
 {
-    [SerializeField] private GameObject collectEffect;       // effetto quando raccolta
-    [SerializeField] private AudioClip collectSound;         // suono quando raccolta
-    [SerializeField] private float destroyDelay = 0.1f;      // ritardo distruzione
-    private bool collected = false;                          // per evitare doppie raccolte
+    public int value = 1;                 // valore della moneta
 
-    [SerializeField] private float amplitude = 0.15f;   // quanto sale/scende
-    [SerializeField] private float frequency = 2f;      // velocità dell'oscillazione
+    public GameObject collectEffect;       // effetto quando raccolta
+    public AudioClip collectSound;         // suono quando raccolta
+    private float destroyDelay = 0.1f;      // ritardo distruzione
+
+    [Header("Animazione")]
+    public float amplitude = 0.15f;   // quanto sale/scende
+    public float frequency = 2f;      // velocità dell'oscillazione
+
+    private bool collected = false;    // stato raccolta
 
     private Vector3 startPos;
     void Start()
@@ -22,32 +27,27 @@ public class Coin : MonoBehaviour, IItem
         transform.position = new Vector3(startPos.x, startPos.y + y, startPos.z);
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    public void Collect()
     {
         if (collected) return;
 
-        if (collision.CompareTag("Player"))
-        {
-            collected = true;
+        collected = true;
 
-            // Effetto visivo
-            if (collectEffect != null)
-                Instantiate(collectEffect, transform.position, Quaternion.identity);
+        Collider2D col = GetComponent<Collider2D>();
+        if (col != null) col.enabled = false;
 
-            // Suono
-            if (collectSound != null)
-                AudioSource.PlayClipAtPoint(collectSound, transform.position);
+        // Notifica il sistema di punteggio
+        GameManager.instance.AddCoin(value);
 
-            // Disattiva grafica e collider
-            GetComponent<SpriteRenderer>().enabled = false;
-            GetComponent<Collider2D>().enabled = false;
+        // Effetto visivo
+        if (collectEffect != null)
+            Instantiate(collectEffect, transform.position, Quaternion.identity);
 
-            // Distrugge l’oggetto dopo breve delay
-            Destroy(gameObject, destroyDelay);
-        }
-    }
-    public void Collect()
-    {
-        throw new System.NotImplementedException();
+        // Suono
+        if (collectSound != null)
+            AudioSource.PlayClipAtPoint(collectSound, transform.position);
+
+        // Distrugge l’oggetto dopo breve delay
+        Destroy(gameObject, destroyDelay);
     }
 }
