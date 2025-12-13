@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Coin : MonoBehaviour
+public class Coin : MonoBehaviour, IItem
 {
     [SerializeField] private GameObject collectEffect;       // effetto quando raccolta
     [SerializeField] private AudioClip collectSound;         // suono quando raccolta
@@ -11,7 +11,6 @@ public class Coin : MonoBehaviour
     [SerializeField] private float frequency = 2f;      // velocità dell'oscillazione
 
     private Vector3 startPos;
-
     void Start()
     {
         startPos = transform.position;
@@ -46,5 +45,9 @@ public class Coin : MonoBehaviour
             // Distrugge l’oggetto dopo breve delay
             Destroy(gameObject, destroyDelay);
         }
+    }
+    public void Collect()
+    {
+        throw new System.NotImplementedException();
     }
 }

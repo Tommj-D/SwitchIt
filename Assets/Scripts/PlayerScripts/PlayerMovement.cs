@@ -12,7 +12,10 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody2D rb; // riferimento al componente Rigidbody2D
     private SpriteRenderer sr; // riferimento al componente SpriteRenderer
     private Animator animator; // riferimento al componente Animator
-    private ParticleSystem grassFX; // riferimento all'effetto particellare di erba che solleva il player
+
+    [Header("Particle Systems")]
+    public ParticleSystem grassFX; // riferimento all'effetto particellare di erba che solleva il player
+    public ParticleSystem jumpFX; // riferimento all'effetto particellare di salto
 
     private float nextBlinkTime;
     private float moveInput; // input di movimento orizzontale va da -1 a 1
@@ -41,7 +44,6 @@ public class PlayerMovement : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
-        grassFX = GetComponentInChildren<ParticleSystem>();
     }
 
     void Update()
@@ -117,6 +119,7 @@ public class PlayerMovement : MonoBehaviour
                     if (jumpsRemaining < maxJumps)
                     {
                         animator.SetTrigger("DoubleJump");
+                        jumpFX.Play();
                     }
                     rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpPower);
                     jumpsRemaining--;
