@@ -91,7 +91,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c03a09b166a920a4ab893576aa4549e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHead
-  slime: {fileID: 3951131504119047993}
+  enemy: {fileID: 3951131504119047993}
 --- !u!1 &8068589428734277748
 GameObject:
   m_ObjectHideFlags: 0
@@ -106,6 +106,7 @@ GameObject:
   - component: {fileID: 3951131504119047993}
   - component: {fileID: 501101685884834853}
   - component: {fileID: 1162083301820946057}
+  - component: {fileID: 4875377385314659443}
   m_Layer: 0
   m_Name: SlimeGreen
   m_TagString: Enemy
@@ -221,9 +222,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc931ebf3bbd7c546b22c84cf65dee7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Slime_Green
-  patrolSpeed: 1
-  patrolling: 1
   dieSound: {fileID: 0}
+  patrolSpeed: 1
+  isKillable: 1
 --- !u!60 &501101685884834853
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -318,3 +319,15 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!114 &4875377385314659443
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8068589428734277748}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f69593e4ea0657c4695cf7c10b3abc83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RespawnableObject

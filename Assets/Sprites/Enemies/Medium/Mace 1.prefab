@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 8188467335814984981}
   - component: {fileID: 7768701106616368867}
   - component: {fileID: 7636107211730844602}
-  - component: {fileID: 7863138810717867698}
   m_Layer: 0
   m_Name: Mace 1
   m_TagString: Enemy
@@ -228,16 +227,3 @@ PolygonCollider2D:
       - {x: -0.04, y: -1.28}
       - {x: 0.01, y: -1.28}
   m_UseDelaunayMesh: 0
---- !u!114 &7863138810717867698
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3335905764682719425}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 70558f9814946a149862575a1fe635a8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Enemy
-  isKillable: 0

@@ -1,8 +1,11 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.InputSystem;
 
 public class PlayerRespawn : MonoBehaviour
 {
+    private PlayerInput playerInput;
+
     public ScreenFade screenFade;
     public SceneController sceneController;
 
@@ -25,35 +28,14 @@ public class PlayerRespawn : MonoBehaviour
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<Collider2D>();
+        playerInput = GetComponent<PlayerInput>();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (!isDying && collision.gameObject.CompareTag("Enemy"))
         {
-            Enemy enemy = collision.gameObject.GetComponent<Enemy>();
-            if (enemy != null)
-            {
-                // prendi il primo punto di contatto
-                ContactPoint2D contact = collision.GetContact(0);
-                // Se la normale ha componente y positiva vuol dire che l'oggetto "spinge" verso l'alto il player
-                // (cioè il player ha colpito l'enemy dall'alto)
-                if (contact.normal.y > 0.5f && enemy.isKillable)
-                {
-                    // stompa il nemico
-                    enemy.OnStomp();
-
-                    // piccolo rimbalzo del player (adatta il valore)
-                    rb.linearVelocity = new Vector2(rb.linearVelocity.x, 10f);
-
-                    // eventualmente riproduci suono, aumenta punteggio, ecc.
-                }
-                else
-                {
-                    // il player viene ucciso dal nemico
-                    StartCoroutine(DeathSequence());
-                }
-            }
+            StartCoroutine(DeathSequence());
         }
     }
 
@@ -68,8 +50,10 @@ public class PlayerRespawn : MonoBehaviour
 
 
     private IEnumerator DeathSequence()
-    {
+    { 
         isDying = true;
+
+        playerInput.enabled = false;
 
         // Blocca movimento e collisioni
         rb.linearVelocity = Vector2.zero;
@@ -142,6 +126,8 @@ public class PlayerRespawn : MonoBehaviour
         {
             yield return screenFade.FadeInCoroutine(sceneController.fadeDuration);
         }
+
+        playerInput.enabled = true;
 
         isDying = false;
     }

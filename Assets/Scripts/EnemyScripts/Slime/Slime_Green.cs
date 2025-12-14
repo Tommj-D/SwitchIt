@@ -1,8 +1,12 @@
 using UnityEngine;
 
-public class Slime_Green : MonoBehaviour
+public class Slime_Green : Enemy
 {
-    private Animator animator;
+    protected override void Move()
+    {
+        transform.Translate(Vector2.right * patrolSpeed * Time.deltaTime);
+    }
+    /*private Animator animator;
 
     public float patrolSpeed = 1.0f;
     public bool patrolling = true;
@@ -51,6 +55,6 @@ public class Slime_Green : MonoBehaviour
 
         // distruggi il nemico dopo breve delay
         Destroy(gameObject, 4f);
-    }
+    }*/
 }
 

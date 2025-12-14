@@ -5,10 +5,6 @@ using System.Collections.Generic;
 
 public class PlayerMovement : MonoBehaviour
 {
-
-    //private PlayerControls controls; // riferimento alla classe PlayerControls generata
-
-
     private Rigidbody2D rb; // riferimento al componente Rigidbody2D
     private SpriteRenderer sr; // riferimento al componente SpriteRenderer
     private Animator animator; // riferimento al componente Animator
