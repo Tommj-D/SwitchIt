@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5721008355908464977}
   - component: {fileID: 8377302624767516326}
+  - component: {fileID: 4713333011712152472}
   m_Layer: 0
   m_Name: Head
   m_TagString: Untagged
@@ -66,7 +67,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.0044666827, y: 0.19204217}
+  m_Offset: {x: -0.0036111474, y: 0.1333786}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -76,8 +77,21 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.6337679, y: 0.097844064}
+  m_Size: {x: 0.6063608, y: 0.10329908}
   m_EdgeRadius: 0
+--- !u!114 &4713333011712152472
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2725092621144280184}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c03a09b166a920a4ab893576aa4549e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyHead
+  slime: {fileID: 3951131504119047993}
 --- !u!1 &8068589428734277748
 GameObject:
   m_ObjectHideFlags: 0
@@ -256,15 +270,15 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: 0.36358228, y: 0.10793882}
-      - {x: 0.29122925, y: 0.10688135}
-      - {x: 0.20678061, y: 0.107931495}
-      - {x: -0.06469672, y: 0.100797564}
-      - {x: -0.18881927, y: 0.10871389}
-      - {x: -0.27781507, y: 0.09589319}
-      - {x: -0.3944744, y: 0.103992075}
-      - {x: -0.5171668, y: 0.0039017545}
-      - {x: -0.53863525, y: -0.033867467}
+    - - {x: 0.34189132, y: 0.040465623}
+      - {x: 0.29122925, y: 0.051456735}
+      - {x: 0.20678061, y: 0.07901462}
+      - {x: -0.062290527, y: 0.08392926}
+      - {x: -0.18881927, y: 0.077387884}
+      - {x: -0.25371793, y: 0.07179457}
+      - {x: -0.3554119, y: 0.0097763855}
+      - {x: -0.43894786, y: -0.035694808}
+      - {x: -0.52316517, y: -0.093811035}
       - {x: -0.57391775, y: -0.13086711}
       - {x: -0.57416415, y: -0.36303398}
       - {x: -0.5259817, y: -0.4184982}
@@ -274,8 +288,8 @@ PolygonCollider2D:
       - {x: 0.57415354, y: -0.3445342}
       - {x: 0.57276803, y: -0.24995245}
       - {x: 0.57911855, y: -0.18243593}
-      - {x: 0.5468281, y: -0.04427866}
-      - {x: 0.40931118, y: 0.098657474}
+      - {x: 0.5058641, y: -0.08283498}
+      - {x: 0.3827961, y: 0.021544836}
   m_UseDelaunayMesh: 0
 --- !u!50 &1162083301820946057
 Rigidbody2D:
