@@ -81,6 +81,7 @@ public class PlayerMovement : MonoBehaviour
         {
             sr.flipX = false;
             grassFX.transform.localScale = new Vector3(1, 1, 1);
+            jumpFX.transform.GetChild(0).localPosition = new Vector3(-0.2f, 0, 0);
             if (rb.linearVelocity.y == 0)
             {
                 grassFX.Play();
@@ -94,6 +95,7 @@ public class PlayerMovement : MonoBehaviour
         {
             sr.flipX = true;
             grassFX.transform.localScale = new Vector3(-1, 1, 1);
+            jumpFX.transform.GetChild(0).localPosition = new Vector3(0.2f, 0, 0);
             if (rb.linearVelocity.y == 0)
             {
                 grassFX.Play();
