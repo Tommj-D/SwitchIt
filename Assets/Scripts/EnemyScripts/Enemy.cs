@@ -5,11 +5,13 @@ public abstract class Enemy : MonoBehaviour
     protected Animator animator;
 
     public AudioClip dieSound;
-    public float patrolSpeed = 1.0f;
+    public float patrolSpeed = 3.0f;
     public bool isKillable = true;
 
-
     protected bool isDead = false;
+    protected bool isActive = false;
+
+    protected int direction = 1;           // 1 = destra, -1 = sinistra
 
     protected virtual void Start()
     {
@@ -18,7 +20,7 @@ public abstract class Enemy : MonoBehaviour
 
     protected virtual void Update()
     {
-        if (isDead) return;
+        if (isDead || !isActive) return;
         Move();
     }
 
@@ -33,12 +35,43 @@ public abstract class Enemy : MonoBehaviour
             if (respawn != null)
                 respawn.Die();
         }
+        if (collision.gameObject.CompareTag("Obstacle"))
+        {
+            Flip();
+        }
+    }
+
+    //Per non far cadere il nemico dai bordi delle piattaforme
+    protected virtual void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Obstacle"))
+        {
+            Flip();
+        }
+
+        if (collision.gameObject.CompareTag("Death"))
+        {
+            Death();
+        }
     }
 
     public virtual void OnStomped(GameObject player)
     {
         if (!isKillable) return;
+        
+        Death();
 
+        // rimbalzare il player
+        var playerRb = player.GetComponent<Rigidbody2D>();
+        if (playerRb != null)
+            playerRb.linearVelocity = new Vector2(playerRb.linearVelocity.x, 8f);
+
+
+        Invoke(nameof(DisableEnemy), 3f);
+    }
+
+    private void Death()
+    {
         isDead = true;
 
         animator.SetTrigger("Die");
@@ -52,13 +85,28 @@ public abstract class Enemy : MonoBehaviour
         {
             rb.bodyType = RigidbodyType2D.Kinematic;    // Disabilita fisica
         }
+    }
+    private void Flip()
+    {
+        direction *= -1; // cambia direzione
+        Vector3 scale = transform.localScale;
+        scale.x *= -1;   // capovolge lo sprite
+        transform.localScale = scale;
+    }
 
-        // rimbalzare il player
-        var playerRb = player.GetComponent<Rigidbody2D>();
-        if (playerRb != null)
-            playerRb.linearVelocity = new Vector2(playerRb.linearVelocity.x, 8f);
+    //In modo da attivare il nemico solo quando entra nella camera
+    private void OnBecameVisible()
+    {
+        isActive = true; // attiva il nemico quando entra nella camera
+    }
 
+   private void OnBecameInvisible()
+    {
+        isActive = false;
+    }
 
-        Destroy(gameObject, 3f);
+    private void DisableEnemy()
+    {
+        gameObject.SetActive(false);
     }
 }

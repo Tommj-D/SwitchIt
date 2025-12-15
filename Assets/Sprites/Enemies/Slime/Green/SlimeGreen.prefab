@@ -223,7 +223,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Slime_Green
   dieSound: {fileID: 0}
-  patrolSpeed: 1
+  patrolSpeed: 3
   isKillable: 1
 --- !u!60 &501101685884834853
 PolygonCollider2D:

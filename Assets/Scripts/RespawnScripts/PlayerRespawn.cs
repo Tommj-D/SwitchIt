@@ -122,12 +122,11 @@ public class PlayerRespawn : MonoBehaviour
 
 
         //FADE IN (torna visibile)
+        playerInput.enabled = true;
         if (screenFade != null)
         {
             yield return screenFade.FadeInCoroutine(sceneController.fadeDuration);
         }
-
-        playerInput.enabled = true;
 
         isDying = false;
     }

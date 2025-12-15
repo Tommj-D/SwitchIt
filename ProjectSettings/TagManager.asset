@@ -10,6 +10,7 @@ TagManager:
   - Death
   - Enemy
   - Hidden
+  - Obstacle
   layers:
   - Default
   - TransparentFX
