@@ -135,11 +135,17 @@ public class PlayerMovement : MonoBehaviour
     {
         if(Physics2D.OverlapBox(groundCheckPos.position, groundCheckSize, 0, groundLayer))
         {
-            jumpsRemaining = maxJumps;
+            ResetJumps();
             animator.SetBool("isJumping", false);
         }
     }
-    
+
+    public void ResetJumps()
+    {
+        jumpsRemaining = maxJumps;
+    }
+
+
     /*[SerializeField] private Transform groundCheckLeft; // riferimento al GameObject
     [SerializeField] private Transform groundCheckRight; // riferimento al GameObject
     [SerializeField] private Transform groundCheckCenter; // riferimento al GameObject

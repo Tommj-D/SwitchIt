@@ -29,7 +29,7 @@ public abstract class Enemy : MonoBehaviour
 
     protected virtual void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Player")&&!isDead)
         {
             var respawn = collision.gameObject.GetComponent<PlayerRespawn>();
             if (respawn != null)
@@ -74,6 +74,12 @@ public abstract class Enemy : MonoBehaviour
     {
         isDead = true;
 
+        Collider2D[] colliders = GetComponents<Collider2D>();
+        foreach (Collider2D col in colliders)
+        {
+            col.enabled = false;
+        }
+
         animator.SetTrigger("Die");
 
         if (dieSound)
@@ -100,10 +106,10 @@ public abstract class Enemy : MonoBehaviour
         isActive = true; // attiva il nemico quando entra nella camera
     }
 
-   private void OnBecameInvisible()
+   /*private void OnBecameInvisible()
     {
         isActive = false;
-    }
+    }*/
 
     private void DisableEnemy()
     {
