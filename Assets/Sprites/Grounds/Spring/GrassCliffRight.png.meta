@@ -56,7 +56,7 @@ TextureImporter:
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 100
-  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 40}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
   alphaIsTransparency: 1
@@ -121,7 +121,7 @@ TextureImporter:
     physicsShape: []
     bones: []
     spriteID: ab0145c54a7b56d4aba690296c870e9c
-    internalID: 0
+    internalID: -1662431278
     vertices: []
     indices: 
     edges: []
