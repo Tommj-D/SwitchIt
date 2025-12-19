@@ -5,6 +5,14 @@ public class EnemyHead : MonoBehaviour
     public Enemy enemy;
 
     public float jumpingForce = 8f;
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            enemy.OnStomped(collision.gameObject);
+        }
+    }
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))

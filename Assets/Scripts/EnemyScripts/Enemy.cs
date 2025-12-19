@@ -35,23 +35,19 @@ public abstract class Enemy : MonoBehaviour
             if (respawn != null)
                 respawn.Die();
         }
-        if (collision.gameObject.CompareTag("Obstacle"))
-        {
-            Flip();
-        }
+       Flip();
     }
 
     //Per non far cadere il nemico dai bordi delle piattaforme
     protected virtual void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Obstacle"))
-        {
-            Flip();
-        }
-
         if (collision.gameObject.CompareTag("Death"))
         {
             Death();
+        }
+        if (collision.gameObject.CompareTag("Obstacle"))
+        {
+            Flip();
         }
     }
 
