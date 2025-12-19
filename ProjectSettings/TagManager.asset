@@ -54,11 +54,11 @@ TagManager:
   - name: Word
     uniqueID: 3798781991
     locked: 0
-  - name: ForeGround
-    uniqueID: 438903465
-    locked: 0
   - name: Player
     uniqueID: 2685689403
+    locked: 0
+  - name: ForeGround
+    uniqueID: 438903465
     locked: 0
   - name: UI
     uniqueID: 2960379461

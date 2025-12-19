@@ -4802,7 +4802,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -1609277893
-  m_SortingLayer: 4
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_RenderMode: 0
   m_MeshDistribution: 0
@@ -5004,7 +5004,7 @@ Transform:
   m_GameObject: {fileID: 3179677826175787134}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.8, z: 0}
+  m_LocalPosition: {x: 0, y: -0.6, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -9838,8 +9838,8 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -1609277893
-  m_SortingLayer: 4
-  m_SortingOrder: 0
+  m_SortingLayer: 3
+  m_SortingOrder: 1
   m_RenderMode: 0
   m_MeshDistribution: 0
   m_SortMode: 0
@@ -14732,7 +14732,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -1609277893
-  m_SortingLayer: 4
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_RenderMode: 0
   m_MeshDistribution: 0
@@ -14978,7 +14978,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -1609277893
-  m_SortingLayer: 4
+  m_SortingLayer: 3
   m_SortingOrder: 5
   m_Sprite: {fileID: -274480938, guid: 6bd1c00f5f6ecc746b6e2277f8a7d292, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -15375,8 +15375,16 @@ PrefabInstance:
       value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 5279418879429634893, guid: c6134c85717d8ea4f901d38df046ac2f, type: 3}
+      propertyPath: m_SortingLayer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5279418879429634893, guid: c6134c85717d8ea4f901d38df046ac2f, type: 3}
       propertyPath: m_SortingOrder
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5279418879429634893, guid: c6134c85717d8ea4f901d38df046ac2f, type: 3}
+      propertyPath: m_SortingLayerID
+      value: -1609277893
       objectReference: {fileID: 0}
     - target: {fileID: 5875382720354227320, guid: c6134c85717d8ea4f901d38df046ac2f, type: 3}
       propertyPath: m_Layer

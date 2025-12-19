@@ -22,8 +22,10 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Jumping")]
     public float jumpPower = 5f;
-    public int maxJumps = 2; // numero massimo di salti ce il player può fare
+    public int maxJumps = 2; // numero massimo di salti che il player può fare
     private int jumpsRemaining;
+    private bool isGrounded;
+
 
     [Header("GroundCheck")]
     public Transform groundCheckPos; // punto di controllo a terra
@@ -125,7 +127,6 @@ public class PlayerMovement : MonoBehaviour
                 else if (context.canceled)
                 {
                     rb.linearVelocity = new Vector2(rb.linearVelocity.x, rb.linearVelocity.y * 0.5f);
-                    jumpsRemaining--;
                 }
             }
         }
@@ -133,11 +134,20 @@ public class PlayerMovement : MonoBehaviour
 
     private void GroundCeck()
     {
-        if(Physics2D.OverlapBox(groundCheckPos.position, groundCheckSize, 0, groundLayer))
+        bool groundedNow = Physics2D.OverlapBox(
+        groundCheckPos.position,
+        groundCheckSize,
+        0,
+        groundLayer
+    );
+
+        if (groundedNow && !isGrounded)
         {
             ResetJumps();
             animator.SetBool("isJumping", false);
         }
+
+        isGrounded = groundedNow;
     }
 
     public void ResetJumps()

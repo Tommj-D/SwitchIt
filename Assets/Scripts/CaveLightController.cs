@@ -9,7 +9,9 @@ public class CaveLightController : MonoBehaviour
     public float outsideIntensity = 1.0f;
     public float lerpSpeed = 2f;
 
-    float desiredIntensity;
+    private float desiredIntensity;
+
+    private static int playerInsideCaves = 0;
 
     void Start()
     {
@@ -21,7 +23,7 @@ public class CaveLightController : MonoBehaviour
     {
         if (globalLight)
         {
-            globalLight.intensity = Mathf.Lerp(globalLight.intensity, desiredIntensity, Time.deltaTime * lerpSpeed);
+            globalLight.intensity = Mathf.MoveTowards(globalLight.intensity, desiredIntensity, lerpSpeed * Time.deltaTime);
         }
     }
 
@@ -29,6 +31,7 @@ public class CaveLightController : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
+            playerInsideCaves++;
             desiredIntensity = targetDarkIntensity;
         }
     }
@@ -38,6 +41,13 @@ public class CaveLightController : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             desiredIntensity = outsideIntensity;
+            playerInsideCaves--;
+
+        if (playerInsideCaves <= 0)
+        {
+            playerInsideCaves = 0;
+            desiredIntensity = outsideIntensity;
+        }
         }
     }
 }
