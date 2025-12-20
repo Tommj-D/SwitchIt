@@ -8,6 +8,7 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody2D rb; // riferimento al componente Rigidbody2D
     private SpriteRenderer sr; // riferimento al componente SpriteRenderer
     private Animator animator; // riferimento al componente Animator
+    private SpriteMaskController spriteMaskController; // riferimento al componente SpriteMask
 
     [Header("Particle Systems")]
     public ParticleSystem grassFX; // riferimento all'effetto particellare di erba che solleva il player
@@ -42,6 +43,7 @@ public class PlayerMovement : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
+        spriteMaskController = GetComponentInChildren<SpriteMaskController>();
     }
 
     void Update()
@@ -79,28 +81,14 @@ public class PlayerMovement : MonoBehaviour
     {
         horizontalMovement = context.ReadValue<Vector2>().x;
 
-        if (horizontalMovement > 0.01f)
+        if (Mathf.Abs(horizontalMovement) > 0.01f)
         {
-            sr.flipX = false;
-            grassFX.transform.localScale = new Vector3(1, 1, 1);
-            jumpFX.transform.GetChild(0).localPosition = new Vector3(-0.2f, 0, 0);
+            Flip(horizontalMovement);
+
             if (rb.linearVelocity.y == 0)
             {
                 grassFX.Play();
-                if(rb.linearVelocity.y != 0 && rb.linearVelocity.x == 0)
-                {
-                    grassFX.Stop();
-                }
-            }
-        }
-        else if (horizontalMovement < -0.01f)
-        {
-            sr.flipX = true;
-            grassFX.transform.localScale = new Vector3(-1, 1, 1);
-            jumpFX.transform.GetChild(0).localPosition = new Vector3(0.2f, 0, 0);
-            if (rb.linearVelocity.y == 0)
-            {
-                grassFX.Play();
+
                 if (rb.linearVelocity.y != 0 && rb.linearVelocity.x == 0)
                 {
                     grassFX.Stop();
@@ -148,6 +136,28 @@ public class PlayerMovement : MonoBehaviour
         }
 
         isGrounded = groundedNow;
+    }
+
+    private void Flip(float direction)
+    {
+        if (direction > 0)
+        {
+            sr.flipX = false;
+            grassFX.transform.localScale = new Vector3(1, 1, 1);
+            jumpFX.transform.GetChild(0).localPosition = new Vector3(-0.2f, 0, 0);
+
+            if (spriteMaskController != null)
+                spriteMaskController.FaceRight();
+        }
+        else if (direction < 0)
+        {
+            sr.flipX = true;
+            grassFX.transform.localScale = new Vector3(-1, 1, 1);
+            jumpFX.transform.GetChild(0).localPosition = new Vector3(0.2f, 0, 0);
+
+            if (spriteMaskController != null)
+                spriteMaskController.FaceLeft();
+        }
     }
 
     public void ResetJumps()
