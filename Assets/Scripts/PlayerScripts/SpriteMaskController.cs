@@ -32,7 +32,6 @@ public class SpriteMaskController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log("Trigger OK");
         if (other.CompareTag("Hidden") && spriteMask != null)
             spriteMask.enabled = true;
     }
