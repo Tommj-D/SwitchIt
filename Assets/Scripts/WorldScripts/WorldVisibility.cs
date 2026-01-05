@@ -2,52 +2,34 @@ using UnityEngine;
 
 public class WorldVisibility : MonoBehaviour
 {
-    [SerializeField] private bool isFantasyObject = true;
+    public bool isFantasyObject = true;
 
     private SpriteRenderer sr;
     private Collider2D col;
 
-    private void Awake()
+    void Awake()
     {
         sr = GetComponent<SpriteRenderer>();
         col = GetComponent<Collider2D>();
     }
 
-    private void OnEnable()
+    void Start()
     {
-        // Iscriviti all'evento
-        WorldSwitch.OnWorldChanged += HandleWorldChanged;
+        UpdateVisibility();
     }
 
-    private void OnDisable()
+    void Update()
     {
-        // Annulla iscrizione per evitare memory leak / reference dangling
-        WorldSwitch.OnWorldChanged -= HandleWorldChanged;
+        UpdateVisibility();
     }
 
-    // Questo metodo viene chiamato ogni volta che il mondo cambia
-    private void HandleWorldChanged(bool isFantasyActive)
+    void UpdateVisibility()
     {
-        bool shouldBeVisible = false;
+        bool shouldBeVisible =
+            (isFantasyObject && WorldSwitch.isFantasyWorldActive) ||
+            (!isFantasyObject && !WorldSwitch.isFantasyWorldActive);
 
-        if (isFantasyObject)
-        {
-            if (isFantasyActive)
-                shouldBeVisible = true;
-            else
-                shouldBeVisible = false;
-        }
-        else
-        {
-            if (!isFantasyActive)
-                shouldBeVisible = true;
-            else
-                shouldBeVisible = false;
-        }
-
-        if (sr != null)
-            sr.enabled = shouldBeVisible;
-
+        sr.enabled = shouldBeVisible;
         if (col != null)
             col.enabled = shouldBeVisible;
     }
