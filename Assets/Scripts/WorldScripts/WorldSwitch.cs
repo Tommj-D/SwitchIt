@@ -1,36 +1,21 @@
-using System; //per action<T>
+using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class WorldSwitch : MonoBehaviour
 {
-    private PlayerControls controls; // riferimento al sistema di input
+    public bool canSwitchWorld = true;
 
-    [SerializeField] private GameObject realWorld;
-    [SerializeField] private GameObject fantasyWorld;
-    
-    [SerializeField] private Camera mainCamera;
-    [SerializeField] private Color realWorldColor = Color.cyan;
-    [SerializeField] private Color fantasyWorldColor = Color.magenta;
+    [Header("Worlds")]
+    public GameObject realWorld;
+    public GameObject fantasyWorld;
+
+    [Header("Camera Settings")]
+    public Camera mainCamera;
+    public Color realWorldColor = Color.cyan;
+    public Color fantasyWorldColor = Color.magenta;
 
     public static bool isFantasyWorldActive = false;
-
-    // EVENTO: notifico agli listener quale mondo è attivo
-    public static event Action<bool> OnWorldChanged;
-
-    private void Awake()
-    {
-        controls = new PlayerControls();
-    }
-
-    private void OnEnable()
-    {
-        controls.Enable();
-    }
-
-    private void OnDisable()
-    {
-        controls.Disable();
-    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -42,37 +27,32 @@ public class WorldSwitch : MonoBehaviour
         // Imposta il colore iniziale della camera
         if (mainCamera != null)
             mainCamera.backgroundColor = realWorldColor;
-
-        // Notifica lo stato iniziale agli eventuali listener
-        OnWorldChanged?.Invoke(isFantasyWorldActive);
     }
 
-    // Update is called once per frame
-    void Update()
+    //cambio mondo
+    public void Switch(InputAction.CallbackContext context)
     {
-        if(controls.Player.SwitchWorld.WasPressedThisFrame())
-        {
-            if(isFantasyWorldActive)
-            {
-                //Passa al mondo reale
-                realWorld.SetActive(true);
-                fantasyWorld.SetActive(false);
-                isFantasyWorldActive = false;
-                if (mainCamera != null)
-                    mainCamera.backgroundColor = realWorldColor;
+        if (!canSwitchWorld)
+            return;
 
-            }
-            else
-            {
-                //Passa al mondo fantasy
-                realWorld.SetActive(false);
-                fantasyWorld.SetActive(true);
-                isFantasyWorldActive = true;
-                if (mainCamera != null)
-                    mainCamera.backgroundColor = fantasyWorldColor;
-            }
-            // INVIO EVENTO: notifico tutti gli oggetti interessati
-            OnWorldChanged?.Invoke(isFantasyWorldActive);
+        if (isFantasyWorldActive)
+        {
+            //Passa al mondo reale
+            realWorld.SetActive(true);
+            fantasyWorld.SetActive(false);
+            isFantasyWorldActive = false;
+            if (mainCamera != null)
+                mainCamera.backgroundColor = realWorldColor;
+
+        }
+        else
+        {
+            //Passa al mondo fantasy
+            realWorld.SetActive(false);
+            fantasyWorld.SetActive(true);
+            isFantasyWorldActive = true;
+            if (mainCamera != null)
+                mainCamera.backgroundColor = fantasyWorldColor;
         }
     }
 }

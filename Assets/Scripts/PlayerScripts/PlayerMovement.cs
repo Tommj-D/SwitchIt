@@ -15,7 +15,6 @@ public class PlayerMovement : MonoBehaviour
     public ParticleSystem jumpFX; // riferimento all'effetto particellare di salto
 
     private float nextBlinkTime;
-    private float moveInput; // input di movimento orizzontale va da -1 a 1
 
     [Header("Movement")]
     public float moveSpeed = 10f; //velocita di movimento orizzontale
