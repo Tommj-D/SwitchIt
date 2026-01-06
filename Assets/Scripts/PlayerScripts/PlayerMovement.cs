@@ -36,6 +36,7 @@ public class PlayerMovement : MonoBehaviour
     public float baseGravity = 2f;
     public float maxFallSpeed = 18f;
     public float fallSpeedMultiplier = 2f;
+    private int gravityDirection = 1; // 1 per normale, -1 per invertita
 
     void Start()
     {
@@ -65,14 +66,14 @@ public class PlayerMovement : MonoBehaviour
 
     private void Gravity()
     {
-        if (rb.linearVelocity.y < 0)
+        if (rb.linearVelocity.y * gravityDirection < 0)
         {
-            rb.gravityScale = baseGravity * fallSpeedMultiplier; // Aumenta la gravita' durante la caduta
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, Mathf.Max(rb.linearVelocity.y, -maxFallSpeed)); // Limita la velocita' di caduta
+            rb.gravityScale = baseGravity * fallSpeedMultiplier * gravityDirection; // Aumenta la gravita' durante la caduta
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, Mathf.Clamp(rb.linearVelocity.y, -maxFallSpeed, maxFallSpeed)); // Limita la velocita' di caduta
         }
         else
         {
-            rb.gravityScale = baseGravity; // Gravita' normale
+            rb.gravityScale = baseGravity * gravityDirection; // Gravita' normale
         }
     }
 
@@ -108,7 +109,7 @@ public class PlayerMovement : MonoBehaviour
                         animator.SetTrigger("DoubleJump");
                         jumpFX.Play();
                     }
-                    rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpPower);
+                    rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpPower*gravityDirection);
                     jumpsRemaining--;
                 }
                 else if (context.canceled)
@@ -137,6 +138,11 @@ public class PlayerMovement : MonoBehaviour
         isGrounded = groundedNow;
     }
 
+    public void ResetJumps()
+    {
+        jumpsRemaining = maxJumps;
+    }
+
     private void Flip(float direction)
     {
         if (direction > 0)
@@ -158,12 +164,16 @@ public class PlayerMovement : MonoBehaviour
                 spriteMaskController.FaceLeft();
         }
     }
-
-    public void ResetJumps()
+    public void InvertGravity(InputAction.CallbackContext context)
     {
-        jumpsRemaining = maxJumps;
+        if(WorldSwitch.isFantasyWorldActive) 
+        {
+            gravityDirection *= -1;
+            transform.Rotate(180f, 0f, 0f);
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0); // reset per stabilità
+        }
+        
     }
-
 
     /*[SerializeField] private Transform groundCheckLeft; // riferimento al GameObject
     [SerializeField] private Transform groundCheckRight; // riferimento al GameObject
