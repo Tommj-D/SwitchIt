@@ -38,6 +38,11 @@ public class PlayerMovement : MonoBehaviour
     public float fallSpeedMultiplier = 2f;
     private int gravityDirection = 1; // 1 per normale, -1 per invertita
 
+    [Header("Gravity Flip")]
+    public float flipDuration = 0.25f;
+    private bool isFlipping = false;
+
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -164,174 +169,39 @@ public class PlayerMovement : MonoBehaviour
                 spriteMaskController.FaceLeft();
         }
     }
+
+    //----------- GRAVITY INVERSION -------//   
     public void InvertGravity(InputAction.CallbackContext context)
     {
-        if(WorldSwitch.isFantasyWorldActive) 
+        if(WorldSwitch.isFantasyWorldActive && !isFlipping) 
         {
             gravityDirection *= -1;
-            transform.Rotate(180f, 0f, 0f);
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0); // reset per stabilità
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0);
+            StartCoroutine(SmoothFlip());
         }
-        
     }
 
-    /*[SerializeField] private Transform groundCheckLeft; // riferimento al GameObject
-    [SerializeField] private Transform groundCheckRight; // riferimento al GameObject
-    [SerializeField] private Transform groundCheckCenter; // riferimento al GameObject
-
-    [SerializeField] private float checkRadius = 0.15f; // raggio del cerchio per verificare collisione
-    [SerializeField] private LayerMask groundLayer; // layer dei terreni
-    private bool isGrounded; // indica se il giocatore � a terra
-    private bool canDoubleJump = false; // indica se il giocatore pu� fare un doppio salto
-
-    private bool isGravityInverted = false; // indica se la gravit� � invertita
-    [SerializeField] private float gravityCooldown = 0.5f; // mezzo secondo di attesa
-    private float lastGravitySwitchTime = -10f; //inizializza cos� da permettere il primo switch subito
-
-    private float baseGravityScale; // per salvare la gravit� originale
-
-
-    //Per animazione di blink
-    [SerializeField] private float minBlinkTime = 3f;
-    [SerializeField] private float maxBlinkTime = 6f;
-    private float nextBlinkTime;
-
-    // Awake is called when the script instance is being loaded
-    private void Awake()
+    IEnumerator SmoothFlip()
     {
-        controls = new PlayerControls();
-    }
+        isFlipping = true;
 
+        Quaternion startRot = transform.rotation;
+        Quaternion targetRot = startRot * Quaternion.Euler(180f, 0f, 0f);
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        rb = GetComponent<Rigidbody2D>();
-        anim = GetComponent<Animator>(); // Ottieni il componente Animator
-        sr = GetComponent<SpriteRenderer>(); // Ottieni il componente SpriteRenderer
-        baseGravityScale = rb.gravityScale;
+        float elapsed = 0f;
 
-        //Per animazione blink
-        ScheduleNextBlink();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
- 
-        isGrounded = Physics2D.OverlapCircle(groundCheckLeft.position, checkRadius, groundLayer) ||
-        Physics2D.OverlapCircle(groundCheckRight.position, checkRadius, groundLayer) ||
-        Physics2D.OverlapCircle(groundCheckCenter.position, checkRadius, groundLayer);
-        
-        // Movimento orizzontale ///
-        Vector2 move = controls.Player.Move.ReadValue<Vector2>();
-        moveInput = move.x;
-
-        if (moveInput > 0.01f)
+        while (elapsed < flipDuration)
         {
-            sr.flipX = false;
-        }
-        else if (moveInput < -0.01f)
-        {
-            sr.flipX = true;
-        }
-        //Aggiorna animazioni movimento orizziontale
-        float horizontalSpeed = Mathf.Abs(rb.linearVelocity.x);
-        // Imposta velocit� orizzontale 
-        anim.SetFloat("Speed", horizontalSpeed);
-
-        /// Salto ///
-        if (controls.Player.Jump.WasPressedThisFrame())
-        {
-            if (isGrounded)
-            {
-                if (!isGravityInverted)
-                    rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
-                else
-                    rb.linearVelocity = new Vector2(rb.linearVelocity.x, -jumpForce);
-
-                anim.SetBool("isJumping", true); // Aggiorna animazione salto
-
-                canDoubleJump = true; // Abilita il doppio salto
-            }
-            else if (canDoubleJump)
-            {
-                if (!isGravityInverted)
-                    rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
-                else
-                    rb.linearVelocity = new Vector2(rb.linearVelocity.x, -jumpForce);
-
-                canDoubleJump = false; // Consuma il doppio salto
-                anim.SetTrigger("DoubleJump"); // Attiva animazione doppio salto
-            }
+            elapsed += Time.deltaTime;
+            float t = elapsed / flipDuration;
+            transform.rotation = Quaternion.Slerp(startRot, targetRot, t);
+            yield return null;
         }
 
-        anim.SetBool("isJumping", !isGrounded);
-
-        /// Cambio gravit� ///
-        if (controls.Player.InvertGravity.WasPressedThisFrame()&&WorldSwitch.isFantasyWorldActive)
-        {
-            if (Time.time - lastGravitySwitchTime >= gravityCooldown)
-            {
-                isGravityInverted = !isGravityInverted;
-                rb.gravityScale *= -1f;
-                lastGravitySwitchTime = Time.time;
-            }
-        }
-
-
-        /// Gestione animazione Blink ///
-        // Controlla se il personaggio � fermo
-        bool isIdle = horizontalSpeed < 0.01f && isGrounded; // fermo e a terra
-        if (isIdle && Time.time >= nextBlinkTime)
-        {
-            anim.SetTrigger("Blink");
-            ScheduleNextBlink();
-        }
+        transform.rotation = targetRot;
+        isFlipping = false;
     }
-
-    // FixedUpdate is called at fixed intervals and is used for physics updates
-    private void FixedUpdate()
-    {
-        //Applica velocit� orizzontale mantenendo la velocit� verticale
-        rb.linearVelocity = new Vector2(moveInput * moveSpeed, rb.linearVelocity.y);
-    }
-
-    // Imposta il prossimo Blink casuale
-    private void ScheduleNextBlink()
-    {
-        nextBlinkTime = Time.time + Random.Range(minBlinkTime, maxBlinkTime);
-    }
-
-    // Called when the object becomes enabled and active
-    private void OnEnable()
-    {
-        if (controls != null)
-            controls.Enable(); // Enable input actions
-
-        //Mi iscrivo all�evento del cambio mondo
-        WorldSwitch.OnWorldChanged += HandleWorldChange;
-    }
-
-    // Called when the object becomes disabled or inactive
-    private void OnDisable()
-    {
-        if (controls != null)
-            controls.Disable(); // Disable input actions
-
-        //Mi disiscrivo per sicurezza
-        WorldSwitch.OnWorldChanged -= HandleWorldChange;
-    }
-
-    private void HandleWorldChange(bool isFantasyActive)
-    {
-        if (!isFantasyActive && isGravityInverted)
-        {
-            isGravityInverted = false;
-            rb.gravityScale = baseGravityScale;
-        }
-    }
-    */
+    //-------------------------------------//
 
     private void OnDrawGizmosSelected()
     {
