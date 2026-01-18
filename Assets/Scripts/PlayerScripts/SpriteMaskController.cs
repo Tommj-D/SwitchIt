@@ -10,6 +10,7 @@ public class SpriteMaskController : MonoBehaviour
     private Vector3 startLocalPos;
     private Vector3 targetLocalPos;
 
+
     private void Start()
     {
         if (spriteMask != null)
