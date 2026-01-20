@@ -19,6 +19,7 @@ public class PlayerMovement : MonoBehaviour
     [Header("Movement")]
     public float moveSpeed = 10f; //velocita di movimento orizzontale
     private float horizontalMovement;
+    public static bool isFacingRight = true;
 
     [Header("Jumping")]
     public float jumpPower = 5f;
@@ -155,18 +156,14 @@ public class PlayerMovement : MonoBehaviour
             sr.flipX = false;
             grassFX.transform.localScale = new Vector3(1, 1, 1);
             jumpFX.transform.GetChild(0).localPosition = new Vector3(-0.2f, 0, 0);
-
-            if (spriteMaskController != null)
-                spriteMaskController.FaceRight();
+            isFacingRight= true;
         }
         else if (direction < 0)
         {
             sr.flipX = true;
             grassFX.transform.localScale = new Vector3(-1, 1, 1);
             jumpFX.transform.GetChild(0).localPosition = new Vector3(0.2f, 0, 0);
-
-            if (spriteMaskController != null)
-                spriteMaskController.FaceLeft();
+            isFacingRight= false;
         }
     }
 

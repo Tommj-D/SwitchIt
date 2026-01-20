@@ -4879,7 +4879,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1782203138637990255}
   - component: {fileID: 8044241290227095567}
-  - component: {fileID: 772429324196874665}
+  - component: {fileID: 270471810756050860}
   m_Layer: 0
   m_Name: SpriteTrigger
   m_TagString: Untagged
@@ -4938,7 +4938,7 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0.0061431527, y: 0.018678665}
   m_Radius: 0.8223171
---- !u!114 &772429324196874665
+--- !u!114 &270471810756050860
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -14904,6 +14904,7 @@ MonoBehaviour:
   baseGravity: 1.5
   maxFallSpeed: 18
   fallSpeedMultiplier: 2
+  flipDuration: 0.25
 --- !u!50 &1716597626252583210
 Rigidbody2D:
   serializedVersion: 5
