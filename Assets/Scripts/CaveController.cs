@@ -12,6 +12,8 @@ public class CaveController : MonoBehaviour
 
     [Header("Sprite Mask Offset")]
     public Vector3 maskOffset;
+    private Vector3 currentMaskOffset;
+
 
     [Header("Flip Settings")]
     public float maskFlipSpeed = 5f;
@@ -33,34 +35,45 @@ public class CaveController : MonoBehaviour
 
         targetMaskScale = originalMaskScale;
         targetMaskPosition = originalMaskPosition;
+
+        currentMaskOffset = maskOffset;
+
     }
 
 
     private void Update()
+{
+    if (spriteMask != null)
     {
-        if (spriteMask != null)
-        {
-            // Aggiorna la posizione target in base alla direzione del player
-            Vector3 flippedOffset = PlayerMovement.isFacingRight
-                ? maskOffset
-                : new Vector3(-maskOffset.x, maskOffset.y, maskOffset.z);
+        // Aggiorna la posizione target in base alla direzione del player
+        Vector3 desiredOffset = PlayerMovement.isFacingRight
+            ? maskOffset
+            : new Vector3(-maskOffset.x, maskOffset.y, maskOffset.z);
 
-            targetMaskPosition = originalMaskPosition + flippedOffset;
+        // Smooth transition dell’offset
+        currentMaskOffset = Vector3.Lerp(
+            currentMaskOffset,
+            desiredOffset,
+            maskFlipSpeed * Time.deltaTime
+        );
 
-            // Lerp verso la posizione e scala target
-            spriteMask.transform.localPosition = Vector3.Lerp(
-                spriteMask.transform.localPosition,
-                targetMaskPosition,
-                maskLerpSpeed * Time.deltaTime
-            );
+        // Target position finale
+        targetMaskPosition = originalMaskPosition + currentMaskOffset;
 
-            spriteMask.transform.localScale = Vector3.Lerp(
-                spriteMask.transform.localScale,
-                targetMaskScale,
-                maskLerpSpeed * Time.deltaTime
-            );
-        }
+        // Aggiorna la posizione e scala effettiva della sprite mask
+        spriteMask.transform.localPosition = Vector3.Lerp(
+            spriteMask.transform.localPosition,
+            targetMaskPosition,
+            maskLerpSpeed * Time.deltaTime
+        );
+
+        spriteMask.transform.localScale = Vector3.Lerp(
+            spriteMask.transform.localScale,
+            targetMaskScale,
+            maskLerpSpeed * Time.deltaTime
+        );
     }
+}
 
     private void OnTriggerEnter2D(Collider2D other)
     {
