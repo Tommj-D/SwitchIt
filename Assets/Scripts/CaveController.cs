@@ -6,14 +6,11 @@ public class CaveController : MonoBehaviour
     public SpriteMask spriteMask;
 
     [Header("Sprite Mask Settings")]
-    //public bool modifySpriteMask = false;
-    public float spriteMaskDimension = 1.5f;
-    public float maskLerpSpeed = 5f;
+    public Vector3 spriteMaskTargetScale;
 
     [Header("Sprite Mask Offset")]
     public Vector3 maskOffset;
     private Vector3 currentMaskOffset;
-
 
     [Header("Flip Settings")]
     public float maskFlipSpeed = 5f;
@@ -42,38 +39,25 @@ public class CaveController : MonoBehaviour
 
 
     private void Update()
-{
-    if (spriteMask != null)
     {
-        // Aggiorna la posizione target in base alla direzione del player
-        Vector3 desiredOffset = PlayerMovement.isFacingRight
-            ? maskOffset
-            : new Vector3(-maskOffset.x, maskOffset.y, maskOffset.z);
+        if (spriteMask != null)
+        {
+            // Calcola offset in base alla direzione del player
+            Vector3 desiredOffset = PlayerMovement.isFacingRight
+                ? maskOffset
+                : new Vector3(-maskOffset.x, maskOffset.y, maskOffset.z);
 
-        // Smooth transition dell’offset
-        currentMaskOffset = Vector3.Lerp(
-            currentMaskOffset,
-            desiredOffset,
-            maskFlipSpeed * Time.deltaTime
-        );
+            // Smooth per il flip della posizione
+            currentMaskOffset = Vector3.Lerp(
+                currentMaskOffset,
+                desiredOffset,
+                maskFlipSpeed * Time.deltaTime
+            );
 
-        // Target position finale
-        targetMaskPosition = originalMaskPosition + currentMaskOffset;
-
-        // Aggiorna la posizione e scala effettiva della sprite mask
-        spriteMask.transform.localPosition = Vector3.Lerp(
-            spriteMask.transform.localPosition,
-            targetMaskPosition,
-            maskLerpSpeed * Time.deltaTime
-        );
-
-        spriteMask.transform.localScale = Vector3.Lerp(
-            spriteMask.transform.localScale,
-            targetMaskScale,
-            maskLerpSpeed * Time.deltaTime
-        );
+            targetMaskPosition = originalMaskPosition + currentMaskOffset;
+            spriteMask.transform.localPosition = targetMaskPosition;
+        }
     }
-}
 
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -81,12 +65,15 @@ public class CaveController : MonoBehaviour
 
         CaveLightManager.Instance.EnterCave();
 
-        if (/*modifySpriteMask && */spriteMask != null)
+        if (spriteMask != null)
         {
-            targetMaskScale = originalMaskScale * spriteMaskDimension;
+            targetMaskScale = spriteMaskTargetScale;
             targetMaskPosition = originalMaskPosition + maskOffset;
+
+            spriteMask.transform.localScale = targetMaskScale;
         }
-    }
+    }   
+
 
     private void OnTriggerExit2D(Collider2D other)
     {
@@ -94,10 +81,14 @@ public class CaveController : MonoBehaviour
 
         CaveLightManager.Instance.ExitCave();
 
-        if (/*modifySpriteMask && */spriteMask != null)
+        if (spriteMask != null)
         {
+            // Torna alla scala originale
             targetMaskScale = originalMaskScale;
             targetMaskPosition = originalMaskPosition;
+
+            spriteMask.transform.localScale = targetMaskScale;
         }
     }
+
 }
