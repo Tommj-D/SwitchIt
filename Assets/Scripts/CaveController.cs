@@ -4,12 +4,11 @@ using UnityEngine.Rendering.Universal;
 public class CaveController : MonoBehaviour
 {
     public SpriteMask spriteMask;
+    private bool isPlayerInsideCave = false;
 
     [Header("Sprite Mask Settings")]
-    public Vector3 spriteMaskTargetScale;
-
-    [Header("Sprite Mask Offset")]
-    public Vector3 maskOffset;
+    public Vector3 spriteMaskDimension;
+    public Vector3 spriteMaskPosition;
     private Vector3 currentMaskOffset;
 
     [Header("Flip Settings")]
@@ -33,42 +32,45 @@ public class CaveController : MonoBehaviour
         targetMaskScale = originalMaskScale;
         targetMaskPosition = originalMaskPosition;
 
-        currentMaskOffset = maskOffset;
+        currentMaskOffset = spriteMaskPosition;
 
     }
 
 
     private void Update()
     {
-        if (spriteMask != null)
-        {
-            // Calcola offset in base alla direzione del player
-            Vector3 desiredOffset = PlayerMovement.isFacingRight
-                ? maskOffset
-                : new Vector3(-maskOffset.x, maskOffset.y, maskOffset.z);
+        if (spriteMask == null || !isPlayerInsideCave)
+            return;
 
-            // Smooth per il flip della posizione
-            currentMaskOffset = Vector3.Lerp(
-                currentMaskOffset,
-                desiredOffset,
-                maskFlipSpeed * Time.deltaTime
-            );
+        // Calcola offset in base alla direzione del player
+        Vector3 desiredOffset = PlayerMovement.isFacingRight
+            ? spriteMaskPosition
+            : new Vector3(-spriteMaskPosition.x, spriteMaskPosition.y, spriteMaskPosition.z);
 
-            targetMaskPosition = originalMaskPosition + currentMaskOffset;
-            spriteMask.transform.localPosition = targetMaskPosition;
-        }
+        // Smooth per il flip della posizione
+        currentMaskOffset = Vector3.Lerp(
+            currentMaskOffset,
+            desiredOffset,
+            maskFlipSpeed * Time.deltaTime
+        );
+
+        targetMaskPosition = originalMaskPosition + currentMaskOffset;
+        spriteMask.transform.localPosition = targetMaskPosition;
+
+
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (!other.CompareTag("Player")) return;
 
+        isPlayerInsideCave = true;
         CaveLightManager.Instance.EnterCave();
 
         if (spriteMask != null)
         {
-            targetMaskScale = spriteMaskTargetScale;
-            targetMaskPosition = originalMaskPosition + maskOffset;
+            targetMaskScale = spriteMaskDimension;
+            targetMaskPosition = originalMaskPosition + spriteMaskPosition;
 
             spriteMask.transform.localScale = targetMaskScale;
         }
@@ -79,6 +81,7 @@ public class CaveController : MonoBehaviour
     {
         if (!other.CompareTag("Player")) return;
 
+        isPlayerInsideCave = false;
         CaveLightManager.Instance.ExitCave();
 
         if (spriteMask != null)
