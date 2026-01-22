@@ -11,7 +11,11 @@ public class CaveController : MonoBehaviour
     public Vector3 spriteMaskPosition;
     private Vector3 currentMaskOffset;
 
-    [Header("Flip Settings")]
+    [Header("Scale Settings")]
+    public float maskScaleSpeed = 5f;
+
+    [Header("Position Settings")]
+    public float maskPositionSpeed = 5f;
     public float maskFlipSpeed = 5f;
 
     private Vector3 originalMaskScale;
@@ -54,10 +58,20 @@ public class CaveController : MonoBehaviour
             maskFlipSpeed * Time.deltaTime
         );
 
+        // Smooth della scala
+        spriteMask.transform.localScale = Vector3.Lerp(
+            spriteMask.transform.localScale,
+            targetMaskScale,
+            maskScaleSpeed * Time.deltaTime
+        );
+
         targetMaskPosition = originalMaskPosition + currentMaskOffset;
-        spriteMask.transform.localPosition = targetMaskPosition;
 
-
+        spriteMask.transform.localPosition = Vector3.Lerp(
+            spriteMask.transform.localPosition,
+            targetMaskPosition,
+            maskPositionSpeed * Time.deltaTime
+        );
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -71,8 +85,6 @@ public class CaveController : MonoBehaviour
         {
             targetMaskScale = spriteMaskDimension;
             targetMaskPosition = originalMaskPosition + spriteMaskPosition;
-
-            spriteMask.transform.localScale = targetMaskScale;
         }
     }   
 
@@ -91,6 +103,7 @@ public class CaveController : MonoBehaviour
             targetMaskPosition = originalMaskPosition;
 
             spriteMask.transform.localScale = targetMaskScale;
+            spriteMask.transform.localPosition = targetMaskPosition;
         }
     }
 
