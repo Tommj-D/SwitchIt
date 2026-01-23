@@ -21,8 +21,8 @@ TagManager:
   - RealWorld
   - FantasyWorld
   - Player
-  - 
-  - 
+  - PlayerDeath
+  - Enemy
   - 
   - 
   - 

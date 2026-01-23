@@ -10,6 +10,8 @@ public class PlayerRespawn : MonoBehaviour
     public SceneController sceneController;
 
     public Vector3 respawnPoint;
+    [Header("Respawn Timing")]
+    public float blackScreenHoldTime = 0.2f;
     public float respawnDelay = 1.5f;
     
     public GameObject deathParticle;
@@ -50,7 +52,8 @@ public class PlayerRespawn : MonoBehaviour
 
 
     private IEnumerator DeathSequence()
-    { 
+    {
+        if (isDying) yield break;  
         isDying = true;
 
         playerInput.enabled = false;
@@ -94,46 +97,55 @@ public class PlayerRespawn : MonoBehaviour
         yield return new WaitForSeconds(respawnDelay);
 
         //FADE OUT (schermo si scurisce) 
-        if (screenFade != null)
-        {
-            yield return screenFade.FadeOutCoroutine(sceneController.fadeDuration);
-        }
 
-
-        // Respawn
-        transform.position = respawnPoint;
+        yield return screenFade.FadeOutCoroutine(sceneController.fadeDuration);
 
         // prima del respawn, resetta oggetti
         if (RespawnManager.Instance != null)
             RespawnManager.Instance.ResetAll();
 
+        // Respawn
+        transform.position = respawnPoint;
+        
         if (riggedBody != null) riggedBody.SetActive(false);
+
         if (fullSprite != null)
         {
             var sr = fullSprite.GetComponent<SpriteRenderer>();
             if (sr != null) sr.enabled = true;
         }
 
+        yield return new WaitForSeconds(blackScreenHoldTime);
+
         if (animator != null)
-             animator.SetTrigger("Respawn");
+            animator.SetTrigger("Respawn");
 
         if (movement != null) movement.enabled = true;
         if (col != null) col.enabled = true;
 
 
-        //FADE IN (torna visibile
-        if (screenFade != null)
-        {
-            yield return screenFade.FadeInCoroutine(sceneController.fadeDuration);
-        }
+        yield return null;
+
+        //FADE IN (torna visibile)
+        Coroutine fadeIn = StartCoroutine(
+    screenFade.FadeInCoroutine(sceneController.fadeDuration)
+);
+
+        //In modo che i comadi si attivino quando il gioco torna visibile
+        yield return new WaitForSeconds(sceneController.fadeDuration * 0.2f);
+
+
         playerInput.enabled = true;
         isDying = false;
+
+        yield return fadeIn;
     }
 
     public bool IsDying() { return isDying; }
      
     public void Die()
     {
+        if (isDying) return;
         StartCoroutine(DeathSequence());
     }
 }  

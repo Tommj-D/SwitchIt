@@ -5,6 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class SceneController : MonoBehaviour
 {
+    public static SceneController Instance;
+
     public float fadeDuration = 1f;
 
     private ScreenFade sceneFade;
@@ -12,12 +14,24 @@ public class SceneController : MonoBehaviour
 
     private void Awake()
     {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         sceneFade = GetComponentInChildren<ScreenFade>();
     }
 
 
     private IEnumerator Start()
     {
+        sceneFade.gameObject.SetActive(true);
         yield return sceneFade.FadeInCoroutine(fadeDuration);
     }
 
