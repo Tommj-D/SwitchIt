@@ -54,10 +54,6 @@ public class SwitchLevel : MonoBehaviour
                 player.transform.position,
                 Quaternion.identity
             );
-
-            TeleportPullFX pullFX = fx.GetComponent<TeleportPullFX>();
-            if (pullFX)
-                pullFX.target = magicStonePoint;
         }
 
         // Assorbimento verso la pietra magica
