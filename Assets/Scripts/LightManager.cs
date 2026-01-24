@@ -13,6 +13,8 @@ public class LightManager : MonoBehaviour
     private int caveCounter = 0;
     private float targetIntensity;
 
+    private bool lockLight = false;
+
     void Awake()
     {
         if (Instance == null) Instance = this;
@@ -26,10 +28,12 @@ public class LightManager : MonoBehaviour
 
     void Update()
     {
-        globalLight.intensity = Mathf.MoveTowards(
-            globalLight.intensity,
-            targetIntensity,
-            lerpSpeed * Time.deltaTime
+        if (lockLight) return;
+
+        globalLight.intensity = Mathf.Lerp(
+        globalLight.intensity,
+        targetIntensity,
+        lerpSpeed * Time.deltaTime
         );
     }
 
@@ -49,5 +53,23 @@ public class LightManager : MonoBehaviour
             targetIntensity = outsideIntensity;
         }
     }
+
+    public void LockLight(float intensity)
+    {
+        lockLight = true;
+        globalLight.intensity = intensity;
+    }
+
+    public void UnlockLight()
+    {
+        lockLight = false;
+    }
+
+    public void ForceIntensity(float intensity)
+    {
+        globalLight.intensity = intensity;
+        targetIntensity = intensity;
+    }
+
     public float CurrentIntensity => globalLight.intensity;
 }

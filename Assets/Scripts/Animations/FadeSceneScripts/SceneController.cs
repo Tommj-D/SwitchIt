@@ -40,28 +40,62 @@ public class SceneController : MonoBehaviour
     {
         StartCoroutine(LoadSceneCoroutine(sceneName));
     }
-
-
     private IEnumerator LoadSceneCoroutine(string sceneName)
     {
-        if (LightManager.Instance != null)
-        {
-            sceneFade.gameObject.SetActive(true);
-            sceneFade.SetAlphaFromLight(
-                LightManager.Instance.CurrentIntensity
-            );
-        }
-        // Fade Out
-        yield return sceneFade.FadeOutCoroutine(fadeDuration);
+        float startLight = LightManager.Instance.CurrentIntensity;
 
-        // Carica scena
+        // Fade out
+        yield return FadeOutWithLight(fadeDuration);
+
+        // Load scena
         yield return SceneManager.LoadSceneAsync(sceneName);
-
-        // Aspetta un frame
         yield return null;
 
+        float targetLight = LightManager.Instance.outsideIntensity;
+
         // Fade in
+        yield return FadeInWithLight(fadeDuration, targetLight);
+    }
+
+    private IEnumerator FadeOutWithLight(float duration)
+    {
+        float startLight = LightManager.Instance.CurrentIntensity;
+        float t = 0f;
+
         sceneFade.gameObject.SetActive(true);
-        yield return sceneFade.FadeInCoroutine(fadeDuration);
+
+        while (t < 1f)
+        {
+            t += Time.deltaTime / duration;
+            float eased = Mathf.SmoothStep(0f, 1f, t);
+
+            float lightValue = Mathf.Lerp(startLight, 0f, eased);
+            LightManager.Instance.ForceIntensity(lightValue);
+            sceneFade.SetAlphaFromLight(lightValue);
+
+            yield return null;
+        }
+    }
+
+
+    private IEnumerator FadeInWithLight(float duration, float targetLight)
+    {
+        float t = 0f;
+
+        sceneFade.gameObject.SetActive(true);
+
+        while (t < 1f)
+        {
+            t += Time.deltaTime / duration;
+            float eased = Mathf.SmoothStep(0f, 1f, t);
+
+            float lightValue = Mathf.Lerp(0f, targetLight, eased);
+            LightManager.Instance.ForceIntensity(lightValue);
+            sceneFade.SetAlphaFromLight(lightValue);
+
+            yield return null;
+        }
+
+        sceneFade.gameObject.SetActive(false);
     }
 }

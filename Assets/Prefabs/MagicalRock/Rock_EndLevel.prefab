@@ -141,10 +141,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SwitchLevel
   nextSceneName: Level_2
-  teleportDelay: 0.1
   absorbDuration: 1.2
   teleportEffect: {fileID: 0}
-  magicStonePoint: {fileID: 0}
+  magicStonePoint: {fileID: 6165062635176916578}
+  vcam: {fileID: 0}
 --- !u!50 &6514443634441177400
 Rigidbody2D:
   serializedVersion: 5
@@ -448,7 +448,7 @@ MonoBehaviour:
   glowStrength: 2
   particlesStrength: 2
   runeColor: {r: 0.2941177, g: 0, b: 0.509804, a: 1}
-  particlesColor: {r: 0.6, g: 0.1960784, b: 0.8000001, a: 1}
+  particlesColor: {r: 0.5411765, g: 0.1686275, b: 0.8862746, a: 1}
   runeColor_Then: {r: 0, g: 0, b: 0, a: 0}
   particlesColor_Then: {r: 0, g: 0, b: 0, a: 0}
   rockLightColor: {r: 0, g: 0, b: 0, a: 0}
