@@ -5,19 +5,19 @@ using System.Collections;
 public class ScreenFade : MonoBehaviour
 {
     private Image fadeImage;
-    SceneController sceneController;
 
     private void Awake() 
     {
         fadeImage = GetComponent<Image>();
-        sceneController = GetComponentInParent<SceneController>();
     }
 
 
     public IEnumerator FadeInCoroutine(float duration)
     {
+        float targetAlpha = 1f - Mathf.Clamp01(LightManager.Instance.CurrentIntensity);
+
         Color startColor = new Color(fadeImage.color.r, fadeImage.color.g, fadeImage.color.b, 1);
-        Color targetColor = new Color(fadeImage.color.r, fadeImage.color.g, fadeImage.color.b, 0);
+        Color targetColor = new Color(fadeImage.color.r, fadeImage.color.g, fadeImage.color.b, targetAlpha);
 
         yield return FadeCoroutine(startColor, targetColor, duration);
 
@@ -27,7 +27,9 @@ public class ScreenFade : MonoBehaviour
 
     public IEnumerator FadeOutCoroutine(float duration)
     {
-        Color startColor = new Color(fadeImage.color.r, fadeImage.color.g, fadeImage.color.b, 0);
+        float currentAlpha = fadeImage.color.a;
+
+        Color startColor = new Color(fadeImage.color.r, fadeImage.color.g, fadeImage.color.b, currentAlpha);
         Color targetColor = new Color(fadeImage.color.r, fadeImage.color.g, fadeImage.color.b, 1);
         gameObject.SetActive(true);
 
@@ -39,17 +41,26 @@ public class ScreenFade : MonoBehaviour
     private IEnumerator FadeCoroutine(Color startColor, Color targetColor, float duration)
     {
         float elapsedTime = 0;
-        float elapsedPercentage = 0;
 
-        while(elapsedPercentage < 1)
+        while (elapsedTime < duration)
         {
-            elapsedPercentage = elapsedTime / duration;
-            fadeImage.color = Color.Lerp(startColor, targetColor, elapsedPercentage);
-
-            yield return null;
-
+            float t = elapsedTime / duration;
+            fadeImage.color = Color.Lerp(startColor, targetColor, t);
             elapsedTime += Time.deltaTime;
+            yield return null;
         }
+
+        fadeImage.color = targetColor; 
     }
+
+    public void SetAlphaFromLight(float lightIntensity)
+    {
+        float alpha = 1f - Mathf.Clamp01(lightIntensity);
+
+        Color c = fadeImage.color;
+        c.a = alpha;
+        fadeImage.color = c;
+    }
+
 }
 

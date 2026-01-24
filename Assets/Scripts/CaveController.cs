@@ -79,7 +79,7 @@ public class CaveController : MonoBehaviour
         if (!other.CompareTag("Player")) return;
 
         isPlayerInsideCave = true;
-        CaveLightManager.Instance.EnterCave();
+        LightManager.Instance.EnterCave();
 
         if (spriteMask != null)
         {
@@ -94,7 +94,7 @@ public class CaveController : MonoBehaviour
         if (!other.CompareTag("Player")) return;
 
         isPlayerInsideCave = false;
-        CaveLightManager.Instance.ExitCave();
+        LightManager.Instance.ExitCave();
 
         if (spriteMask != null)
         {

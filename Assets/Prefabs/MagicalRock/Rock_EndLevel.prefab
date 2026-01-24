@@ -140,6 +140,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3dd2a78fb21319c47892eaf9f237057e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SwitchLevel
+  nextSceneName: Level_2
+  teleportDelay: 0.1
+  absorbDuration: 1.2
+  teleportEffect: {fileID: 0}
+  magicStonePoint: {fileID: 0}
 --- !u!50 &6514443634441177400
 Rigidbody2D:
   serializedVersion: 5

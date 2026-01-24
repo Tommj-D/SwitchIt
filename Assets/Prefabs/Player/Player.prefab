@@ -15110,7 +15110,8 @@ MonoBehaviour:
   screenFade: {fileID: 0}
   sceneController: {fileID: 0}
   respawnPoint: {x: -6.78, y: -34.67, z: 0}
-  respawnDelay: 1.5
+  blackScreenHoldTime: 0.6
+  respawnDelay: 1.2
   deathParticle: {fileID: 1126785116543351055, guid: 80439d11f5194024793495e2956dbd06, type: 3}
   fullSprite: {fileID: 7890150273709778190}
   riggedBody: {fileID: 6610645402375781762}

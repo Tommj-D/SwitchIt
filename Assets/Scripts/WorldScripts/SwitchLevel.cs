@@ -1,13 +1,21 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.InputSystem;
+using Unity.Cinemachine;
 
-public class LevelEndPortal : MonoBehaviour
+public class SwitchLevel : MonoBehaviour
 {
     public string nextSceneName;
 
-    public float teleportDelay = 0.5f;
+    [Header("Teleport Settings")]
+    public float absorbDuration = 1.2f;
+
+    [Header("Effects")]
     public GameObject teleportEffect;
+    public Transform magicStonePoint;
+
+    public CinemachineCamera vcam;
+    private Transform originalFollow;
 
     private bool activated = false;
 
@@ -31,14 +39,50 @@ public class LevelEndPortal : MonoBehaviour
         if (input != null) input.enabled = false;
         if (rb != null) rb.linearVelocity = Vector2.zero;
 
+        //BLOCCA CAMERA SU PIETRA
+        if (vcam != null)
+        {
+            originalFollow = vcam.Follow;
+            vcam.Follow = magicStonePoint;
+        }
+
         // FX magico
         if (teleportEffect != null)
         {
             Instantiate(teleportEffect, player.transform.position, Quaternion.identity);
         }
 
-        yield return new WaitForSeconds(teleportDelay);
+        // Assorbimento verso la pietra magica
+        yield return StartCoroutine(AbsorbPlayer(player));
 
         SceneController.Instance.LoadScene(nextSceneName);
+    }
+
+    private IEnumerator AbsorbPlayer(GameObject player)
+    {
+        SpriteRenderer sr = player.GetComponentInChildren<SpriteRenderer>();
+
+        Vector3 startPos = player.transform.position;
+        Vector3 targetPos = magicStonePoint.position;
+        Vector3 startScale = player.transform.localScale;
+
+        float t = 0;
+
+        while (t < 1)
+        {
+            t += Time.deltaTime / absorbDuration;
+
+            player.transform.position = Vector3.Lerp(startPos, targetPos, t);
+            player.transform.localScale = Vector3.Lerp(startScale, Vector3.zero, t);
+
+            if (sr)
+            {
+                Color c = sr.color;
+                c.a = Mathf.Lerp(1, 0, t);
+                sr.color = c;
+            }
+
+            yield return null;
+        }
     }
 }

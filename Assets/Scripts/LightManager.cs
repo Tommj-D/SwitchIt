@@ -1,9 +1,9 @@
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
-public class CaveLightManager : MonoBehaviour
+public class LightManager : MonoBehaviour
 {
-    public static CaveLightManager Instance;
+    public static LightManager Instance;
 
     public Light2D globalLight;
     public float insideIntensity = 0.2f;
@@ -49,4 +49,5 @@ public class CaveLightManager : MonoBehaviour
             targetIntensity = outsideIntensity;
         }
     }
+    public float CurrentIntensity => globalLight.intensity;
 }
