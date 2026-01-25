@@ -53,10 +53,8 @@ public class ScreenFade : MonoBehaviour
 
     public void SetAlphaFromLight(float lightIntensity)
     {
-        float alpha = 1f - Mathf.Clamp01(lightIntensity);
-
         Color c = fadeImage.color;
-        c.a = alpha;
+        c.a = 1f - Mathf.Clamp01(lightIntensity);
         fadeImage.color = c;
     }
 

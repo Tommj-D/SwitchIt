@@ -15,7 +15,6 @@ public class SwitchLevel : MonoBehaviour
     public Transform magicStonePoint;
 
     public CinemachineCamera vcam;
-    private Transform originalFollow;
 
     private bool activated = false;
 
@@ -42,18 +41,13 @@ public class SwitchLevel : MonoBehaviour
         //BLOCCA CAMERA SU PIETRA
         if (vcam != null)
         {
-            originalFollow = vcam.Follow;
             vcam.Follow = magicStonePoint;
         }
 
         // FX magico
         if (teleportEffect != null)
         {
-            GameObject fx = Instantiate(
-                teleportEffect,
-                player.transform.position,
-                Quaternion.identity
-            );
+            Instantiate(teleportEffect, player.transform.position, Quaternion.identity);
         }
 
         // Assorbimento verso la pietra magica

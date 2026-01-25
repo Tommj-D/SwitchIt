@@ -228,6 +228,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -274,7 +275,7 @@ GameObject:
   - component: {fileID: 989311152660834002}
   - component: {fileID: 6539336459704322987}
   m_Layer: 0
-  m_Name: Canvas_2
+  m_Name: UI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -409,7 +410,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0dc1bc4b64099814e981aa07c4fe6955, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SceneManager
-  fadeDuration: 2
+  fadeDuration: 1.8
 --- !u!1 &6960408282645097214
 GameObject:
   m_ObjectHideFlags: 0
@@ -423,7 +424,7 @@ GameObject:
   - component: {fileID: 2870258225895062084}
   - component: {fileID: 5412971255690093026}
   m_Layer: 0
-  m_Name: Canvas
+  m_Name: SpawnTransition
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -101,9 +101,6 @@ public class CaveController : MonoBehaviour
             // Torna alla scala originale
             targetMaskScale = originalMaskScale;
             targetMaskPosition = originalMaskPosition;
-
-            spriteMask.transform.localScale = targetMaskScale;
-            spriteMask.transform.localPosition = targetMaskPosition;
         }
     }
 
