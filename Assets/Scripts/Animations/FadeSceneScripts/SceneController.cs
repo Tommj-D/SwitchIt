@@ -38,6 +38,10 @@ public class SceneController : MonoBehaviour
 
     public void LoadScene(string sceneName)
     {
+        LightManager.Instance.LockLight(
+        LightManager.Instance.CurrentIntensity
+    );
+
         StartCoroutine(LoadSceneCoroutine(sceneName));
     }
     private IEnumerator LoadSceneCoroutine(string sceneName)
@@ -51,8 +55,11 @@ public class SceneController : MonoBehaviour
         yield return SceneManager.LoadSceneAsync(sceneName);
         yield return null;
 
-        float targetLight = LightManager.Instance.outsideIntensity;
+        startLight = 0f;
+        LightManager.Instance.ForceIntensity(startLight);
+        sceneFade.SetAlphaFromLight(startLight);
 
+        float targetLight = LightManager.Instance.outsideIntensity;
         // Fade in
         yield return FadeInWithLight(fadeDuration, targetLight);
     }
@@ -60,9 +67,11 @@ public class SceneController : MonoBehaviour
     private IEnumerator FadeOutWithLight(float duration)
     {
         float startLight = LightManager.Instance.CurrentIntensity;
+        float startAlpha = sceneFade.GetComponent<UnityEngine.UI.Image>().color.a;
+
         float t = 0f;
 
-        sceneFade.gameObject.SetActive(true);
+        sceneFade.SetAlphaFromLight(startLight); 
 
         while (t < 1f)
         {
@@ -70,8 +79,10 @@ public class SceneController : MonoBehaviour
             float eased = Mathf.SmoothStep(0f, 1f, t);
 
             float lightValue = Mathf.Lerp(startLight, 0f, eased);
+            float alphaValue = Mathf.Lerp(startAlpha, 1f, eased);
+
             LightManager.Instance.ForceIntensity(lightValue);
-            sceneFade.SetAlphaFromLight(lightValue);
+            sceneFade.GetComponent<UnityEngine.UI.Image>().color = new Color(0, 0, 0, alphaValue);
 
             yield return null;
         }
@@ -84,6 +95,9 @@ public class SceneController : MonoBehaviour
 
         sceneFade.gameObject.SetActive(true);
 
+        LightManager.Instance.ForceIntensity(0f);
+        sceneFade.SetAlphaFromLight(0f);
+
         while (t < 1f)
         {
             t += Time.deltaTime / duration;
@@ -95,7 +109,6 @@ public class SceneController : MonoBehaviour
 
             yield return null;
         }
-
-        sceneFade.gameObject.SetActive(false);
+        LightManager.Instance.UnlockLight();
     }
 }

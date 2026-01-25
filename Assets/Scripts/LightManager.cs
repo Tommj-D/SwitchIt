@@ -68,7 +68,6 @@ public class LightManager : MonoBehaviour
     public void ForceIntensity(float intensity)
     {
         globalLight.intensity = intensity;
-        targetIntensity = intensity;
     }
 
     public float CurrentIntensity => globalLight.intensity;

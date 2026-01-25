@@ -20,8 +20,6 @@ public class ScreenFade : MonoBehaviour
         Color targetColor = new Color(fadeImage.color.r, fadeImage.color.g, fadeImage.color.b, targetAlpha);
 
         yield return FadeCoroutine(startColor, targetColor, duration);
-
-        gameObject.SetActive(false);
     }
 
 
