@@ -56,6 +56,12 @@ public class PlayerRespawn : MonoBehaviour
         if (isDying) yield break;  
         isDying = true;
 
+        // --- AGGIUNTA AUDIO MORTE ---
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.PlaySFX(AudioManager.instance.playerDeathSound);
+        }
+
         playerInput.enabled = false;
 
         // Blocca movimento e collisioni
@@ -65,7 +71,7 @@ public class PlayerRespawn : MonoBehaviour
         var movement = GetComponent<PlayerMovement>();
         if (movement != null) movement.enabled = false;
 
-        //Particelle
+        // Particelle
         if (deathParticle != null)
         {
             GameObject particles = Instantiate(deathParticle, transform.position, Quaternion.identity);
@@ -80,7 +86,6 @@ public class PlayerRespawn : MonoBehaviour
 
         if (riggedBody != null)
         {
-            // Mantieni pos/rot/scale del player sul rig per evitare "salti"
             riggedBody.transform.position = transform.position;
             riggedBody.transform.rotation = transform.rotation;
             riggedBody.transform.localScale = transform.localScale;
@@ -93,14 +98,13 @@ public class PlayerRespawn : MonoBehaviour
             animator.SetTrigger("Die");
 
 
-        // Aspetta animazione
+        // Aspetta animazione (qui il giocatore sente l'audio mentre vede l'animazione/particelle)
         yield return new WaitForSeconds(respawnDelay);
 
-        //FADE OUT (schermo si scurisce) 
-
+        // FADE OUT (schermo si scurisce) 
         yield return screenFade.FadeOutCoroutine(sceneController.fadeDuration);
 
-        // prima del respawn, resetta oggetti
+        // Prima del respawn, resetta oggetti
         if (RespawnManager.Instance != null)
             RespawnManager.Instance.ResetAll();
 
@@ -126,12 +130,12 @@ public class PlayerRespawn : MonoBehaviour
 
         yield return null;
 
-        //FADE IN (torna visibile)
+        // FADE IN (torna visibile)
         Coroutine fadeIn = StartCoroutine(
-    screenFade.FadeInCoroutine(sceneController.fadeDuration)
-);
+            screenFade.FadeInCoroutine(sceneController.fadeDuration)
+        );
 
-        //In modo che i comadi si attivino quando il gioco torna visibile
+        // In modo che i comandi si attivino quando il gioco torna visibile
         yield return new WaitForSeconds(sceneController.fadeDuration * 0.2f);
 
 
@@ -148,4 +152,4 @@ public class PlayerRespawn : MonoBehaviour
         if (isDying) return;
         StartCoroutine(DeathSequence());
     }
-}  
+}

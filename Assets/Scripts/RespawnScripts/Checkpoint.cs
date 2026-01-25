@@ -11,6 +11,12 @@ public class Checkpoint : MonoBehaviour
 
         if (!other.CompareTag("Player")) return;
 
+        if (other.CompareTag("Player"))
+        {
+            AudioManager.instance.PlaySFX(AudioManager.instance.checkpointSound);
+            // Altra logica del checkpoint...
+        }
+
         PlayerRespawn playerRespawn = other.GetComponent<PlayerRespawn>();
         if (playerRespawn != null)
         {

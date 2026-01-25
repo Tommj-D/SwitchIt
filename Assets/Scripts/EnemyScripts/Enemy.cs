@@ -4,14 +4,13 @@ public abstract class Enemy : MonoBehaviour
 {
     protected Animator animator;
 
-    public AudioClip dieSound;
     public float patrolSpeed = 3.0f;
     public bool isKillable = true;
 
     protected bool isDead = false;
     protected bool isActive = false;
 
-    protected int direction = 1;           // 1 = destra, -1 = sinistra
+    protected int direction = 1; // 1 = destra, -1 = sinistra
 
     protected virtual void Start()
     {
@@ -24,27 +23,35 @@ public abstract class Enemy : MonoBehaviour
         Move();
     }
 
-    // OGNI nemico deve implementare il suo movimento
+    // Ogni nemico deve implementare il suo movimento (es. in uno script che eredita da questo)
     protected abstract void Move();
 
     protected virtual void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Player")&&!isDead)
+        if (collision.gameObject.CompareTag("Player") && !isDead)
         {
+            // --- SUONO MORTE GIOCATORE ---
+            if (AudioManager.instance != null)
+            {
+                AudioManager.instance.PlaySFX(AudioManager.instance.playerDeathSound);
+            }
+
             var respawn = collision.gameObject.GetComponent<PlayerRespawn>();
             if (respawn != null)
                 respawn.Die();
         }
-       Flip();
+        Flip();
     }
 
-    //Per non far cadere il nemico dai bordi delle piattaforme
     protected virtual void OnTriggerEnter2D(Collider2D collision)
     {
+        // Se il nemico cade in un buco o tocca un'area di morte
         if (collision.gameObject.CompareTag("Death"))
         {
             Death();
         }
+        
+        // Se tocca un muro o un ostacolo, cambia direzione
         if (collision.gameObject.CompareTag("Obstacle"))
         {
             Flip();
@@ -53,53 +60,61 @@ public abstract class Enemy : MonoBehaviour
 
     public virtual void OnStomped(GameObject player)
     {
-        if (!isKillable) return;
+        if (!isKillable || isDead) return;
         
         Death();
 
-        // rimbalzare il player
+        // Fa rimbalzare il giocatore verso l'alto
         var playerRb = player.GetComponent<Rigidbody2D>();
         if (playerRb != null)
             playerRb.linearVelocity = new Vector2(playerRb.linearVelocity.x, 8f);
 
-
+        // Disabilita definitivamente l'oggetto dopo 3 secondi
         Invoke(nameof(DisableEnemy), 3f);
     }
 
     private void Death()
     {
+        if (isDead) return; // Evita di chiamare la morte più volte
         isDead = true;
 
+        // --- SUONO MORTE NEMICO ---
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.PlaySFX(AudioManager.instance.enemyDeathSound);
+        }
+
+        // Disabilita tutti i collider per evitare altre collisioni
         Collider2D[] colliders = GetComponents<Collider2D>();
         foreach (Collider2D col in colliders)
         {
             col.enabled = false;
         }
 
-        animator.SetTrigger("Die");
+        // Avvia l'animazione di morte
+        if (animator != null)
+            animator.SetTrigger("Die");
 
-        if (dieSound)
-            AudioSource.PlayClipAtPoint(dieSound, transform.position);
-
-        // Disabilita fisica
+        // Disabilita la fisica per farlo "scivolare" o restare fermo
         var rb = GetComponent<Rigidbody2D>();
         if (rb)
         {
-            rb.bodyType = RigidbodyType2D.Kinematic;    // Disabilita fisica
+            rb.bodyType = RigidbodyType2D.Kinematic;
+            rb.linearVelocity = Vector2.zero;
         }
     }
+
     private void Flip()
     {
-        direction *= -1; // cambia direzione
+        direction *= -1; 
         Vector3 scale = transform.localScale;
-        scale.x *= -1;   // capovolge lo sprite
+        scale.x *= -1;   
         transform.localScale = scale;
     }
 
-    //In modo da attivare il nemico solo quando entra nella camera
     private void OnBecameVisible()
     {
-        isActive = true; // attiva il nemico quando entra nella camera
+        isActive = true; 
     }
 
     private void DisableEnemy()
