@@ -1,9 +1,9 @@
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
-public class CaveLightManager : MonoBehaviour
+public class LightManager : MonoBehaviour
 {
-    public static CaveLightManager Instance;
+    public static LightManager Instance;
 
     public Light2D globalLight;
     public float insideIntensity = 0.2f;
@@ -12,6 +12,8 @@ public class CaveLightManager : MonoBehaviour
 
     private int caveCounter = 0;
     private float targetIntensity;
+
+    private bool lockLight = false;
 
     void Awake()
     {
@@ -26,10 +28,12 @@ public class CaveLightManager : MonoBehaviour
 
     void Update()
     {
-        globalLight.intensity = Mathf.MoveTowards(
-            globalLight.intensity,
-            targetIntensity,
-            lerpSpeed * Time.deltaTime
+        if (lockLight) return;
+
+        globalLight.intensity = Mathf.Lerp(
+        globalLight.intensity,
+        targetIntensity,
+        lerpSpeed * Time.deltaTime
         );
     }
 
@@ -49,4 +53,22 @@ public class CaveLightManager : MonoBehaviour
             targetIntensity = outsideIntensity;
         }
     }
+
+    public void LockLight(float intensity)
+    {
+        lockLight = true;
+        globalLight.intensity = intensity;
+    }
+
+    public void UnlockLight()
+    {
+        lockLight = false;
+    }
+
+    public void ForceIntensity(float intensity)
+    {
+        globalLight.intensity = intensity;
+    }
+
+    public float CurrentIntensity => globalLight.intensity;
 }

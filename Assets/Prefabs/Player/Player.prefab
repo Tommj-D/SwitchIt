@@ -4879,7 +4879,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1782203138637990255}
   - component: {fileID: 8044241290227095567}
-  - component: {fileID: 772429324196874665}
+  - component: {fileID: 270471810756050860}
   m_Layer: 0
   m_Name: SpriteTrigger
   m_TagString: Untagged
@@ -4938,7 +4938,7 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0.0061431527, y: 0.018678665}
   m_Radius: 0.8223171
---- !u!114 &772429324196874665
+--- !u!114 &270471810756050860
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4951,7 +4951,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpriteMaskController
   spriteMask: {fileID: 566326071614979912}
-  flipSpeed: 5
 --- !u!1 &3179677826175787134
 GameObject:
   m_ObjectHideFlags: 0
@@ -14767,8 +14766,8 @@ Transform:
   m_GameObject: {fileID: 5563932730464692035}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.8, y: 0, z: 0}
-  m_LocalScale: {x: 6.5, y: 6.5, z: 6.5}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 2686655829600352574}
@@ -14904,6 +14903,7 @@ MonoBehaviour:
   baseGravity: 1.5
   maxFallSpeed: 18
   fallSpeedMultiplier: 2
+  flipDuration: 0.25
 --- !u!50 &1716597626252583210
 Rigidbody2D:
   serializedVersion: 5
@@ -15110,7 +15110,8 @@ MonoBehaviour:
   screenFade: {fileID: 0}
   sceneController: {fileID: 0}
   respawnPoint: {x: -6.78, y: -34.67, z: 0}
-  respawnDelay: 1.5
+  blackScreenHoldTime: 0.6
+  respawnDelay: 1.2
   deathParticle: {fileID: 1126785116543351055, guid: 80439d11f5194024793495e2956dbd06, type: 3}
   fullSprite: {fileID: 7890150273709778190}
   riggedBody: {fileID: 6610645402375781762}

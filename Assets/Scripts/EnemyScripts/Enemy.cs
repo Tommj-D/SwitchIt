@@ -102,11 +102,6 @@ public abstract class Enemy : MonoBehaviour
         isActive = true; // attiva il nemico quando entra nella camera
     }
 
-   /*private void OnBecameInvisible()
-    {
-        isActive = false;
-    }*/
-
     private void DisableEnemy()
     {
         gameObject.SetActive(false);

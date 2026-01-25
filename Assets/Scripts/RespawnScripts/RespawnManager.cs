@@ -14,7 +14,7 @@ public class RespawnManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    // API: chiamata dai RespawnableObject in Awake/OnDestroy
+    //chiamata dai RespawnableObject in Awake/OnDestroy
     public static void Register(RespawnableObject r)
     {
         if (!allRespawnables.Contains(r)) allRespawnables.Add(r);
@@ -27,7 +27,6 @@ public class RespawnManager : MonoBehaviour
     // Resetta tutti gli oggetti registrati
     public void ResetAll()
     {
-        // opzionale: puoi decidere ordine (prima oggetti statici, poi dinamici, ecc.)
         for (int i = 0; i < allRespawnables.Count; i++)
         {
             var r = allRespawnables[i];
