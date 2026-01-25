@@ -56,7 +56,7 @@ public class PlayerRespawn : MonoBehaviour
         if (isDying) yield break;  
         isDying = true;
 
-        // --- AGGIUNTA AUDIO MORTE ---
+        //Audio morte
         if (AudioManager.instance != null)
         {
             AudioManager.instance.PlaySFX(AudioManager.instance.playerDeathSound);

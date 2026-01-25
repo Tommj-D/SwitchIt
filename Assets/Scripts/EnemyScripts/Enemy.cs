@@ -9,6 +9,7 @@ public abstract class Enemy : MonoBehaviour
 
     protected bool isDead = false;
     protected bool isActive = false;
+    protected bool isVisible = false; // se è entrato nella camera almeno una volta
 
     protected int direction = 1; // 1 = destra, -1 = sinistra
 
@@ -20,6 +21,7 @@ public abstract class Enemy : MonoBehaviour
     protected virtual void Update()
     {
         if (isDead || !isActive) return;
+
         Move();
     }
 
@@ -30,12 +32,6 @@ public abstract class Enemy : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player") && !isDead)
         {
-            // --- SUONO MORTE GIOCATORE ---
-            if (AudioManager.instance != null)
-            {
-                AudioManager.instance.PlaySFX(AudioManager.instance.playerDeathSound);
-            }
-
             var respawn = collision.gameObject.GetComponent<PlayerRespawn>();
             if (respawn != null)
                 respawn.Die();
@@ -78,7 +74,7 @@ public abstract class Enemy : MonoBehaviour
         if (isDead) return; // Evita di chiamare la morte più volte
         isDead = true;
 
-        // --- SUONO MORTE NEMICO ---
+        // Suono morte
         if (AudioManager.instance != null)
         {
             AudioManager.instance.PlaySFX(AudioManager.instance.enemyDeathSound);
@@ -114,11 +110,39 @@ public abstract class Enemy : MonoBehaviour
 
     private void OnBecameVisible()
     {
-        isActive = true; 
+        if (!isDead)
+        {
+            isActive = true;
+            isVisible = true;
+        }
     }
 
     private void DisableEnemy()
     {
         gameObject.SetActive(false);
+    }
+
+    public virtual void ResetEnemy()
+    {
+        isDead = false;
+        isKillable = true;
+
+        isActive = false;
+        isVisible = false;
+
+        // Riattiva Rigidbody
+        var rb = GetComponent<Rigidbody2D>();
+        if (rb)
+        {
+            rb.bodyType = RigidbodyType2D.Dynamic;
+            rb.linearVelocity = Vector2.zero;
+            rb.angularVelocity = 0f;
+            rb.simulated = true;
+        }
+
+        // Riattiva collider
+        var colliders = GetComponentsInChildren<Collider2D>();
+        foreach (var c in colliders)
+            c.enabled = true;
     }
 }
