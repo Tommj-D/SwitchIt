@@ -97,6 +97,10 @@ public class RespawnableObject : MonoBehaviour
                 animator.Update(0f);
             }
         }
+
+        var enemy = GetComponent<Enemy>();
+        if (enemy != null)
+            enemy.ResetEnemy();
     }
 }
 

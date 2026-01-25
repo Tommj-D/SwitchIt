@@ -25,12 +25,11 @@ public class Coin : MonoBehaviour
         transform.position = new Vector3(startPos.x, startPos.y + y, startPos.z);
     }
 
-    // Questa funzione rileva il giocatore
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player") && !collected)
         {
-            Collect(); // Chiama la funzione sotto che gestisce tutto
+            Collect(); 
         }
     }
 
@@ -42,19 +41,19 @@ public class Coin : MonoBehaviour
         Collider2D col = GetComponent<Collider2D>();
         if (col != null) col.enabled = false;
 
-        // 1. PUNTEGGIO
+        // PUNTEGGIO
         if (GameManager.instance != null)
             GameManager.instance.AddCoin(value);
 
-        // 2. SUONO (Usiamo il nostro AudioManager centrale)
+        // SUONO 
         if (AudioManager.instance != null)
             AudioManager.instance.PlaySFX(AudioManager.instance.coinSound);
 
-        // 3. EFFETTO VISIVO
+        // EFFETTO VISIVO
         if (collectEffect != null)
             Instantiate(collectEffect, transform.position, Quaternion.identity);
 
-        // 4. DISTRUZIONE
+        // DISTRUZIONE
         Destroy(gameObject, destroyDelay);
     }
 }
