@@ -91,14 +91,9 @@ public class PlayerMovement : MonoBehaviour
         {
             Flip(horizontalMovement);
 
-            if (rb.linearVelocity.y == 0)
+            if (isGrounded)
             {
                 grassFX.Play();
-
-                if (rb.linearVelocity.y != 0 && rb.linearVelocity.x == 0)
-                {
-                    grassFX.Stop();
-                }
             }
         }
     }
