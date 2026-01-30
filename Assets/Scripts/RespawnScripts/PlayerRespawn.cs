@@ -9,7 +9,13 @@ public class PlayerRespawn : MonoBehaviour
     public ScreenFade screenFade;
     public SceneController sceneController;
 
-    public Vector3 respawnPoint;
+    private Transform respawnRune;
+
+    [Header("Magic Respawn")]
+    public float spawnScale = 0.2f;
+    public float growDuration = 0.6f;
+    public float upwardForce = 8f;
+
     [Header("Respawn Timing")]
     public float blackScreenHoldTime = 0.2f;
     public float respawnDelay = 1.5f;
@@ -17,10 +23,11 @@ public class PlayerRespawn : MonoBehaviour
     public GameObject deathParticle;
     public GameObject fullSprite;      
     public GameObject riggedBody;
-
+  
     private Animator animator;
     private Rigidbody2D rb;
     private Collider2D col;
+    private SpriteRenderer fullSpriteRenderer;
 
     private bool isDying = false;
 
@@ -31,6 +38,9 @@ public class PlayerRespawn : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<Collider2D>();
         playerInput = GetComponent<PlayerInput>();
+        if (fullSprite != null)
+            fullSpriteRenderer = fullSprite.GetComponent<SpriteRenderer>();
+
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -97,54 +107,100 @@ public class PlayerRespawn : MonoBehaviour
         if (animator != null)
             animator.SetTrigger("Die");
 
-
         // Aspetta animazione (qui il giocatore sente l'audio mentre vede l'animazione/particelle)
         yield return new WaitForSeconds(respawnDelay);
 
-        // FADE OUT (schermo si scurisce) 
+        // FADE OUT
         yield return screenFade.FadeOutCoroutine(sceneController.fadeDuration);
 
-        // Prima del respawn, resetta oggetti
+        // Prepara il player (ancora invisibile)
+        yield return StartCoroutine(PrepareRespawn());
+
+        // Hold nero
+        yield return new WaitForSeconds(blackScreenHoldTime);
+
+        // Spegni rigged
+        if (riggedBody != null)
+            riggedBody.SetActive(false);
+
+        // Reset mondo
         if (RespawnManager.Instance != null)
             RespawnManager.Instance.ResetAll();
 
-        // Respawn
-        transform.position = respawnPoint;
-        
-        if (riggedBody != null) riggedBody.SetActive(false);
-
-        if (fullSprite != null)
+        if (animator != null)
         {
-            var sr = fullSprite.GetComponent<SpriteRenderer>();
-            if (sr != null) sr.enabled = true;
+            animator.SetTrigger("Respawn");
         }
 
-        yield return new WaitForSeconds(blackScreenHoldTime);
+        // FADE IN
+        yield return screenFade.FadeInCoroutine(sceneController.fadeDuration);
 
-        if (animator != null)
-            animator.SetTrigger("Respawn");
+        // Animazione uscita dalla roccia
+        yield return StartCoroutine(PlayRespawnAnimation());
 
-        if (movement != null) movement.enabled = true;
-        if (col != null) col.enabled = true;
-
-
-        yield return null;
-
-        // FADE IN (torna visibile)
-        Coroutine fadeIn = StartCoroutine(
-            screenFade.FadeInCoroutine(sceneController.fadeDuration)
-        );
-
-        // In modo che i comandi si attivino quando il gioco torna visibile
+        // Input leggermente dopo
         yield return new WaitForSeconds(sceneController.fadeDuration * 0.2f);
-
-
         playerInput.enabled = true;
+
         isDying = false;
 
-        yield return fadeIn;
     }
 
+    private IEnumerator PrepareRespawn()
+    {
+        if (fullSpriteRenderer == null || respawnRune == null)
+            yield break;
+
+        transform.position = respawnRune.position;
+
+        rb.simulated = false;
+        rb.linearVelocity = Vector2.zero;
+
+        transform.localScale = Vector3.one * spawnScale;
+
+        fullSprite.SetActive(true);
+        fullSpriteRenderer.enabled = true;
+
+        Color c = fullSpriteRenderer.color;
+        c.a = 0f;
+        fullSpriteRenderer.color = c;
+
+        yield return null;
+    }
+
+
+    private IEnumerator PlayRespawnAnimation()
+    {
+        Color c = fullSpriteRenderer.color;
+
+        float t = 0f;
+        while (t < 1f)
+        {
+            t += Time.deltaTime / growDuration;
+
+            transform.localScale = Vector3.Lerp(
+                Vector3.one * spawnScale,
+                Vector3.one,
+                t
+            );
+
+            c.a = Mathf.Lerp(0f, 1f, t);
+            fullSpriteRenderer.color = c;
+
+            yield return null;
+        }
+
+        rb.simulated = true;
+        rb.AddForce(Vector2.up * upwardForce, ForceMode2D.Impulse);
+
+        col.enabled = true;
+        GetComponent<PlayerMovement>().enabled = true;
+    }
+
+    public void SetRespawnPoint(Transform rune)
+    {
+        respawnRune = rune;
+    }
     public bool IsDying() { return isDying; }
      
     public void Die()

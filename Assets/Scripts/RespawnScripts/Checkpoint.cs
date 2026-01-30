@@ -3,23 +3,22 @@ using System.Collections;
 
 public class Checkpoint : MonoBehaviour
 {
+    public Transform runeSpawnPoint;
     private bool activated = false;
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (activated) return; //evita riattivazioni
-
+        if (activated) return;
         if (!other.CompareTag("Player")) return;
 
         activated = true;
 
         AudioManager.instance.PlaySFX(AudioManager.instance.checkpointSound);
-            
-        PlayerRespawn playerRespawn = other.GetComponent<PlayerRespawn>();
 
+        PlayerRespawn playerRespawn = other.GetComponent<PlayerRespawn>();
         if (playerRespawn != null)
         {
-            playerRespawn.respawnPoint = transform.position;
+            playerRespawn.SetRespawnPoint(runeSpawnPoint);
         }
     }
 }
