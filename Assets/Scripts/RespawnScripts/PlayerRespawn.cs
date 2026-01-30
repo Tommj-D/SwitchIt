@@ -12,7 +12,7 @@ public class PlayerRespawn : MonoBehaviour
     private Transform respawnRune;
 
     [Header("Magic Respawn")]
-    public float spawnScale = 0.2f;
+    private float spawnScale = 0.1f;
     public float growDuration = 0.6f;
     public float upwardForce = 8f;
 
@@ -132,15 +132,12 @@ public class PlayerRespawn : MonoBehaviour
             animator.SetTrigger("Respawn");
         }
 
+        StartCoroutine(PlayRespawnAnimation());
+
+        playerInput.enabled = true;
+
         // FADE IN
         yield return screenFade.FadeInCoroutine(sceneController.fadeDuration);
-
-        // Animazione uscita dalla roccia
-        yield return StartCoroutine(PlayRespawnAnimation());
-
-        // Input leggermente dopo
-        yield return new WaitForSeconds(sceneController.fadeDuration * 0.2f);
-        playerInput.enabled = true;
 
         isDying = false;
 
@@ -168,31 +165,52 @@ public class PlayerRespawn : MonoBehaviour
         yield return null;
     }
 
-
     private IEnumerator PlayRespawnAnimation()
     {
+        if (fullSpriteRenderer == null) yield break;
+
+        yield return new WaitForSeconds(0.2f);
+
+        // Colore iniziale invisibile
         Color c = fullSpriteRenderer.color;
+        c.a = 0f;
+        fullSpriteRenderer.color = c;
+
+        // Scala iniziale
+        transform.localScale = Vector3.one * spawnScale;
+
+        // Fisica e input off
+        rb.simulated = false;
+        col.enabled = false;
+        GetComponent<PlayerMovement>().enabled = false;
 
         float t = 0f;
+        bool impulseGiven = false;
         while (t < 1f)
         {
             t += Time.deltaTime / growDuration;
+            t = Mathf.Clamp01(t);
 
-            transform.localScale = Vector3.Lerp(
-                Vector3.one * spawnScale,
-                Vector3.one,
-                t
-            );
+            // Scala gradualmente
+            transform.localScale = Vector3.Lerp(Vector3.one * spawnScale, Vector3.one, t);
 
+            // Fade-in
             c.a = Mathf.Lerp(0f, 1f, t);
             fullSpriteRenderer.color = c;
+
+            // Dai impulso dopo un po'
+            if (!impulseGiven && t >= 0.3f)
+            {
+                rb.simulated = true;
+                rb.linearVelocity = Vector2.zero; // resetta velocità
+                rb.AddForce(Vector2.up * upwardForce, ForceMode2D.Impulse);
+                impulseGiven = true;
+            }
 
             yield return null;
         }
 
-        rb.simulated = true;
-        rb.AddForce(Vector2.up * upwardForce, ForceMode2D.Impulse);
-
+        // riattivo collisioni e movimento
         col.enabled = true;
         GetComponent<PlayerMovement>().enabled = true;
     }

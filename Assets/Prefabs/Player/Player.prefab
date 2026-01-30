@@ -15109,7 +15109,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerRespawn
   screenFade: {fileID: 0}
   sceneController: {fileID: 0}
-  respawnPoint: {x: -6.78, y: -34.67, z: 0}
+  growDuration: 0.8
+  upwardForce: 12
   blackScreenHoldTime: 0.6
   respawnDelay: 1.2
   deathParticle: {fileID: 1126785116543351055, guid: 80439d11f5194024793495e2956dbd06, type: 3}
