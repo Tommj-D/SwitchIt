@@ -35,6 +35,11 @@ public class Coin : MonoBehaviour
 
     public void Collect()
     {
+
+        // SUONO 
+        if (AudioManager.instance != null)
+            AudioManager.instance.PlaySFX(AudioManager.instance.coinSound);
+
         collected = true;
 
         // Disabilita il collider così non viene raccolta due volte
@@ -44,10 +49,6 @@ public class Coin : MonoBehaviour
         // PUNTEGGIO
         if (GameManager.instance != null)
             GameManager.instance.AddCoin(value);
-
-        // SUONO 
-        if (AudioManager.instance != null)
-            AudioManager.instance.PlaySFX(AudioManager.instance.coinSound);
 
         // EFFETTO VISIVO
         if (collectEffect != null)
