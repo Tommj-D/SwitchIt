@@ -9,7 +9,6 @@ public class AudioManager : MonoBehaviour
     public AudioSource sfxSource;
 
     [Header("Clip Audio")]
-    [Header("Clip Audio")]
     public AudioClip backgroundMusic;
     public AudioClip coinSound;
     public AudioClip checkpointSound;
