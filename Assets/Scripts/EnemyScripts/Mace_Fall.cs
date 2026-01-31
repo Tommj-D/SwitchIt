@@ -83,6 +83,12 @@ public class Mace_Fall : MonoBehaviour
     {
         if (isFalling && other.gameObject.CompareTag("Ground"))
         {
+            // Suono di impatto
+            if (AudioManager.instance != null)
+            {
+                AudioManager.instance.PlaySFX(AudioManager.instance.maceSound);
+            }
+
             isFalling = false;
             if (impactParticles != null)
             {

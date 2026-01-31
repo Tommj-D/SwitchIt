@@ -28,7 +28,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3335905764682719425}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 147.32, y: -19.37, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -106,7 +106,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6611dac966902f642a76d9968e45f284, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Mace_Fall
-  fallSpeed: 7
+  fallSpeed: 11
   upSpeed: 3
   shakeDuration: 0.3
   shakeAmount: 0.1
@@ -148,7 +148,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.05706787, y: -3.1935682}
+  m_Offset: {x: -0.042720795, y: -4.2552595}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -158,7 +158,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 3.2145996, y: 3.6415005}
+  m_Size: {x: 3.4154587, y: 5.764883}
   m_EdgeRadius: 0
 --- !u!60 &7636107211730844602
 PolygonCollider2D:

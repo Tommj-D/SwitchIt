@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class AudioManager : MonoBehaviour
 {
-    public static AudioManager instance; // Permette di accedervi da altri script
+    public static AudioManager instance; 
 
     [Header("Sorgenti Audio")]
     public AudioSource musicSource;
@@ -10,10 +10,23 @@ public class AudioManager : MonoBehaviour
 
     [Header("Clip Audio")]
     public AudioClip backgroundMusic;
+    [Header("Item")]
     public AudioClip coinSound;
+    
+    [Header("Enemies")]
+    public AudioClip enemyDeathSound; 
+    public AudioClip maceSound;
+    
+    [Header("Player")]
+    public AudioClip jumpSound;
+    public AudioClip jumpLanding;
+    public AudioClip playerDeathSound;
+
+    [Header("World")]
     public AudioClip checkpointSound;
-    public AudioClip enemyDeathSound; // NUOVO: Trascina qui il suono del nemico sconfitto
-    public AudioClip playerDeathSound; // NUOVO: Trascina qui il suono della morte del player
+    public AudioClip respawnSound;
+    public AudioClip endLevelSound;
+    public AudioClip switchLevelSound;
 
     void Awake()
     {

@@ -26,6 +26,7 @@ public class PlayerMovement : MonoBehaviour
     public int maxJumps = 2; // numero massimo di salti che il player può fare
     private int jumpsRemaining;
     private bool isGrounded;
+    private bool isJumping = false;
 
 
     [Header("GroundCheck")]
@@ -102,6 +103,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (jumpsRemaining>0)
         {
+            isJumping = true;
             {
                 if (context.performed)
                 {
@@ -132,6 +134,11 @@ public class PlayerMovement : MonoBehaviour
 
         if (groundedNow && !isGrounded)
         {
+            if (isJumping)
+            {
+                AudioManager.instance.PlaySFX(AudioManager.instance.jumpLanding);
+                isJumping = false;
+            }
             ResetJumps();
             animator.SetBool("isJumping", false);
         }

@@ -107,7 +107,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f752a78f4a5820948b9ee4626bb4004b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Spike_Fall
-  fallSpeed: 7.5
+  fallSpeed: 8.5
   shakeDuration: 0.4
   shakeAmount: 0.1
   impactParticles: {fileID: 327209828427378427, guid: d407f4ad6c344dc4dbf433eb80a12578, type: 3}
