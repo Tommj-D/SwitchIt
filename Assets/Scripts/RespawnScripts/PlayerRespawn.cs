@@ -169,7 +169,12 @@ public class PlayerRespawn : MonoBehaviour
     {
         if (fullSpriteRenderer == null) yield break;
 
-        yield return new WaitForSeconds(0.2f);
+        if (AudioManager.instance != null)
+                {
+                    AudioManager.instance.PlaySFX(AudioManager.instance.respawnSound);
+                }
+
+        yield return new WaitForSeconds(0.9f);
 
         // Colore iniziale invisibile
         Color c = fullSpriteRenderer.color;

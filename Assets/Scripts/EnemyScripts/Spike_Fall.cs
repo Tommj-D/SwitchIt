@@ -76,6 +76,10 @@ public class Spike_Fall : MonoBehaviour
         // Se tocca un oggetto con layer "Ground"
         if (collision.gameObject.layer == LayerMask.NameToLayer("Ground")||collision.gameObject.CompareTag("Player"))
         {
+            if (AudioManager.instance != null)
+            {
+                AudioManager.instance.PlaySFX(AudioManager.instance.spikeSound);
+            }
             // Istanzia le particelle
             if (impactParticles != null)
             {

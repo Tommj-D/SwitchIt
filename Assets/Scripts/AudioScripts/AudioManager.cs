@@ -16,6 +16,7 @@ public class AudioManager : MonoBehaviour
     [Header("Enemies")]
     public AudioClip enemyDeathSound; 
     public AudioClip maceSound;
+    public AudioClip spikeSound;
     
     [Header("Player")]
     public AudioClip jumpSound;
@@ -27,6 +28,7 @@ public class AudioManager : MonoBehaviour
     public AudioClip respawnSound;
     public AudioClip endLevelSound;
     public AudioClip switchLevelSound;
+    public AudioClip secretEntranceSound;
 
     void Awake()
     {

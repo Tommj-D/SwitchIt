@@ -5,6 +5,7 @@ public class CaveController : MonoBehaviour
 {
     public SpriteMask spriteMask;
     private bool isPlayerInsideCave = false;
+    private bool isActivated = false;
 
     [Header("Sprite Mask Settings")]
     public Vector3 spriteMaskDimension;
@@ -77,6 +78,12 @@ public class CaveController : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (!other.CompareTag("Player")) return;
+
+        if (AudioManager.instance != null&&!isActivated)
+        {
+            AudioManager.instance.PlaySFX(AudioManager.instance.secretEntranceSound);
+            isActivated = true;
+        }
 
         isPlayerInsideCave = true;
         LightManager.Instance.EnterCave();

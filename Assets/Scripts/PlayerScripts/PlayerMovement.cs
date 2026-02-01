@@ -109,6 +109,7 @@ public class PlayerMovement : MonoBehaviour
                 {
                     if (jumpsRemaining < maxJumps)
                     {
+                        AudioManager.instance.PlaySFX(AudioManager.instance.jumpSound);
                         animator.SetTrigger("DoubleJump");
                         jumpFX.Play();
                     }
