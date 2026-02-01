@@ -17,9 +17,15 @@ public class Chest : MonoBehaviour
     public float duration = 0.4f;              // durata dell’animazione di uscita
     public float waitingTime = 0.05f;     // tempo di attesa tra un’uscita e l’altra
 
+    public float startDimension = 0.6f;   // dimensione iniziale dell’oggetto che esce
+    public float endDimension = 1.7f;     // dimensione finale dell’oggetto che esce
+
+    [Header("Single Object Settings")]
     public bool stayVisible = false;       // se true, l'oggetto rimane visibile per un po' prima di scomparire
     public float visibleDuration = 1.5f; // tempo prima che scompaia 
     public float finalFadeDuration = 0.5f; // quanto dura il fade-out
+
+    
 
     void Start()
     {
@@ -86,7 +92,7 @@ public class Chest : MonoBehaviour
                 float t = elapsed / duration;
 
                 drop.transform.position = Vector3.Lerp(start, end, t);
-                drop.transform.localScale = Vector3.one * Mathf.Lerp(0.4f, 1.2f, t);
+                drop.transform.localScale = Vector3.one * Mathf.Lerp(startDimension, endDimension, t);
 
                 // Se stayVisible==false facciamo il fade DURANTE la salita
                 if (sr != null)
@@ -103,7 +109,7 @@ public class Chest : MonoBehaviour
 
             // Assicuriamo pos e scala finali
             drop.transform.position = end;
-            drop.transform.localScale = Vector3.one * (stayVisible ? 1f : 1.2f);
+            drop.transform.localScale = Vector3.one * endDimension;
 
             if (sr != null && !stayVisible)
                 sr.color = new Color(originalColor.r, originalColor.g, originalColor.b, 0f); // garantito invisible
