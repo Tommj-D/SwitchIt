@@ -192,6 +192,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 8300000, guid: b851268b6aefe3b4880957de0074a601, type: 3}
     - target: {fileID: 6991497699843298835, guid: 81249a29c5bd15949a2f408dd4782223, type: 3}
+      propertyPath: chestSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 2a8dbe0ab1a10cb4eb9c348b5af74942, type: 3}
+    - target: {fileID: 6991497699843298835, guid: 81249a29c5bd15949a2f408dd4782223, type: 3}
       propertyPath: spikeSound
       value: 
       objectReference: {fileID: 8300000, guid: b99da9a57308d4ba1bee1cf1d9038376, type: 3}
@@ -208,6 +212,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 8300000, guid: 01450bddc9094724599275fee2e2f74d, type: 3}
     - target: {fileID: 6991497699843298835, guid: 81249a29c5bd15949a2f408dd4782223, type: 3}
+      propertyPath: backgroundMusic
+      value: 
+      objectReference: {fileID: 8300000, guid: b4cdc4c9f9e1f8b4ca9e742e68378d32, type: 3}
+    - target: {fileID: 6991497699843298835, guid: 81249a29c5bd15949a2f408dd4782223, type: 3}
       propertyPath: slimeDeathSound
       value: 
       objectReference: {fileID: 8300000, guid: 80557ac7cfe00cc4b9db124ad2743bf5, type: 3}
@@ -215,6 +223,10 @@ PrefabInstance:
       propertyPath: spikeCrashSound
       value: 
       objectReference: {fileID: 8300000, guid: 54c317e536eff2d4cae11b279ae61b16, type: 3}
+    - target: {fileID: 6991497699843298835, guid: 81249a29c5bd15949a2f408dd4782223, type: 3}
+      propertyPath: switchLevelSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 91dbe1fa30d8d9340beb4b717f0b42bb, type: 3}
     - target: {fileID: 6991497699843298835, guid: 81249a29c5bd15949a2f408dd4782223, type: 3}
       propertyPath: secretEntranceSound
       value: 
