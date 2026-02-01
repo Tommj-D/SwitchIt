@@ -50,6 +50,10 @@ public class SwitchLevel : MonoBehaviour
             Instantiate(teleportEffect, player.transform.position, Quaternion.identity);
         }
 
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.PlaySFX(AudioManager.instance.switchLevelSound);
+        }
         // Assorbimento verso la pietra magica
         yield return StartCoroutine(AbsorbPlayer(player));
 

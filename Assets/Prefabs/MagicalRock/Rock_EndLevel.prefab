@@ -142,7 +142,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SwitchLevel
   nextSceneName: Level_2
-  absorbDuration: 1.2
+  absorbDuration: 1.8
   teleportEffect: {fileID: 5354946170535676697, guid: 3cb30b0e9ccce9844b18449c8f1ba94a, type: 3}
   magicStonePoint: {fileID: 6165062635176916578}
   vcam: {fileID: 0}

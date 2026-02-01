@@ -5,7 +5,6 @@ public class Chest : MonoBehaviour
 {
     private Animator animator;
 
-    public AudioClip collectSound;
     public GameObject collectEffect;
 
     public bool needKey = false;
@@ -56,6 +55,10 @@ public class Chest : MonoBehaviour
     {
         isOpen = true;
         animator.SetTrigger("Open");
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.PlaySFX(AudioManager.instance.chestSound);
+        }
         StartCoroutine(SpawnDrop(inv));
     }
 
@@ -147,8 +150,10 @@ public class Chest : MonoBehaviour
                 Instantiate(collectEffect, drop.transform.position, Quaternion.identity);
 
             // Suono nella posizione finale della moneta
-            if (collectSound != null)
-                AudioSource.PlayClipAtPoint(collectSound, drop.transform.position);
+            if (AudioManager.instance != null)
+            {
+                AudioManager.instance.PlaySFX(AudioManager.instance.coinSound);
+            }
 
             // ---- AGGIUNTA AL PLAYER ----
             if (inv != null)

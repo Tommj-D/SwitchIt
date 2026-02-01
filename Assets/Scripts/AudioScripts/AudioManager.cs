@@ -12,7 +12,10 @@ public class AudioManager : MonoBehaviour
     public AudioClip backgroundMusic;
     [Header("Item")]
     public AudioClip coinSound;
-    
+    public AudioClip chestSound;
+    public AudioClip keySound;
+    public AudioClip chestLockedSound;
+
     [Header("Enemies")]
     public AudioClip slimeDeathSound; 
     public AudioClip shakeSound;
@@ -28,9 +31,9 @@ public class AudioManager : MonoBehaviour
     [Header("World")]
     public AudioClip checkpointSound;
     public AudioClip respawnSound;
-    public AudioClip endLevelSound;
     public AudioClip switchLevelSound;
     public AudioClip secretEntranceSound;
+    
 
     void Awake()
     {

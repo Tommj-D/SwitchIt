@@ -190,7 +190,7 @@ PrefabInstance:
     - target: {fileID: 6991497699843298835, guid: 81249a29c5bd15949a2f408dd4782223, type: 3}
       propertyPath: walkSound
       value: 
-      objectReference: {fileID: 8300000, guid: 9aa93af3d88f01743ab2de1977d00e9f, type: 3}
+      objectReference: {fileID: 8300000, guid: b851268b6aefe3b4880957de0074a601, type: 3}
     - target: {fileID: 6991497699843298835, guid: 81249a29c5bd15949a2f408dd4782223, type: 3}
       propertyPath: spikeSound
       value: 
