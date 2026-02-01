@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public class CaveController : MonoBehaviour
 {
@@ -79,6 +80,10 @@ public class CaveController : MonoBehaviour
     {
         if (!other.CompareTag("Player")) return;
 
+        //Modifico musica all'interno della grotta
+        VolumeController.Instance.FadeMasterLowpass(800f, 0.4f);
+        VolumeController.Instance.DuckMusic(-3f, 0.4f);
+
         if (AudioManager.instance != null&&!isActivated)
         {
             AudioManager.instance.PlaySFX(AudioManager.instance.secretEntranceSound);
@@ -99,6 +104,10 @@ public class CaveController : MonoBehaviour
     private void OnTriggerExit2D(Collider2D other)
     {
         if (!other.CompareTag("Player")) return;
+
+        // Ripristino musica all'uscita dalla grotta
+        VolumeController.Instance.FadeMasterLowpass(22000f, 0.6f);
+        VolumeController.Instance.RestoreMusic(0.6f);
 
         isPlayerInsideCave = false;
         LightManager.Instance.ExitCave();

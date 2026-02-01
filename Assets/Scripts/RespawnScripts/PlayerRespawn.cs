@@ -71,6 +71,8 @@ public class PlayerRespawn : MonoBehaviour
         {
             AudioManager.instance.PlaySFX(AudioManager.instance.playerDeathSound);
         }
+        //Abbasso il volume mentre il player muore
+        VolumeController.Instance.DuckMusic(-30f, 0.4f);
 
         playerInput.enabled = false;
 
@@ -214,6 +216,9 @@ public class PlayerRespawn : MonoBehaviour
 
             yield return null;
         }
+
+        //Rimetto la musica al volume normale
+        VolumeController.Instance.RestoreMusic(1f);
 
         // riattivo collisioni e movimento
         col.enabled = true;
