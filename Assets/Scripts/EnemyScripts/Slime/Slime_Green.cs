@@ -6,5 +6,13 @@ public class Slime_Green : Enemy
     {
         transform.Translate(Vector2.right * direction * patrolSpeed * Time.deltaTime);
     }
+
+    protected override void Sound()
+    {
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.PlaySFX(AudioManager.instance.slimeDeathSound);
+        }
+    }
 }
 

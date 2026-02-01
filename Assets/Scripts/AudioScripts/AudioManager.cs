@@ -14,14 +14,16 @@ public class AudioManager : MonoBehaviour
     public AudioClip coinSound;
     
     [Header("Enemies")]
-    public AudioClip enemyDeathSound; 
-    public AudioClip maceSound;
-    public AudioClip spikeSound;
+    public AudioClip slimeDeathSound; 
+    public AudioClip shakeSound;
+    public AudioClip maceCrashSound;
+    public AudioClip spikeCrashSound;
     
     [Header("Player")]
     public AudioClip jumpSound;
     public AudioClip jumpLanding;
     public AudioClip playerDeathSound;
+    public AudioClip walkSound;
 
     [Header("World")]
     public AudioClip checkpointSound;

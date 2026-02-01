@@ -53,6 +53,10 @@ public class Mace_Fall : MonoBehaviour
     private IEnumerator StartShake()
     {
         isShaking = true;
+        if (AudioManager.instance.shakeSound != null)
+        {
+            AudioManager.instance.PlaySFX(AudioManager.instance.shakeSound);
+        }
         yield return new WaitForSeconds(shakeDuration);
         isShaking = false;
         transform.position = originalPosition;
@@ -86,7 +90,7 @@ public class Mace_Fall : MonoBehaviour
             // Suono di impatto
             if (AudioManager.instance != null)
             {
-                AudioManager.instance.PlaySFX(AudioManager.instance.maceSound);
+                AudioManager.instance.PlaySFX(AudioManager.instance.maceCrashSound);
             }
 
             isFalling = false;

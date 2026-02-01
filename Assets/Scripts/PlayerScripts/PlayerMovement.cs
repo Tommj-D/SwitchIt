@@ -95,6 +95,10 @@ public class PlayerMovement : MonoBehaviour
             if (isGrounded)
             {
                 grassFX.Play();
+                if (AudioManager.instance.walkSound != null)
+                {
+                    AudioManager.instance.PlaySFX(AudioManager.instance.walkSound);
+                }
             }
         }
     }

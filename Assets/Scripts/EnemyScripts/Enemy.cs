@@ -28,6 +28,9 @@ public abstract class Enemy : MonoBehaviour
     // Ogni nemico deve implementare il suo movimento (es. in uno script che eredita da questo)
     protected abstract void Move();
 
+    // Ogni nemico deve implementare il suo suono (es. in uno script che eredita da questo)
+    protected abstract void Sound();
+
     protected virtual void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Player") && !isDead)
@@ -75,10 +78,7 @@ public abstract class Enemy : MonoBehaviour
         isDead = true;
 
         // Suono morte
-        if (AudioManager.instance != null)
-        {
-            AudioManager.instance.PlaySFX(AudioManager.instance.enemyDeathSound);
-        }
+        Sound();
 
         // Disabilita tutti i collider per evitare altre collisioni
         Collider2D[] colliders = GetComponents<Collider2D>();

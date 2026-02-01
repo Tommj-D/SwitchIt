@@ -63,6 +63,10 @@ public class Spike_Fall : MonoBehaviour
     {
         isShaking = true;
 
+        if (AudioManager.instance.shakeSound != null)
+        {
+            AudioManager.instance.PlaySFX(AudioManager.instance.shakeSound);
+        }
         yield return new WaitForSeconds(shakeDuration);
 
         isShaking = false;
@@ -78,7 +82,7 @@ public class Spike_Fall : MonoBehaviour
         {
             if (AudioManager.instance != null)
             {
-                AudioManager.instance.PlaySFX(AudioManager.instance.spikeSound);
+                AudioManager.instance.PlaySFX(AudioManager.instance.spikeCrashSound);
             }
             // Istanzia le particelle
             if (impactParticles != null)

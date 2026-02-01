@@ -182,11 +182,15 @@ PrefabInstance:
     - target: {fileID: 6991497699843298835, guid: 81249a29c5bd15949a2f408dd4782223, type: 3}
       propertyPath: jumpSound
       value: 
-      objectReference: {fileID: 8300000, guid: 6af586b8ab7b747e482c60d260b29650, type: 3}
+      objectReference: {fileID: 8300000, guid: 0164afc010f334a498ef1cbfb4f9f220, type: 3}
     - target: {fileID: 6991497699843298835, guid: 81249a29c5bd15949a2f408dd4782223, type: 3}
       propertyPath: maceSound
       value: 
       objectReference: {fileID: 8300000, guid: 01450bddc9094724599275fee2e2f74d, type: 3}
+    - target: {fileID: 6991497699843298835, guid: 81249a29c5bd15949a2f408dd4782223, type: 3}
+      propertyPath: walkSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 9aa93af3d88f01743ab2de1977d00e9f, type: 3}
     - target: {fileID: 6991497699843298835, guid: 81249a29c5bd15949a2f408dd4782223, type: 3}
       propertyPath: spikeSound
       value: 
@@ -198,11 +202,23 @@ PrefabInstance:
     - target: {fileID: 6991497699843298835, guid: 81249a29c5bd15949a2f408dd4782223, type: 3}
       propertyPath: respawnSound
       value: 
-      objectReference: {fileID: 8300000, guid: 225d908463bde814ea42f65aa840ff70, type: 3}
+      objectReference: {fileID: 8300000, guid: 9d4fb855d7948604ab102a4baaa93d20, type: 3}
+    - target: {fileID: 6991497699843298835, guid: 81249a29c5bd15949a2f408dd4782223, type: 3}
+      propertyPath: maceCrashSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 01450bddc9094724599275fee2e2f74d, type: 3}
+    - target: {fileID: 6991497699843298835, guid: 81249a29c5bd15949a2f408dd4782223, type: 3}
+      propertyPath: slimeDeathSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 80557ac7cfe00cc4b9db124ad2743bf5, type: 3}
+    - target: {fileID: 6991497699843298835, guid: 81249a29c5bd15949a2f408dd4782223, type: 3}
+      propertyPath: spikeCrashSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 54c317e536eff2d4cae11b279ae61b16, type: 3}
     - target: {fileID: 6991497699843298835, guid: 81249a29c5bd15949a2f408dd4782223, type: 3}
       propertyPath: secretEntranceSound
       value: 
-      objectReference: {fileID: 8300000, guid: a0ca8964c08d54c5dbebf245bdc474ca, type: 3}
+      objectReference: {fileID: 8300000, guid: 1ee053960432f50469e8fc4c385d40b8, type: 3}
     - target: {fileID: 8353855458831400638, guid: 81249a29c5bd15949a2f408dd4782223, type: 3}
       propertyPath: sfxSlider
       value: 
