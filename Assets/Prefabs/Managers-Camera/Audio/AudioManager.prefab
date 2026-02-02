@@ -155,7 +155,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1284125330772375128}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 3.35462, y: -1.8272095, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -178,11 +178,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AudioManager
   musicSource: {fileID: 1115040162540533581}
   sfxSource: {fileID: 2387209443073028794}
-  backgroundMusic: {fileID: 8300000, guid: 5b1ed8fbe89154eaf96723b6e5f0aad3, type: 3}
+  backgroundMusic: {fileID: 8300000, guid: b4cdc4c9f9e1f8b4ca9e742e68378d32, type: 3}
   coinSound: {fileID: 8300000, guid: d43d1167debac304fbbe6f1101e8e183, type: 3}
-  checkpointSound: {fileID: 8300000, guid: cd4689e4cf8c23241b5beddb7b81cd4f, type: 3}
-  enemyDeathSound: {fileID: 8300000, guid: ffb159a21c8a04135a5616979c828fab, type: 3}
+  chestSound: {fileID: 8300000, guid: 2a8dbe0ab1a10cb4eb9c348b5af74942, type: 3}
+  keySound: {fileID: 0}
+  chestLockedSound: {fileID: 0}
+  slimeDeathSound: {fileID: 8300000, guid: 80557ac7cfe00cc4b9db124ad2743bf5, type: 3}
+  shakeSound: {fileID: 0}
+  maceCrashSound: {fileID: 8300000, guid: 01450bddc9094724599275fee2e2f74d, type: 3}
+  spikeCrashSound: {fileID: 8300000, guid: 54c317e536eff2d4cae11b279ae61b16, type: 3}
+  jumpSound: {fileID: 8300000, guid: 0164afc010f334a498ef1cbfb4f9f220, type: 3}
+  jumpLanding: {fileID: 8300000, guid: 66d8c93f4138d574d99e6badbf4a8c98, type: 3}
   playerDeathSound: {fileID: 8300000, guid: 1e2bf4a2b89e318428154479ee05cc8e, type: 3}
+  walkSound: {fileID: 8300000, guid: b851268b6aefe3b4880957de0074a601, type: 3}
+  checkpointSound: {fileID: 8300000, guid: cd4689e4cf8c23241b5beddb7b81cd4f, type: 3}
+  respawnSound: {fileID: 8300000, guid: 9d4fb855d7948604ab102a4baaa93d20, type: 3}
+  switchLevelSound: {fileID: 8300000, guid: 91dbe1fa30d8d9340beb4b717f0b42bb, type: 3}
+  secretEntranceSound: {fileID: 8300000, guid: 1ee053960432f50469e8fc4c385d40b8, type: 3}
 --- !u!114 &8353855458831400638
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -196,9 +208,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VolumeController
   masterMixer: {fileID: 24100000, guid: bd895b5153b2e204ca4b0ca8a56c023b, type: 2}
-  volumeMenuCanvas: {fileID: 0}
-  musicSlider: {fileID: 0}
-  sfxSlider: {fileID: 0}
+  volumeMenuCanvas: {fileID: 593504427206255592, guid: c15fc8803001d2e4786463557284692f, type: 3}
+  musicSlider: {fileID: 4236497833882640584, guid: 8bf4543d27c80e344b12bab44c9828d3, type: 3}
+  sfxSlider: {fileID: 3025272525309951543, guid: 4b36ac37329f5574ba93987cc95467aa, type: 3}
 --- !u!1 &3394312872380919852
 GameObject:
   m_ObjectHideFlags: 0
