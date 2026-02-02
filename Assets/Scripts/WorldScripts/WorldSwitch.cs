@@ -1,6 +1,5 @@
-using System;
 using UnityEngine;
-using UnityEngine.InputSystem;
+using UnityEngine.InputSystem; // Fondamentale per Keyboard.current
 
 public class WorldSwitch : MonoBehaviour
 {
@@ -17,42 +16,42 @@ public class WorldSwitch : MonoBehaviour
 
     public static bool isFantasyWorldActive = false;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        //All'avvio del gioco, il mondo reale è attivo e il mondo fantasy è inattivo
-        realWorld.SetActive(true);
-        fantasyWorld.SetActive(false);
+        // Setup iniziale
+        if (realWorld != null) realWorld.SetActive(true);
+        if (fantasyWorld != null) fantasyWorld.SetActive(false);
 
-        // Imposta il colore iniziale della camera
         if (mainCamera != null)
             mainCamera.backgroundColor = realWorldColor;
     }
 
-    //cambio mondo
-    public void Switch(InputAction.CallbackContext context)
+    void Update()
     {
-        if (!canSwitchWorld)
-            return;
-
-        if (isFantasyWorldActive)
+        // Controlla se il tasto E Ã¨ stato premuto in questo frame
+        if (Keyboard.current != null && Keyboard.current.eKey.wasPressedThisFrame)
         {
-            //Passa al mondo reale
-            realWorld.SetActive(true);
-            fantasyWorld.SetActive(false);
-            isFantasyWorldActive = false;
-            if (mainCamera != null)
-                mainCamera.backgroundColor = realWorldColor;
+            ToggleWorld();
+        }
+    }
 
-        }
-        else
+    private void ToggleWorld()
+    {
+        if (!canSwitchWorld) return;
+
+        // Inverte lo stato attuale
+        isFantasyWorldActive = !isFantasyWorldActive;
+
+        // Attiva/Disattiva i mondi
+        if (realWorld != null) realWorld.SetActive(!isFantasyWorldActive);
+        if (fantasyWorld != null) fantasyWorld.SetActive(isFantasyWorldActive);
+
+        // Cambia colore alla camera
+        if (mainCamera != null)
         {
-            //Passa al mondo fantasy
-            realWorld.SetActive(false);
-            fantasyWorld.SetActive(true);
-            isFantasyWorldActive = true;
-            if (mainCamera != null)
-                mainCamera.backgroundColor = fantasyWorldColor;
+            mainCamera.backgroundColor = isFantasyWorldActive ? fantasyWorldColor : realWorldColor;
         }
+        
+        Debug.Log("Mondo Fantasy Attivo: " + isFantasyWorldActive);
     }
 }
