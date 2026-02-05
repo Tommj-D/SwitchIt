@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class AudioManager : MonoBehaviour
 {
-    public static AudioManager instance; 
+    public static AudioManager Instance; 
 
     [Header("Sorgenti Audio")]
     public AudioSource musicSource;
@@ -37,9 +37,12 @@ public class AudioManager : MonoBehaviour
 
     void Awake()
     {
-        // Si assicura che ci sia solo un AudioManager
-        if (instance == null) instance = this;
-        else Destroy(gameObject);
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
     }
 
     void Start()

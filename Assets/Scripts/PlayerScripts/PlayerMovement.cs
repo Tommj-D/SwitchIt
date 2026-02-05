@@ -95,9 +95,9 @@ public class PlayerMovement : MonoBehaviour
             if (isGrounded)
             {
                 grassFX.Play();
-                if (AudioManager.instance.walkSound != null)
+                if (AudioManager.Instance.walkSound != null)
                 {
-                    AudioManager.instance.PlaySFX(AudioManager.instance.walkSound);
+                    AudioManager.Instance.PlaySFX(AudioManager.Instance.walkSound);
                 }
             }
         }
@@ -113,7 +113,7 @@ public class PlayerMovement : MonoBehaviour
                 {
                     if (jumpsRemaining < maxJumps)
                     {
-                        AudioManager.instance.PlaySFX(AudioManager.instance.jumpSound);
+                        AudioManager.Instance.PlaySFX(AudioManager.Instance.jumpSound);
                         animator.SetTrigger("DoubleJump");
                         jumpFX.Play();
                     }
@@ -141,7 +141,7 @@ public class PlayerMovement : MonoBehaviour
         {
             if (isJumping)
             {
-                AudioManager.instance.PlaySFX(AudioManager.instance.jumpLanding);
+                AudioManager.Instance.PlaySFX(AudioManager.Instance.jumpLanding);
                 isJumping = false;
             }
             ResetJumps();

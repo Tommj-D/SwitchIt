@@ -14,7 +14,6 @@ public class RespawnManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-
         Instance = this;
     }
 

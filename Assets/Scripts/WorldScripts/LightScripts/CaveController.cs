@@ -84,9 +84,9 @@ public class CaveController : MonoBehaviour
         VolumeController.Instance.FadeMasterLowpass(800f, 0.4f);
         VolumeController.Instance.DuckMusic(-3f, 0.4f);
 
-        if (AudioManager.instance != null&&!isActivated)
+        if (AudioManager.Instance != null&&!isActivated)
         {
-            AudioManager.instance.PlaySFX(AudioManager.instance.secretEntranceSound);
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.secretEntranceSound);
             isActivated = true;
         }
 

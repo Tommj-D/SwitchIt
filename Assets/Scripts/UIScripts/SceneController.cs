@@ -19,7 +19,6 @@ public class SceneController : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-
         Instance = this;
 
         sceneFade = GetComponentInChildren<ScreenFade>();

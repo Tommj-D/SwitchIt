@@ -67,9 +67,9 @@ public class PlayerRespawn : MonoBehaviour
         isDying = true;
 
         //Audio morte
-        if (AudioManager.instance != null)
+        if (AudioManager.Instance != null)
         {
-            AudioManager.instance.PlaySFX(AudioManager.instance.playerDeathSound);
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.playerDeathSound);
         }
         //Abbasso il volume mentre il player muore
         VolumeController.Instance.DuckMusic(-30f, 0.4f);
@@ -171,9 +171,9 @@ public class PlayerRespawn : MonoBehaviour
     {
         if (fullSpriteRenderer == null) yield break;
 
-        if (AudioManager.instance != null)
+        if (AudioManager.Instance != null)
                 {
-                    AudioManager.instance.PlaySFX(AudioManager.instance.respawnSound);
+                    AudioManager.Instance.PlaySFX(AudioManager.Instance.respawnSound);
                 }
 
         yield return new WaitForSeconds(0.9f);

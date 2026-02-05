@@ -9,9 +9,9 @@ public class Slime_Green : Enemy
 
     protected override void Sound()
     {
-        if (AudioManager.instance != null)
+        if (AudioManager.Instance != null)
         {
-            AudioManager.instance.PlaySFX(AudioManager.instance.slimeDeathSound);
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.slimeDeathSound);
         }
     }
 }

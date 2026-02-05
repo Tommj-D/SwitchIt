@@ -53,9 +53,9 @@ public class Mace_Fall : MonoBehaviour
     private IEnumerator StartShake()
     {
         isShaking = true;
-        if (AudioManager.instance.shakeSound != null)
+        if (AudioManager.Instance.shakeSound != null)
         {
-            AudioManager.instance.PlaySFX(AudioManager.instance.shakeSound);
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.shakeSound);
         }
         yield return new WaitForSeconds(shakeDuration);
         isShaking = false;
@@ -88,9 +88,9 @@ public class Mace_Fall : MonoBehaviour
         if (isFalling && other.gameObject.CompareTag("Ground"))
         {
             // Suono di impatto
-            if (AudioManager.instance != null)
+            if (AudioManager.Instance != null)
             {
-                AudioManager.instance.PlaySFX(AudioManager.instance.maceCrashSound);
+                AudioManager.Instance.PlaySFX(AudioManager.Instance.maceCrashSound);
             }
 
             isFalling = false;

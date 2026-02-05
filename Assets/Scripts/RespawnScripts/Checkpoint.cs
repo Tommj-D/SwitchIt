@@ -13,7 +13,7 @@ public class Checkpoint : MonoBehaviour
         if (!other.CompareTag("Player")) return;
 
         if (makeSound)
-            AudioManager.instance.PlaySFX(AudioManager.instance.checkpointSound);
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.checkpointSound);
 
         activated = true;
 
