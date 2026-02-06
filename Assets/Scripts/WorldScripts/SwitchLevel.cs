@@ -57,6 +57,11 @@ public class SwitchLevel : MonoBehaviour
         // Assorbimento verso la pietra magica
         yield return StartCoroutine(AbsorbPlayer(player));
 
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.isTestMode = false;
+        }
+
         SceneController.Instance.LoadScene(nextSceneName);
     }
 

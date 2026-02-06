@@ -32,14 +32,6 @@ public class PlayerRespawn : MonoBehaviour
 
     private void Awake()
     {
-        if (Object.FindObjectsByType<PlayerRespawn>(FindObjectsSortMode.None).Length > 1)
-        {
-            Destroy(gameObject);
-            return;
-        }
-
-        DontDestroyOnLoad(gameObject);
-
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<Collider2D>();
@@ -54,7 +46,8 @@ public class PlayerRespawn : MonoBehaviour
         // Se esiste il RespawnManager e il fullSprite, fai partire l'animazione di spawn
         if (RespawnManager.Instance != null && fullSpriteRenderer != null)
         {
-            StartCoroutine(InitialSpawnSequence());
+            if (!GameManager.Instance.isTestMode)
+                StartCoroutine(InitialSpawnSequence());
         }
     }
 
@@ -259,28 +252,34 @@ public class PlayerRespawn : MonoBehaviour
     }
 
     //---------SPAWN NUOVA SCENA---------
-    private void OnEnable()
+
+    public void ForceSpawn(Transform point)
     {
-        SceneManager.sceneLoaded += OnSceneLoaded;
+        if (point == null) return;
+
+        if (rb == null)
+            rb = GetComponent<Rigidbody2D>();
+
+        transform.position = point.position;
+
+        if (rb != null)
+            rb.linearVelocity = Vector2.zero;
+
+        if (fullSprite != null)
+        {
+            fullSprite.SetActive(true);
+            if (fullSpriteRenderer != null)
+                fullSpriteRenderer.enabled = true;
+        }
+
+        Debug.Log($"[PlayerRespawn] Posizione finale = {transform.position}");
     }
 
-    private void OnDisable()
+    public void TriggerSpawnAnimation()
     {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
+        if (fullSpriteRenderer == null) return;
+        StartCoroutine(PlayRespawnAnimation());
     }
-
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        if (RespawnManager.Instance == null) return;
-
-        if(GameManager.Instance != null && GameManager.Instance.isTestMode) return;
-        Transform spawnPoint = RespawnManager.Instance.GetRespawnPoint();
-        if (spawnPoint == null) return;
-
-        transform.position = spawnPoint.position;
-        rb.linearVelocity = Vector2.zero;
-    }
-
 
     public bool IsDying() { return isDying; }
      
