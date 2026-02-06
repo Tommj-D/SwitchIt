@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Cinemachine; // Assicurati che CinemachineCamera sia disponibile
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -44,6 +45,12 @@ public class PlayerMovement : MonoBehaviour
     public float flipDuration = 0.25f;
     private bool isFlipping = false;
 
+    [Header("Camera")]
+    public CinemachineCamera vcam;
+    public float cameraOffsetX = 4f;
+
+    private CinemachinePositionComposer positionComposer;
+
 
     void Start()
     {
@@ -51,6 +58,16 @@ public class PlayerMovement : MonoBehaviour
         sr = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
         spriteMaskController = GetComponentInChildren<SpriteMaskController>();
+
+        if (vcam != null)
+        {
+            positionComposer = vcam.GetComponent<CinemachinePositionComposer>();
+
+            if (positionComposer != null)
+            {
+                positionComposer.TargetOffset = new Vector3(cameraOffsetX, 0, 0);
+            }
+        }
     }
 
     void Update()
@@ -61,7 +78,7 @@ public class PlayerMovement : MonoBehaviour
 
         ///ANIMAZIONI///
         animator.SetFloat("Speed", Mathf.Abs(rb.linearVelocity.x));
-        animator.SetFloat("VerticalSpeed", Mathf.Abs(rb.linearVelocity.y));                          
+        animator.SetFloat("VerticalSpeed", Mathf.Abs(rb.linearVelocity.y));
 
         if (rb.linearVelocity.x == 0 && jumpsRemaining == maxJumps && Time.time >= nextBlinkTime)
         {
@@ -105,7 +122,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void Jump(InputAction.CallbackContext context)
     {
-        if (jumpsRemaining>0)
+        if (jumpsRemaining > 0)
         {
             isJumping = true;
             {
@@ -117,7 +134,7 @@ public class PlayerMovement : MonoBehaviour
                         animator.SetTrigger("DoubleJump");
                         jumpFX.Play();
                     }
-                    rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpPower*gravityDirection);
+                    rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpPower * gravityDirection);
                     jumpsRemaining--;
                 }
                 else if (context.canceled)
@@ -163,21 +180,34 @@ public class PlayerMovement : MonoBehaviour
             sr.flipX = false;
             grassFX.transform.localScale = new Vector3(1, 1, 1);
             jumpFX.transform.GetChild(0).localPosition = new Vector3(-0.2f, 0, 0);
-            isFacingRight= true;
+            isFacingRight = true;
+
+            SetCameraOffset(cameraOffsetX);
         }
         else if (direction < 0)
         {
             sr.flipX = true;
             grassFX.transform.localScale = new Vector3(-1, 1, 1);
             jumpFX.transform.GetChild(0).localPosition = new Vector3(0.2f, 0, 0);
-            isFacingRight= false;
+            isFacingRight = false;
+
+            SetCameraOffset(-cameraOffsetX);
         }
+    }
+
+    private void SetCameraOffset(float x)
+    {
+        if (positionComposer == null) return;
+
+        Vector3 offset = positionComposer.TargetOffset;
+        offset.x = x;
+        positionComposer.TargetOffset = offset;
     }
 
     //----------- GRAVITY INVERSION -------//   
     public void InvertGravity(InputAction.CallbackContext context)
     {
-        if(WorldSwitch.isFantasyWorldActive && !isFlipping) 
+        if (WorldSwitch.isFantasyWorldActive && !isFlipping)
         {
             gravityDirection *= -1;
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0);
