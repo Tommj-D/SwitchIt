@@ -31,16 +31,26 @@ public class PlayerRespawn : MonoBehaviour
 
     private bool isDying = false;
 
-
     private void Start()
     {
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<Collider2D>();
         playerInput = GetComponent<PlayerInput>();
+
         if (fullSprite != null)
             fullSpriteRenderer = fullSprite.GetComponent<SpriteRenderer>();
 
+        if (RespawnManager.Instance != null && fullSpriteRenderer != null && !GameManager.Instance.isTestMode)
+        {
+            StartCoroutine(InitialSpawnSequence());
+        }
+    }
+
+    private IEnumerator InitialSpawnSequence()
+    {
+        yield return StartCoroutine(PrepareRespawn());
+        yield return StartCoroutine(PlayRespawnAnimation());
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -147,10 +157,17 @@ public class PlayerRespawn : MonoBehaviour
 
     private IEnumerator PrepareRespawn()
     {
-        if (fullSpriteRenderer == null || respawnRune == null)
+        if (fullSpriteRenderer == null)
             yield break;
 
-        transform.position = respawnRune.position;
+        if (RespawnManager.Instance == null)
+            yield break;
+
+        Transform respawnPoint = RespawnManager.Instance.GetRespawnPoint();
+        if (respawnPoint == null)
+            yield break;
+
+        transform.position = respawnPoint.position;
 
         rb.simulated = false;
         rb.linearVelocity = Vector2.zero;
@@ -228,6 +245,9 @@ public class PlayerRespawn : MonoBehaviour
     public void SetRespawnPoint(Transform rune)
     {
         respawnRune = rune;
+
+        if (RespawnManager.Instance != null)
+            RespawnManager.Instance.SetCheckpoint(rune);
     }
     public bool IsDying() { return isDying; }
      

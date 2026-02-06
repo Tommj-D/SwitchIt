@@ -7,6 +7,11 @@ public class RespawnManager : MonoBehaviour
 
     private static List<RespawnableObject> allRespawnables = new List<RespawnableObject>();
 
+    [Header("Player Respawn")]
+    public Transform defaultRespawnPoint;
+
+    private Transform currentRespawnPoint;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -15,6 +20,8 @@ public class RespawnManager : MonoBehaviour
             return;
         }
         Instance = this;
+
+        currentRespawnPoint = defaultRespawnPoint;
     }
 
     //chiamata dai RespawnableObject in Awake/OnDestroy
@@ -36,5 +43,15 @@ public class RespawnManager : MonoBehaviour
             if (r != null) r.ResetToStart();
         }
     }
-}
 
+    public void SetCheckpoint(Transform newPoint)
+    {
+        if (newPoint != null)
+            currentRespawnPoint = newPoint;
+    }
+
+    public Transform GetRespawnPoint()
+    {
+        return currentRespawnPoint != null ? currentRespawnPoint : defaultRespawnPoint;
+    }
+}
