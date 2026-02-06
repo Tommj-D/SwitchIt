@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class PlayerRespawn : MonoBehaviour
 {
@@ -8,8 +9,6 @@ public class PlayerRespawn : MonoBehaviour
 
     public ScreenFade screenFade;
     public SceneController sceneController;
-
-    private Transform respawnRune;
 
     [Header("Magic Respawn")]
     private float spawnScale = 0.1f;
@@ -31,16 +30,34 @@ public class PlayerRespawn : MonoBehaviour
 
     private bool isDying = false;
 
-
-    private void Start()
+    private void Awake()
     {
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<Collider2D>();
         playerInput = GetComponent<PlayerInput>();
+
         if (fullSprite != null)
             fullSpriteRenderer = fullSprite.GetComponent<SpriteRenderer>();
+    }
 
+    private void Start()
+    {
+        // Se esiste il RespawnManager e il fullSprite, fai partire l'animazione di spawn
+        if (RespawnManager.Instance != null && fullSpriteRenderer != null)
+        {
+            if (!GameManager.Instance.isTestMode)
+                StartCoroutine(InitialSpawnSequence());
+        }
+    }
+
+    private IEnumerator InitialSpawnSequence()
+    {
+        if (!GameManager.Instance.isTestMode)
+        {
+            yield return StartCoroutine(PrepareRespawn());
+            yield return StartCoroutine(PlayRespawnAnimation());
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -67,9 +84,9 @@ public class PlayerRespawn : MonoBehaviour
         isDying = true;
 
         //Audio morte
-        if (AudioManager.instance != null)
+        if (AudioManager.Instance != null)
         {
-            AudioManager.instance.PlaySFX(AudioManager.instance.playerDeathSound);
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.playerDeathSound);
         }
         //Abbasso il volume mentre il player muore
         VolumeController.Instance.DuckMusic(-30f, 0.4f);
@@ -147,10 +164,18 @@ public class PlayerRespawn : MonoBehaviour
 
     private IEnumerator PrepareRespawn()
     {
-        if (fullSpriteRenderer == null || respawnRune == null)
+        if (fullSpriteRenderer == null)
             yield break;
 
-        transform.position = respawnRune.position;
+        if (RespawnManager.Instance == null)
+            yield break;
+
+        Transform respawnPoint = RespawnManager.Instance.GetRespawnPoint();
+        if (respawnPoint == null)
+            yield break;
+
+        // Imposto posizione
+        transform.position = respawnPoint.position;
 
         rb.simulated = false;
         rb.linearVelocity = Vector2.zero;
@@ -171,9 +196,9 @@ public class PlayerRespawn : MonoBehaviour
     {
         if (fullSpriteRenderer == null) yield break;
 
-        if (AudioManager.instance != null)
+        if (AudioManager.Instance != null)
                 {
-                    AudioManager.instance.PlaySFX(AudioManager.instance.respawnSound);
+                    AudioManager.Instance.PlaySFX(AudioManager.Instance.respawnSound);
                 }
 
         yield return new WaitForSeconds(0.9f);
@@ -211,6 +236,7 @@ public class PlayerRespawn : MonoBehaviour
                 rb.simulated = true;
                 rb.linearVelocity = Vector2.zero; // resetta velocità
                 rb.AddForce(Vector2.up * upwardForce, ForceMode2D.Impulse);
+
                 impulseGiven = true;
             }
 
@@ -225,10 +251,35 @@ public class PlayerRespawn : MonoBehaviour
         GetComponent<PlayerMovement>().enabled = true;
     }
 
-    public void SetRespawnPoint(Transform rune)
+    //---------SPAWN NUOVA SCENA---------
+
+    public void ForceSpawn(Transform point)
     {
-        respawnRune = rune;
+        if (point == null) return;
+
+        if (rb == null)
+            rb = GetComponent<Rigidbody2D>();
+
+        transform.position = point.position;
+
+        if (rb != null)
+            rb.linearVelocity = Vector2.zero;
+
+        if (fullSprite != null)
+        {
+            fullSprite.SetActive(true);
+            if (fullSpriteRenderer != null)
+                fullSpriteRenderer.enabled = true;
+        }
+
     }
+
+    public void TriggerSpawnAnimation()
+    {
+        if (fullSpriteRenderer == null) return;
+        StartCoroutine(PlayRespawnAnimation());
+    }
+
     public bool IsDying() { return isDying; }
      
     public void Die()

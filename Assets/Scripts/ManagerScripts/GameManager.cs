@@ -1,20 +1,24 @@
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager instance;
+    public static GameManager Instance;
 
     public int coinCount = 0;
     public TextMeshProUGUI coinText;
 
+    [Header("Test Mode")]
+    public bool isTestMode = true;
+
     private void Awake()
     {
-        if (instance == null)
-            instance = this;
-        else
-            Destroy(gameObject);
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);   
+            return;
+        }
+        Instance = this;
     }
 
     void Start()

@@ -145,7 +145,7 @@ MonoBehaviour:
   absorbDuration: 1.8
   teleportEffect: {fileID: 5354946170535676697, guid: 3cb30b0e9ccce9844b18449c8f1ba94a, type: 3}
   magicStonePoint: {fileID: 6165062635176916578}
-  vcam: {fileID: 0}
+  vcam: {fileID: 6907379130471642857, guid: 3c9e3a22e012fe148a806ef19adc6167, type: 3}
 --- !u!50 &6514443634441177400
 Rigidbody2D:
   serializedVersion: 5
@@ -942,7 +942,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rockLight: {fileID: 5990127503115311141}
   glowStrength: 2
-  particlesStrength: 2
+  particlesStrength: 5
   runeColor: {r: 0.2941177, g: 0, b: 0.509804, a: 1}
   particlesColor: {r: 0.5411765, g: 0.1686275, b: 0.8862746, a: 1}
   runeColor_Then: {r: 0, g: 0, b: 0, a: 0}
@@ -1102,7 +1102,7 @@ GameObject:
   - component: {fileID: 9117286656065929551}
   - component: {fileID: 3920382121561267179}
   m_Layer: 0
-  m_Name: Grass_1
+  m_Name: Grass
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

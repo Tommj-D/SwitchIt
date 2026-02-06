@@ -138,7 +138,7 @@ PrefabInstance:
     - target: {fileID: 1428933681068825993, guid: 90658218177e940acbbe28220c62314c, type: 3}
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 2048259897}
+      objectReference: {fileID: 0}
     - target: {fileID: 1428933681068825993, guid: 90658218177e940acbbe28220c62314c, type: 3}
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: SetMusicVolume
@@ -230,7 +230,7 @@ PrefabInstance:
     - target: {fileID: 5161109146628406515, guid: 90658218177e940acbbe28220c62314c, type: 3}
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 2048259897}
+      objectReference: {fileID: 0}
     - target: {fileID: 5161109146628406515, guid: 90658218177e940acbbe28220c62314c, type: 3}
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: SetMusicVolume
@@ -418,6 +418,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1288312201822447041, guid: f5bedbd203125ba4f89de886d70c88a2, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -14.378031
+      objectReference: {fileID: 0}
+    - target: {fileID: 1288312201822447041, guid: f5bedbd203125ba4f89de886d70c88a2, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -3.4094906
+      objectReference: {fileID: 0}
     - target: {fileID: 2303527559450894790, guid: f5bedbd203125ba4f89de886d70c88a2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -15.67803
@@ -429,7 +437,23 @@ PrefabInstance:
     - target: {fileID: 2519096542146015328, guid: f5bedbd203125ba4f89de886d70c88a2, type: 3}
       propertyPath: Target.TrackingTarget
       value: 
-      objectReference: {fileID: 279049243}
+      objectReference: {fileID: 0}
+    - target: {fileID: 3234543264439612519, guid: f5bedbd203125ba4f89de886d70c88a2, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3234543264439612519, guid: f5bedbd203125ba4f89de886d70c88a2, type: 3}
+      propertyPath: Target.TrackingTarget
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6763211893344866778, guid: f5bedbd203125ba4f89de886d70c88a2, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -14.378031
+      objectReference: {fileID: 0}
+    - target: {fileID: 6763211893344866778, guid: f5bedbd203125ba4f89de886d70c88a2, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -3.4094906
+      objectReference: {fileID: 0}
     - target: {fileID: 6951153654006219685, guid: f5bedbd203125ba4f89de886d70c88a2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -8.32197
@@ -483,7 +507,9 @@ PrefabInstance:
       value: '[CAMERAS]'
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 1064707971785224935, guid: f5bedbd203125ba4f89de886d70c88a2, type: 3}
+    - {fileID: 7768803702054134568, guid: f5bedbd203125ba4f89de886d70c88a2, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f5bedbd203125ba4f89de886d70c88a2, type: 3}
@@ -892,7 +918,7 @@ PrefabInstance:
     - target: {fileID: 5571468596158380998, guid: 6951a6ce211dd3545bff03e0c7275bc7, type: 3}
       propertyPath: mainCamera
       value: 
-      objectReference: {fileID: 120034124}
+      objectReference: {fileID: 0}
     - target: {fileID: 5571468596158380998, guid: 6951a6ce211dd3545bff03e0c7275bc7, type: 3}
       propertyPath: fantasyWorld
       value: 
@@ -944,7 +970,7 @@ PrefabInstance:
     - target: {fileID: 6712831317450295238, guid: 6951a6ce211dd3545bff03e0c7275bc7, type: 3}
       propertyPath: mainCamera
       value: 
-      objectReference: {fileID: 120034124}
+      objectReference: {fileID: 0}
     - target: {fileID: 6712831317450295238, guid: 6951a6ce211dd3545bff03e0c7275bc7, type: 3}
       propertyPath: fantasyWorld
       value: 
@@ -966,6 +992,18 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 79219044}
     - target: {fileID: 8851047966293521450, guid: 6951a6ce211dd3545bff03e0c7275bc7, type: 3}
+      propertyPath: volumeMenuCanvas
+      value: 
+      objectReference: {fileID: 79219045}
+    - target: {fileID: 9122959382436324354, guid: 6951a6ce211dd3545bff03e0c7275bc7, type: 3}
+      propertyPath: sfxSlider
+      value: 
+      objectReference: {fileID: 79219043}
+    - target: {fileID: 9122959382436324354, guid: 6951a6ce211dd3545bff03e0c7275bc7, type: 3}
+      propertyPath: musicSlider
+      value: 
+      objectReference: {fileID: 79219044}
+    - target: {fileID: 9122959382436324354, guid: 6951a6ce211dd3545bff03e0c7275bc7, type: 3}
       propertyPath: volumeMenuCanvas
       value: 
       objectReference: {fileID: 79219045}
@@ -1373,7 +1411,7 @@ Tilemap:
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
       dummyAlignment: 0
-      m_AllTileFlags: 1073741825
+      m_AllTileFlags: 2147483649
   - first: {x: -12, y: -12, z: 0}
     second:
       serializedVersion: 2
@@ -2523,7 +2561,10 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 322193643}
+  - {fileID: 2138119784}
+  - {fileID: 2060261652}
   - {fileID: 120034123}
   - {fileID: 1107090995}
   - {fileID: 79219041}
-  - {fileID: 279049242}
+  - {fileID: 1158823797}
+  - {fileID: 1053850581}

@@ -1,5 +1,7 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class RespawnManager : MonoBehaviour
 {
@@ -7,22 +9,55 @@ public class RespawnManager : MonoBehaviour
 
     private static List<RespawnableObject> allRespawnables = new List<RespawnableObject>();
 
+    [Header("Player Respawn")]
+    public Transform defaultRespawnPoint;
+    private Transform currentRespawnPoint;
+
     private void Awake()
     {
-        if (Instance != null && Instance != this)
+        Instance = this;
+        allRespawnables.Clear();
+        currentRespawnPoint = defaultRespawnPoint;
+    }
+
+    private void Start()
+    {
+        // Spawn normale player solo se non in test mode
+        if (GameManager.Instance != null && GameManager.Instance.isTestMode)
         {
-            Destroy(gameObject);
             return;
         }
 
-        Instance = this;
+        StartCoroutine(SpawnPlayerDelayed());
     }
 
-    //chiamata dai RespawnableObject in Awake/OnDestroy
+    private IEnumerator SpawnPlayerDelayed()
+    {
+        yield return null; // piccolo delay per sicurezza
+
+        PlayerRespawn player = Object.FindFirstObjectByType<PlayerRespawn>();
+        
+        Transform spawn = GetRespawnPoint();
+        
+        if (player == null || spawn == null)
+        {
+            yield break;
+        }
+
+        player.ForceSpawn(spawn);
+
+        // Avvia animazione di spawn
+        player.TriggerSpawnAnimation();
+    }
+
+    // =========================
+    // REGISTRAZIONE OGGETTI
+    // =========================
     public static void Register(RespawnableObject r)
     {
         if (!allRespawnables.Contains(r)) allRespawnables.Add(r);
     }
+
     public static void Unregister(RespawnableObject r)
     {
         if (allRespawnables.Contains(r)) allRespawnables.Remove(r);
@@ -37,5 +72,17 @@ public class RespawnManager : MonoBehaviour
             if (r != null) r.ResetToStart();
         }
     }
-}
 
+    // =========================
+    // PLAYER RESPAWN
+    // =========================
+    public void SetCheckpoint(Transform newPoint)
+    {
+        currentRespawnPoint = newPoint;
+    }
+
+    public Transform GetRespawnPoint()
+    {
+        return currentRespawnPoint != null ? currentRespawnPoint : defaultRespawnPoint;
+    }
+}

@@ -63,9 +63,9 @@ public class Spike_Fall : MonoBehaviour
     {
         isShaking = true;
 
-        if (AudioManager.instance.shakeSound != null)
+        if (AudioManager.Instance.shakeSound != null)
         {
-            AudioManager.instance.PlaySFX(AudioManager.instance.shakeSound);
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.shakeSound);
         }
         yield return new WaitForSeconds(shakeDuration);
 
@@ -80,9 +80,9 @@ public class Spike_Fall : MonoBehaviour
         // Se tocca un oggetto con layer "Ground"
         if (collision.gameObject.layer == LayerMask.NameToLayer("Ground")||collision.gameObject.CompareTag("Player"))
         {
-            if (AudioManager.instance != null)
+            if (AudioManager.Instance != null)
             {
-                AudioManager.instance.PlaySFX(AudioManager.instance.spikeCrashSound);
+                AudioManager.Instance.PlaySFX(AudioManager.Instance.spikeCrashSound);
             }
             // Istanzia le particelle
             if (impactParticles != null)

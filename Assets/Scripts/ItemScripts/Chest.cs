@@ -61,9 +61,9 @@ public class Chest : MonoBehaviour
     {
         isOpen = true;
         animator.SetTrigger("Open");
-        if (AudioManager.instance != null)
+        if (AudioManager.Instance != null)
         {
-            AudioManager.instance.PlaySFX(AudioManager.instance.chestSound);
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.chestSound);
         }
         StartCoroutine(SpawnDrop(inv));
     }
@@ -156,15 +156,15 @@ public class Chest : MonoBehaviour
                 Instantiate(collectEffect, drop.transform.position, Quaternion.identity);
 
             // Suono nella posizione finale della moneta
-            if (AudioManager.instance != null)
+            if (AudioManager.Instance != null)
             {
-                AudioManager.instance.PlaySFX(AudioManager.instance.coinSound);
+                AudioManager.Instance.PlaySFX(AudioManager.Instance.coinSound);
             }
 
             // ---- AGGIUNTA AL PLAYER ----
             if (inv != null)
                 inv.AddCoins(1);
-            GameManager.instance.AddCoin(1);
+            GameManager.Instance.AddCoin(1);
 
             // attesa prima della prossima moneta
             yield return new WaitForSeconds(waitingTime);

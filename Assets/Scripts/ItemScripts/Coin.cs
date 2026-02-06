@@ -37,8 +37,8 @@ public class Coin : MonoBehaviour
     {
 
         // SUONO 
-        if (AudioManager.instance != null)
-            AudioManager.instance.PlaySFX(AudioManager.instance.coinSound);
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.coinSound);
 
         collected = true;
 
@@ -47,8 +47,8 @@ public class Coin : MonoBehaviour
         if (col != null) col.enabled = false;
 
         // PUNTEGGIO
-        if (GameManager.instance != null)
-            GameManager.instance.AddCoin(value);
+        if (GameManager.Instance != null)
+            GameManager.Instance.AddCoin(value);
 
         // EFFETTO VISIVO
         if (collectEffect != null)
