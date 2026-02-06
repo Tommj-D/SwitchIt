@@ -99,18 +99,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8353855458831400638, guid: 81249a29c5bd15949a2f408dd4782223, type: 3}
-      propertyPath: sfxSlider
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 8353855458831400638, guid: 81249a29c5bd15949a2f408dd4782223, type: 3}
-      propertyPath: musicSlider
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 8353855458831400638, guid: 81249a29c5bd15949a2f408dd4782223, type: 3}
-      propertyPath: volumeMenuCanvas
-      value: 
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -177,10 +165,7 @@ PrefabInstance:
     - {fileID: 9067577420891531570, guid: 7d5e5225882b42647864a0df44846c50, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 497111485175528005, guid: 7d5e5225882b42647864a0df44846c50, type: 3}
-      insertIndex: 1
-      addedObject: {fileID: 6712831317450295238}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7d5e5225882b42647864a0df44846c50, type: 3}
 --- !u!4 &3593359352122093120 stripped
 Transform:
