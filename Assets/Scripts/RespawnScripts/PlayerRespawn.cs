@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class PlayerRespawn : MonoBehaviour
 {
@@ -29,16 +30,38 @@ public class PlayerRespawn : MonoBehaviour
 
     private bool isDying = false;
 
-
-    private void Start()
+    private void Awake()
     {
+        if (Object.FindObjectsByType<PlayerRespawn>(FindObjectsSortMode.None).Length > 1)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        DontDestroyOnLoad(gameObject);
+
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<Collider2D>();
         playerInput = GetComponent<PlayerInput>();
+
         if (fullSprite != null)
             fullSpriteRenderer = fullSprite.GetComponent<SpriteRenderer>();
+    }
 
+    private void Start()
+    {
+        // Se esiste il RespawnManager e il fullSprite, fai partire l'animazione di spawn
+        if (RespawnManager.Instance != null && fullSpriteRenderer != null)
+        {
+            StartCoroutine(InitialSpawnSequence());
+        }
+    }
+
+    private IEnumerator InitialSpawnSequence()
+    {
+        yield return StartCoroutine(PrepareRespawn());
+        yield return StartCoroutine(PlayRespawnAnimation());
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -172,7 +195,6 @@ public class PlayerRespawn : MonoBehaviour
         yield return null;
     }
 
-
     private IEnumerator PlayRespawnAnimation()
     {
         if (fullSpriteRenderer == null) yield break;
@@ -217,6 +239,7 @@ public class PlayerRespawn : MonoBehaviour
                 rb.simulated = true;
                 rb.linearVelocity = Vector2.zero; // resetta velocità
                 rb.AddForce(Vector2.up * upwardForce, ForceMode2D.Impulse);
+
                 impulseGiven = true;
             }
 
@@ -230,6 +253,29 @@ public class PlayerRespawn : MonoBehaviour
         col.enabled = true;
         GetComponent<PlayerMovement>().enabled = true;
     }
+
+    //---------SPAWN NUOVA SCENA---------
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (RespawnManager.Instance == null) return;
+
+        Transform spawnPoint = RespawnManager.Instance.GetRespawnPoint();
+        if (spawnPoint == null) return;
+
+        transform.position = spawnPoint.position;
+        rb.linearVelocity = Vector2.zero;
+    }
+
 
     public bool IsDying() { return isDying; }
      

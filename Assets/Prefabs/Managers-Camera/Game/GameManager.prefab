@@ -45,4 +45,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   coinCount: 0
-  coinText: {fileID: 455089492435880538, guid: 5f6e91679882e0e4db12516a0458e85f, type: 3}
+  coinText: {fileID: 0}

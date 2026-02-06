@@ -27731,6 +27731,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 435632463}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1323980488 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3234543264439612519, guid: f5bedbd203125ba4f89de886d70c88a2, type: 3}
+  m_PrefabInstance: {fileID: 5008078077109336312}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9dfa5b682dcd46bda6128250e975f58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachineCamera
 --- !u!1 &1335413906
 GameObject:
   m_ObjectHideFlags: 0
@@ -45879,7 +45890,7 @@ PrefabInstance:
     - target: {fileID: 7025040627377715240, guid: 308e0b33c6907f541bdd6a9f3f6be5c6, type: 3}
       propertyPath: vcam
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1323980488}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
