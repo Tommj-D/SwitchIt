@@ -3,7 +3,6 @@ using System.Collections;
 
 public class Checkpoint : MonoBehaviour
 {
-    public Transform runeSpawnPoint;
     private bool activated = false;
     public bool makeSound = true;
 
@@ -17,10 +16,6 @@ public class Checkpoint : MonoBehaviour
 
         activated = true;
 
-        PlayerRespawn playerRespawn = other.GetComponent<PlayerRespawn>();
-        if (playerRespawn != null)
-        {
-            playerRespawn.SetRespawnPoint(runeSpawnPoint);
-        }
+        RespawnManager.Instance.SetCheckpoint(transform);
     }
 }

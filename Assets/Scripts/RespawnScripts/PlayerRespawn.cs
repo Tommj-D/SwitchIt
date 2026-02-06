@@ -9,8 +9,6 @@ public class PlayerRespawn : MonoBehaviour
     public ScreenFade screenFade;
     public SceneController sceneController;
 
-    private Transform respawnRune;
-
     [Header("Magic Respawn")]
     private float spawnScale = 0.1f;
     public float growDuration = 0.6f;
@@ -147,10 +145,17 @@ public class PlayerRespawn : MonoBehaviour
 
     private IEnumerator PrepareRespawn()
     {
-        if (fullSpriteRenderer == null || respawnRune == null)
+        if (fullSpriteRenderer == null)
             yield break;
 
-        transform.position = respawnRune.position;
+        if (RespawnManager.Instance == null)
+            yield break;
+
+        Transform respawnPoint = RespawnManager.Instance.GetRespawnPoint();
+        if (respawnPoint == null)
+            yield break;
+
+        transform.position = respawnPoint.position;
 
         rb.simulated = false;
         rb.linearVelocity = Vector2.zero;
@@ -166,6 +171,7 @@ public class PlayerRespawn : MonoBehaviour
 
         yield return null;
     }
+
 
     private IEnumerator PlayRespawnAnimation()
     {
@@ -225,10 +231,6 @@ public class PlayerRespawn : MonoBehaviour
         GetComponent<PlayerMovement>().enabled = true;
     }
 
-    public void SetRespawnPoint(Transform rune)
-    {
-        respawnRune = rune;
-    }
     public bool IsDying() { return isDying; }
      
     public void Die()
