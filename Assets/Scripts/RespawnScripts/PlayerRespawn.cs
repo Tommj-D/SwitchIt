@@ -60,8 +60,11 @@ public class PlayerRespawn : MonoBehaviour
 
     private IEnumerator InitialSpawnSequence()
     {
-        yield return StartCoroutine(PrepareRespawn());
-        yield return StartCoroutine(PlayRespawnAnimation());
+        if (!GameManager.Instance.isTestMode)
+        {
+            yield return StartCoroutine(PrepareRespawn());
+            yield return StartCoroutine(PlayRespawnAnimation());
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -178,6 +181,7 @@ public class PlayerRespawn : MonoBehaviour
         if (respawnPoint == null)
             yield break;
 
+        // Imposto posizione
         transform.position = respawnPoint.position;
 
         rb.simulated = false;
@@ -269,6 +273,7 @@ public class PlayerRespawn : MonoBehaviour
     {
         if (RespawnManager.Instance == null) return;
 
+        if(GameManager.Instance != null && GameManager.Instance.isTestMode) return;
         Transform spawnPoint = RespawnManager.Instance.GetRespawnPoint();
         if (spawnPoint == null) return;
 

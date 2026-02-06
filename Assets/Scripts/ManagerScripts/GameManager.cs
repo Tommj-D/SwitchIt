@@ -8,6 +8,9 @@ public class GameManager : MonoBehaviour
     public int coinCount = 0;
     public TextMeshProUGUI coinText;
 
+    [Header("Test Mode")]
+    public bool isTestMode = true;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
