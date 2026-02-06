@@ -272,7 +272,6 @@ public class PlayerRespawn : MonoBehaviour
                 fullSpriteRenderer.enabled = true;
         }
 
-        Debug.Log($"[PlayerRespawn] Posizione finale = {transform.position}");
     }
 
     public void TriggerSpawnAnimation()

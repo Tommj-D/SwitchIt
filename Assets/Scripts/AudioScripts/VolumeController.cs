@@ -8,10 +8,13 @@ public class VolumeController : MonoBehaviour
 {
     public static VolumeController Instance;
 
+    [Header("Audio Mixer")]
     public AudioMixer masterMixer;
-    public GameObject volumeMenuCanvas;
-    public Slider musicSlider;
-    public Slider sfxSlider;
+
+    [Header("UI Menu")]
+    public GameObject volumeMenuCanvas; // UI scene-based
+    public Slider musicSlider;          // UI scene-based
+    public Slider sfxSlider;            // UI scene-based
 
     private bool isMenuOpen = false;
 
@@ -20,7 +23,13 @@ public class VolumeController : MonoBehaviour
 
     void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
         Instance = this;
+
         masterMixer.GetFloat("MusicVol", out defaultMusicVolume);
         masterMixer.SetFloat("MasterLowpass", 22000f); // stato normale
 
@@ -59,23 +68,25 @@ public class VolumeController : MonoBehaviour
         isMenuOpen = false;
     }
 
+    // SET VOLUME
     public void SetMusicVolume(float volume)
     {
         defaultMusicVolume = volume;
-        masterMixer.SetFloat("MusicVol", volume);
+        if (masterMixer != null)
+            masterMixer.SetFloat("MusicVol", volume);
     }
 
     public void SetSFXVolume(float volume)
     {
-        // Imposta il volume nel mixer (Parametro: SFXVol)
-        masterMixer.SetFloat("SFXVol", volume);
+        if (masterMixer != null)
+            masterMixer.SetFloat("SFXVol", volume);
     }
 
     //----------DUCKING MUSICA----------//
     public void DuckMusic(float targetVolume, float duration)
     {
-        if (musicFadeRoutine != null)
-            StopCoroutine(musicFadeRoutine);
+        if (this == null) return; // sicurezza
+        if (musicFadeRoutine != null) StopCoroutine(musicFadeRoutine);
 
         musicFadeRoutine = StartCoroutine(FadeMusic(targetVolume, duration));
     }
@@ -87,6 +98,8 @@ public class VolumeController : MonoBehaviour
 
     private IEnumerator FadeMusic(float targetVolume, float duration)
     {
+        if (masterMixer == null) yield break;
+
         masterMixer.GetFloat("MusicVol", out float startVolume);
 
         float t = 0f;
@@ -104,11 +117,14 @@ public class VolumeController : MonoBehaviour
     //----------OFFUSCAMENTO MUSICA----------//
     public void FadeMusicLowpass(float target, float duration)
     {
+        if (masterMixer == null) return;
         StartCoroutine(LowpassFadeRoutine(target, duration));
     }
 
     private IEnumerator LowpassFadeRoutine(float target, float duration)
     {
+        if (masterMixer == null) yield break;
+
         masterMixer.GetFloat("MusicLowpass", out float start);
 
         float t = 0f;
@@ -123,14 +139,16 @@ public class VolumeController : MonoBehaviour
         masterMixer.SetFloat("MusicLowpass", target);
     }
 
-    //----------OFFUSCAMENTO MASTER (Musica + SFX)----------//
     public void FadeMasterLowpass(float target, float duration)
     {
+        if (masterMixer == null) return;
         StartCoroutine(LowpassMasterFadeRoutine(target, duration));
     }
 
     private IEnumerator LowpassMasterFadeRoutine(float target, float duration)
     {
+        if (masterMixer == null) yield break;
+
         masterMixer.GetFloat("MasterLowpass", out float start);
 
         float t = 0f;
@@ -143,5 +161,23 @@ public class VolumeController : MonoBehaviour
         }
 
         masterMixer.SetFloat("MasterLowpass", target);
+    }
+
+   
+    // Aggiorna i riferimenti agli slider UI ogni volta che cambi scena
+    public void RefreshUISliders()
+    {
+        if (volumeMenuCanvas != null)
+        {
+            musicSlider = volumeMenuCanvas.transform.Find("MusicSlider")?.GetComponent<Slider>();
+            sfxSlider = volumeMenuCanvas.transform.Find("SFXSlider")?.GetComponent<Slider>();
+        }
+
+        if (musicSlider != null) musicSlider.onValueChanged.AddListener(SetMusicVolume);
+        if (sfxSlider != null) sfxSlider.onValueChanged.AddListener(SetSFXVolume);
+
+        // Aggiorna i valori iniziali
+        if (musicSlider != null) musicSlider.value = defaultMusicVolume;
+        if (sfxSlider != null) sfxSlider.value = 1f;
     }
 }

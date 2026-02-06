@@ -43,6 +43,13 @@ public class AudioManager : MonoBehaviour
             return;
         }
         Instance = this;
+        UnityEngine.SceneManagement.SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, UnityEngine.SceneManagement.LoadSceneMode mode)
+    {
+        if (VolumeController.Instance != null)
+            VolumeController.Instance.RefreshUISliders();
     }
 
     void Start()
