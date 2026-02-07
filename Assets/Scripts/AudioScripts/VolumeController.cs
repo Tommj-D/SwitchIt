@@ -19,6 +19,7 @@ public class VolumeController : MonoBehaviour
     private bool isMenuOpen = false;
 
     private float defaultMusicVolume = 0f;
+    private float defaultSFXVolume = 1f;
     private Coroutine musicFadeRoutine;
 
     void Awake()
@@ -103,6 +104,7 @@ public class VolumeController : MonoBehaviour
 
     public void SetSFXVolume(float volume)
     {
+        defaultSFXVolume = volume;
         if (masterMixer != null)
             masterMixer.SetFloat("SFXVol", volume);
     }
@@ -202,7 +204,7 @@ public class VolumeController : MonoBehaviour
 
         sfxSlider.onValueChanged.RemoveAllListeners();
         sfxSlider.onValueChanged.AddListener(SetSFXVolume);
-        sfxSlider.value = 1f;
+        sfxSlider.value = defaultSFXVolume;
     }
 
     public void ClearUI(GameObject uiRoot)
