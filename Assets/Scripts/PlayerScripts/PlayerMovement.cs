@@ -49,6 +49,11 @@ public class PlayerMovement : MonoBehaviour
     public CinemachineCamera vcam;
     public float cameraOffsetX = 4f;
 
+    private float offsetSmoothTime = 0.3f; //Quanto velocemante la cam segue il player  -- Cambiato in Move()
+    private float targetOffsetX;
+    private float currentOffsetX;
+    private Vector3 cameraBaseOffset;
+    private float offsetVelocity;
     private CinemachinePositionComposer positionComposer;
 
 
@@ -65,8 +70,13 @@ public class PlayerMovement : MonoBehaviour
 
             if (positionComposer != null)
             {
-                positionComposer.TargetOffset = new Vector3(cameraOffsetX, 0, 0);
+                cameraBaseOffset = positionComposer.TargetOffset;
+
+                currentOffsetX = 0f;
+                targetOffsetX = 0f;
             }
+            currentOffsetX = cameraOffsetX;
+            targetOffsetX = cameraOffsetX;
         }
     }
 
@@ -85,7 +95,7 @@ public class PlayerMovement : MonoBehaviour
             animator.SetTrigger("Blink");
             nextBlinkTime = Time.time + Random.Range(3f, 6f);
         }
-
+        UpdateCameraOffset();
     }
 
     private void Gravity()
@@ -106,7 +116,8 @@ public class PlayerMovement : MonoBehaviour
         horizontalMovement = context.ReadValue<Vector2>().x;
 
         if (Mathf.Abs(horizontalMovement) > 0.01f)
-        {
+        {   
+            offsetSmoothTime = 0.3f;  //Resetta la velocita di follow della cam quando il player inizia a muoversi
             Flip(horizontalMovement);
 
             if (isGrounded)
@@ -117,6 +128,11 @@ public class PlayerMovement : MonoBehaviour
                     AudioManager.Instance.PlaySFX(AudioManager.Instance.walkSound);
                 }
             }
+        }
+        if (Mathf.Abs(horizontalMovement) < 0.01f)
+        {
+            targetOffsetX = 0f;
+            offsetSmoothTime = 0.8f;  //Quando il player smette di muoversi, la cam torna al centro piu lentamente rispetto a quando si muove
         }
     }
 
@@ -182,7 +198,7 @@ public class PlayerMovement : MonoBehaviour
             jumpFX.transform.GetChild(0).localPosition = new Vector3(-0.2f, 0, 0);
             isFacingRight = true;
 
-            SetCameraOffset(cameraOffsetX);
+            targetOffsetX = cameraOffsetX; //Flip camera
         }
         else if (direction < 0)
         {
@@ -191,18 +207,28 @@ public class PlayerMovement : MonoBehaviour
             jumpFX.transform.GetChild(0).localPosition = new Vector3(0.2f, 0, 0);
             isFacingRight = false;
 
-            SetCameraOffset(-cameraOffsetX);
+            targetOffsetX = -cameraOffsetX; //Flip Camera
         }
     }
 
-    private void SetCameraOffset(float x)
+    private void UpdateCameraOffset()
     {
         if (positionComposer == null) return;
 
-        Vector3 offset = positionComposer.TargetOffset;
-        offset.x = x;
-        positionComposer.TargetOffset = offset;
+        currentOffsetX = Mathf.SmoothDamp(
+            currentOffsetX,
+            targetOffsetX,
+            ref offsetVelocity,
+            offsetSmoothTime
+        );
+
+        positionComposer.TargetOffset = new Vector3(
+            cameraBaseOffset.x + currentOffsetX,
+            cameraBaseOffset.y,
+            cameraBaseOffset.z
+        );
     }
+
 
     //----------- GRAVITY INVERSION -------//   
     public void InvertGravity(InputAction.CallbackContext context)
