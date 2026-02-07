@@ -47,22 +47,47 @@ public class VolumeController : MonoBehaviour
         }
     }
 
+    //----------GESTIONE UI, MENU, SLIDER----------//
+    public void SetUI(GameObject menuCanvas, Slider music, Slider sfx)
+    {
+        volumeMenuCanvas = menuCanvas;
+        musicSlider = music;
+        sfxSlider = sfx;
+
+        if (musicSlider != null)
+        {
+            musicSlider.onValueChanged.RemoveAllListeners();
+            musicSlider.onValueChanged.AddListener(SetMusicVolume);
+            musicSlider.value = defaultMusicVolume;
+        }
+
+        if (sfxSlider != null)
+        {
+            sfxSlider.onValueChanged.RemoveAllListeners();
+            sfxSlider.onValueChanged.AddListener(SetSFXVolume);
+            sfxSlider.value = 1f;
+        }
+    }
     public void OpenMenu()
-{
-    volumeMenuCanvas.SetActive(true);
-    Time.timeScale = 0f; 
-    isMenuOpen = true;
-    
-    // Queste righe servono a liberare il mouse dal gioco
-    Cursor.visible = true;
-    Cursor.lockState = CursorLockMode.None;
-    
-    // Forza l'EventSystem a guardare il menu
-    UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(null);
-}
+    {
+            if (volumeMenuCanvas == null)
+                return;
+
+            volumeMenuCanvas.SetActive(true);
+            Time.timeScale = 0f;
+            isMenuOpen = true;
+
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+
+            UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(null);
+    }
 
     public void CloseMenu()
     {
+        if (volumeMenuCanvas == null)
+            return;
+
         volumeMenuCanvas.SetActive(false);
         Time.timeScale = 1f;
         isMenuOpen = false;
@@ -163,21 +188,31 @@ public class VolumeController : MonoBehaviour
         masterMixer.SetFloat("MasterLowpass", target);
     }
 
-   
+
     // Aggiorna i riferimenti agli slider UI ogni volta che cambi scena
     public void RefreshUISliders()
     {
-        if (volumeMenuCanvas != null)
+        // Se la UI non si è ancora registrata, esco
+        if (volumeMenuCanvas == null || musicSlider == null || sfxSlider == null)
+            return;
+
+        musicSlider.onValueChanged.RemoveAllListeners();
+        musicSlider.onValueChanged.AddListener(SetMusicVolume);
+        musicSlider.value = defaultMusicVolume;
+
+        sfxSlider.onValueChanged.RemoveAllListeners();
+        sfxSlider.onValueChanged.AddListener(SetSFXVolume);
+        sfxSlider.value = 1f;
+    }
+
+    public void ClearUI(GameObject uiRoot)
+    {
+        if (volumeMenuCanvas == uiRoot)
         {
-            musicSlider = volumeMenuCanvas.transform.Find("MusicSlider")?.GetComponent<Slider>();
-            sfxSlider = volumeMenuCanvas.transform.Find("SFXSlider")?.GetComponent<Slider>();
+            volumeMenuCanvas = null;
+            musicSlider = null;
+            sfxSlider = null;
+            isMenuOpen = false;
         }
-
-        if (musicSlider != null) musicSlider.onValueChanged.AddListener(SetMusicVolume);
-        if (sfxSlider != null) sfxSlider.onValueChanged.AddListener(SetSFXVolume);
-
-        // Aggiorna i valori iniziali
-        if (musicSlider != null) musicSlider.value = defaultMusicVolume;
-        if (sfxSlider != null) sfxSlider.value = 1f;
     }
 }
