@@ -49,7 +49,7 @@ public class PlayerMovement : MonoBehaviour
     public CinemachineCamera vcam;
     public float cameraOffsetX = 4f;
 
-    private float offsetSmoothTime = 0.3f; //Quanto velocemante la cam segue il player  -- Cambiato in Move()
+    private float offsetSmoothTime = 0.3f; //Quanto velocemante la cam segue il player 
     private float targetOffsetX;
     private float currentOffsetX;
     private Vector3 cameraBaseOffset;
@@ -117,7 +117,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (Mathf.Abs(horizontalMovement) > 0.01f)
         {   
-            offsetSmoothTime = 0.3f;  //Resetta la velocita di follow della cam quando il player inizia a muoversi
+            
             Flip(horizontalMovement);
 
             if (isGrounded)
@@ -128,11 +128,6 @@ public class PlayerMovement : MonoBehaviour
                     AudioManager.Instance.PlaySFX(AudioManager.Instance.walkSound);
                 }
             }
-        }
-        if (Mathf.Abs(horizontalMovement) < 0.01f)
-        {
-            targetOffsetX = 0f;
-            offsetSmoothTime = 0.8f;  //Quando il player smette di muoversi, la cam torna al centro piu lentamente rispetto a quando si muove
         }
     }
 
@@ -211,25 +206,6 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    private void UpdateCameraOffset()
-    {
-        if (positionComposer == null) return;
-
-        currentOffsetX = Mathf.SmoothDamp(
-            currentOffsetX,
-            targetOffsetX,
-            ref offsetVelocity,
-            offsetSmoothTime
-        );
-
-        positionComposer.TargetOffset = new Vector3(
-            cameraBaseOffset.x + currentOffsetX,
-            cameraBaseOffset.y,
-            cameraBaseOffset.z
-        );
-    }
-
-
     //----------- GRAVITY INVERSION -------//   
     public void InvertGravity(InputAction.CallbackContext context)
     {
@@ -261,8 +237,32 @@ public class PlayerMovement : MonoBehaviour
         transform.rotation = targetRot;
         isFlipping = false;
     }
-    //-------------------------------------//
 
+    //----------- CAMERA OFFSET/SETTINGS -----------//
+    private void UpdateCameraOffset()
+    {
+        if (positionComposer == null) return;
+
+        currentOffsetX = Mathf.SmoothDamp(
+            currentOffsetX,
+            targetOffsetX,
+            ref offsetVelocity,
+            offsetSmoothTime
+        );
+
+        positionComposer.TargetOffset = new Vector3(
+            cameraBaseOffset.x + currentOffsetX,
+            cameraBaseOffset.y,
+            cameraBaseOffset.z
+        );
+    }
+
+    public void ResetCameraOffset()
+    {
+        targetOffsetX = 0f;
+    }
+
+    //----------- GIZMOS -----------//
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.white;

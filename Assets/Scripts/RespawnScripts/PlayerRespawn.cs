@@ -98,7 +98,11 @@ public class PlayerRespawn : MonoBehaviour
         col.enabled = false;
 
         var movement = GetComponent<PlayerMovement>();
-        if (movement != null) movement.enabled = false;
+        if (movement != null)
+        {
+            movement.ResetCameraOffset();   
+            movement.enabled = false;
+        }
 
         // Particelle
         if (deathParticle != null)
@@ -271,7 +275,6 @@ public class PlayerRespawn : MonoBehaviour
             if (fullSpriteRenderer != null)
                 fullSpriteRenderer.enabled = true;
         }
-
     }
 
     public void TriggerSpawnAnimation()
