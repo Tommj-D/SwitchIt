@@ -21,11 +21,12 @@ public class GameManager : MonoBehaviour
         Instance = this;
     }
 
-    void Start()
+    public void SetCoinText(TextMeshProUGUI newCoinText)
     {
+        coinText = newCoinText;
         UpdateCoinUI();
     }
-
+   
     public void AddCoin(int amount)
     {
         coinCount += amount;

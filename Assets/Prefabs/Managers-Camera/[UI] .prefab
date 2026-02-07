@@ -88,6 +88,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8612576068011217646}
+  - component: {fileID: 3651205791814099120}
   m_Layer: 5
   m_Name: CoinUI
   m_TagString: Untagged
@@ -116,6 +117,19 @@ RectTransform:
   m_AnchoredPosition: {x: -40, y: -22}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 1, y: 1}
+--- !u!114 &3651205791814099120
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 383802741177963143}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3637b6d420e48040b0c11069df1e9a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CoinUI
+  coinText: {fileID: 2054545022994841085}
 --- !u!1 &6183267886881632272
 GameObject:
   m_ObjectHideFlags: 0
@@ -392,6 +406,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5f6e91679882e0e4db12516a0458e85f, type: 3}
+--- !u!114 &2054545022994841085 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 455089492435880538, guid: 5f6e91679882e0e4db12516a0458e85f, type: 3}
+  m_PrefabInstance: {fileID: 1933162080257456039}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!224 &8067721200342465856 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8441352107680647911, guid: 5f6e91679882e0e4db12516a0458e85f, type: 3}
