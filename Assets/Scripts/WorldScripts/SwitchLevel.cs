@@ -31,6 +31,8 @@ public class SwitchLevel : MonoBehaviour
 
     private IEnumerator LevelCompleteSequence(GameObject player)
     {
+        GameManager.Instance.isChangingLevel = true;
+
         // Blocca input e movimento
         PlayerInput input = player.GetComponent<PlayerInput>();
         Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
@@ -54,6 +56,23 @@ public class SwitchLevel : MonoBehaviour
         {
             AudioManager.Instance.PlaySFX(AudioManager.Instance.switchLevelSound);
         }
+
+        // Transizione audio magica
+        if (VolumeController.Instance != null)
+        {
+            // Abbassa volume
+            VolumeController.Instance.DuckMusic(-4f, 0.3f);
+
+            // Lowpass ovattato
+            VolumeController.Instance.FadeMusicLowpass(1500f, 0.3f);
+
+            // Pitch shift
+            VolumeController.Instance.FadeMusicPitch(0.5f, 0.3f);
+
+            // Aumenta leggero riverbero e echo
+            VolumeController.Instance.SetMusicEcho(0.25f);  // 15% del send
+        }
+
         // Assorbimento verso la pietra magica
         yield return StartCoroutine(AbsorbPlayer(player));
 

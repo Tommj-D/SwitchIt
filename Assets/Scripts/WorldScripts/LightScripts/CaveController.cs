@@ -105,6 +105,12 @@ public class CaveController : MonoBehaviour
     {
         if (!other.CompareTag("Player")) return;
 
+        if (GameManager.Instance != null && GameManager.Instance.isChangingLevel)
+        {
+            VolumeController.Instance.DuckMusic(3f, 0.2f);
+            return;
+        }
+
         // Ripristino musica all'uscita dalla grotta
         VolumeController.Instance.RestoreMusic(0.6f);
         VolumeController.Instance.RestoreMusicLowpass(0.6f);

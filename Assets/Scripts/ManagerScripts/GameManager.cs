@@ -11,6 +11,9 @@ public class GameManager : MonoBehaviour
     [Header("Test Mode")]
     public bool isTestMode = true;
 
+    
+    [HideInInspector] public bool isChangingLevel = false;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
