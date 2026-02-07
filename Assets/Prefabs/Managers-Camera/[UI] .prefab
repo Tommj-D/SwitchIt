@@ -351,10 +351,10 @@ RectTransform:
   - {fileID: 214324236452834716}
   m_Father: {fileID: 4777137437529217041}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 940, y: -592.72}
-  m_SizeDelta: {x: 1880, y: 20}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 434.19998, y: -230.82}
+  m_SizeDelta: {x: 868.39996, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1428933681068825993
 MonoBehaviour:
@@ -410,7 +410,7 @@ MonoBehaviour:
       - m_Target: {fileID: 8353855458831400638, guid: 81249a29c5bd15949a2f408dd4782223, type: 3}
         m_TargetAssemblyTypeName: VolumeController, Assembly-CSharp
         m_MethodName: SetSFXVolume
-        m_Mode: 0
+        m_Mode: 4
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -649,10 +649,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 4777137437529217041}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 940, y: -547.61}
-  m_SizeDelta: {x: 1880, y: 40.22}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 434.19998, y: -185.71}
+  m_SizeDelta: {x: 868.39996, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1043673449962506910
 CanvasRenderer:
@@ -1095,10 +1095,10 @@ RectTransform:
   - {fileID: 3805706604498301186}
   m_Father: {fileID: 4777137437529217041}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 940, y: -502.5}
-  m_SizeDelta: {x: 1880, y: 20}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 434.19998, y: -140.6}
+  m_SizeDelta: {x: 868.39996, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &5161109146628406515
 MonoBehaviour:
@@ -1326,10 +1326,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 4777137437529217041}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 940, y: -457.39}
-  m_SizeDelta: {x: 1880, y: 40.22}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 434.19998, y: -95.490005}
+  m_SizeDelta: {x: 868.39996, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1540188741518319125
 CanvasRenderer:
