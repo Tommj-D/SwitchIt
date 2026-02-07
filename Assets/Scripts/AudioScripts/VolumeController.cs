@@ -19,7 +19,7 @@ public class VolumeController : MonoBehaviour
     private bool isMenuOpen = false;
 
     private float defaultMusicVolume = 0f;
-    private float defaultSFXVolume = 1f;
+    private float defaultSFXVolume = 0f;
     private Coroutine musicFadeRoutine;
 
     void Awake()
@@ -32,8 +32,7 @@ public class VolumeController : MonoBehaviour
         Instance = this;
 
         masterMixer.GetFloat("MusicVol", out defaultMusicVolume);
-        masterMixer.SetFloat("MasterLowpass", 22000f); // stato normale
-
+        masterMixer.GetFloat("SFXVol", out defaultSFXVolume);
     }
 
     void Update()
@@ -49,6 +48,32 @@ public class VolumeController : MonoBehaviour
     }
 
     //----------GESTIONE UI, MENU, SLIDER----------//
+    // Aggiorna i riferimenti agli slider UI ogni volta che cambi scena
+    public void RefreshUISliders()
+    {
+        if (volumeMenuCanvas == null || musicSlider == null || sfxSlider == null)
+            return;
+
+        musicSlider.onValueChanged.RemoveAllListeners();
+        musicSlider.onValueChanged.AddListener(SetMusicVolume);
+        musicSlider.value = defaultMusicVolume;
+
+        sfxSlider.onValueChanged.RemoveAllListeners();
+        sfxSlider.onValueChanged.AddListener(SetSFXVolume);
+        sfxSlider.value = defaultSFXVolume;
+    }
+
+    public void ClearUI(GameObject uiRoot)
+    {
+        if (volumeMenuCanvas == uiRoot)
+        {
+            volumeMenuCanvas = null;
+            musicSlider = null;
+            sfxSlider = null;
+            isMenuOpen = false;
+        }
+    }
+
     public void SetUI(GameObject menuCanvas, Slider music, Slider sfx)
     {
         volumeMenuCanvas = menuCanvas;
@@ -66,7 +91,7 @@ public class VolumeController : MonoBehaviour
         {
             sfxSlider.onValueChanged.RemoveAllListeners();
             sfxSlider.onValueChanged.AddListener(SetSFXVolume);
-            sfxSlider.value = 1f;
+            sfxSlider.value = defaultSFXVolume;
         }
     }
     public void OpenMenu()
@@ -110,17 +135,17 @@ public class VolumeController : MonoBehaviour
     }
 
     //----------DUCKING MUSICA----------//
-    public void DuckMusic(float targetVolume, float duration)
+    public void DuckMusic(float duckAmount, float duration)
     {
-        if (this == null) return; // sicurezza
-        if (musicFadeRoutine != null) StopCoroutine(musicFadeRoutine);
+        if (masterMixer == null) return;
 
+        if (musicFadeRoutine != null)
+            StopCoroutine(musicFadeRoutine);
+
+        masterMixer.GetFloat("MusicVol", out float currentVolume);
+
+        float targetVolume = currentVolume + duckAmount; // duckAmount negativo
         musicFadeRoutine = StartCoroutine(FadeMusic(targetVolume, duration));
-    }
-
-    public void RestoreMusic(float duration)
-    {
-        DuckMusic(defaultMusicVolume, duration);
     }
 
     private IEnumerator FadeMusic(float targetVolume, float duration)
@@ -140,15 +165,24 @@ public class VolumeController : MonoBehaviour
 
         masterMixer.SetFloat("MusicVol", targetVolume);
     }
+    public void RestoreMusic(float duration)
+    {
+        if (masterMixer == null) return;
+
+        if (musicFadeRoutine != null)
+            StopCoroutine(musicFadeRoutine);
+
+        musicFadeRoutine = StartCoroutine(FadeMusic(defaultMusicVolume, duration));
+    }
 
     //----------OFFUSCAMENTO MUSICA----------//
     public void FadeMusicLowpass(float target, float duration)
     {
         if (masterMixer == null) return;
-        StartCoroutine(LowpassFadeRoutine(target, duration));
+        StartCoroutine(LowpassMusicFadeRoutine(target, duration));
     }
 
-    private IEnumerator LowpassFadeRoutine(float target, float duration)
+    private IEnumerator LowpassMusicFadeRoutine(float target, float duration)
     {
         if (masterMixer == null) yield break;
 
@@ -166,55 +200,8 @@ public class VolumeController : MonoBehaviour
         masterMixer.SetFloat("MusicLowpass", target);
     }
 
-    public void FadeMasterLowpass(float target, float duration)
+    public void RestoreMusicLowpass(float duration)
     {
-        if (masterMixer == null) return;
-        StartCoroutine(LowpassMasterFadeRoutine(target, duration));
-    }
-
-    private IEnumerator LowpassMasterFadeRoutine(float target, float duration)
-    {
-        if (masterMixer == null) yield break;
-
-        masterMixer.GetFloat("MasterLowpass", out float start);
-
-        float t = 0f;
-        while (t < duration)
-        {
-            t += Time.deltaTime;
-            float value = Mathf.Lerp(start, target, t / duration);
-            masterMixer.SetFloat("MasterLowpass", value);
-            yield return null;
-        }
-
-        masterMixer.SetFloat("MasterLowpass", target);
-    }
-
-
-    // Aggiorna i riferimenti agli slider UI ogni volta che cambi scena
-    public void RefreshUISliders()
-    {
-        // Se la UI non si è ancora registrata, esco
-        if (volumeMenuCanvas == null || musicSlider == null || sfxSlider == null)
-            return;
-
-        musicSlider.onValueChanged.RemoveAllListeners();
-        musicSlider.onValueChanged.AddListener(SetMusicVolume);
-        musicSlider.value = defaultMusicVolume;
-
-        sfxSlider.onValueChanged.RemoveAllListeners();
-        sfxSlider.onValueChanged.AddListener(SetSFXVolume);
-        sfxSlider.value = defaultSFXVolume;
-    }
-
-    public void ClearUI(GameObject uiRoot)
-    {
-        if (volumeMenuCanvas == uiRoot)
-        {
-            volumeMenuCanvas = null;
-            musicSlider = null;
-            sfxSlider = null;
-            isMenuOpen = false;
-        }
+        FadeMusicLowpass(22000f, duration);
     }
 }

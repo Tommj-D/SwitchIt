@@ -81,7 +81,7 @@ public class CaveController : MonoBehaviour
         if (!other.CompareTag("Player")) return;
 
         //Modifico musica all'interno della grotta
-        VolumeController.Instance.FadeMasterLowpass(800f, 0.4f);
+        VolumeController.Instance.FadeMusicLowpass(800f, 0.4f);
         VolumeController.Instance.DuckMusic(-3f, 0.4f);
 
         if (AudioManager.Instance != null&&!isActivated)
@@ -106,8 +106,8 @@ public class CaveController : MonoBehaviour
         if (!other.CompareTag("Player")) return;
 
         // Ripristino musica all'uscita dalla grotta
-        VolumeController.Instance.FadeMasterLowpass(22000f, 0.6f);
         VolumeController.Instance.RestoreMusic(0.6f);
+        VolumeController.Instance.RestoreMusicLowpass(0.6f);
 
         isPlayerInsideCave = false;
         LightManager.Instance.ExitCave();
