@@ -81,8 +81,9 @@ public class CaveController : MonoBehaviour
         if (!other.CompareTag("Player")) return;
 
         //Modifico musica all'interno della grotta
-        VolumeController.Instance.FadeMusicLowpass(800f, 0.4f);
-        VolumeController.Instance.DuckMusic(-3f, 0.4f);
+        VolumeController.Instance.FadeMixerParam(VolumeController.Instance.masterMixer, "MusicLowpass", 800f, 0.4f);
+        VolumeController.Instance.DuckMixer(VolumeController.Instance.masterMixer, "MusicVol", 3f, 0.4f);
+        VolumeController.Instance.DuckMixer(VolumeController.Instance.transitionMixer, "MusicVol", 3f, 0.4f);
 
         if (AudioManager.Instance != null&&!isActivated)
         {
@@ -104,16 +105,8 @@ public class CaveController : MonoBehaviour
     private void OnTriggerExit2D(Collider2D other)
     {
         if (!other.CompareTag("Player")) return;
-
-        if (GameManager.Instance != null && GameManager.Instance.isChangingLevel)
-        {
-            VolumeController.Instance.DuckMusic(3f, 0.2f);
-            return;
-        }
-
         // Ripristino musica all'uscita dalla grotta
-        VolumeController.Instance.RestoreMusic(0.6f);
-        VolumeController.Instance.RestoreMusicLowpass(0.6f);
+        VolumeController.Instance.ResetMusicState(0.4f);
 
         isPlayerInsideCave = false;
         LightManager.Instance.ExitCave();

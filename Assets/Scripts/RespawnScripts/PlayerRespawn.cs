@@ -89,7 +89,7 @@ public class PlayerRespawn : MonoBehaviour
             AudioManager.Instance.PlaySFX(AudioManager.Instance.playerDeathSound);
         }
         //Abbasso il volume mentre il player muore
-        VolumeController.Instance.DuckMusic(-30f, 0.4f);
+        VolumeController.Instance.DuckMixer(VolumeController.Instance.masterMixer, "MusicVol", 30f, 0.4f);
 
         playerInput.enabled = false;
 
@@ -221,7 +221,6 @@ public class PlayerRespawn : MonoBehaviour
         GetComponent<PlayerMovement>().enabled = false;
 
 
-        VolumeController.Instance.RestoreMusicPitch(1.5f);
         float t = 0f;
         bool impulseGiven = false;
         while (t < 1f)
@@ -250,10 +249,15 @@ public class PlayerRespawn : MonoBehaviour
         }
 
         //Rimetto la musica al volume normale
-        VolumeController.Instance.RestoreMusic(1f);
-        VolumeController.Instance.RestoreMusicLowpass(1f);
-        VolumeController.Instance.RestoreMusicEcho();
-        VolumeController.Instance.RestoreMusicPitch(0.7f);
+        AudioTransitionManager transition = AudioManager.Instance.GetComponent<AudioTransitionManager>();
+        VolumeController.Instance.FadeMixerParam(VolumeController.Instance.masterMixer, "MusicVol", 0f, 0.5f);
+        VolumeController.Instance.FadeMixerParam(VolumeController.Instance.transitionMixer, "MusicLowpass", 22000f, 0.5f);
+        VolumeController.Instance.FadeMixerParam(VolumeController.Instance.transitionMixer, "MusicPitch", 1f, 0.5f);
+        VolumeController.Instance.FadeMixerParam(VolumeController.Instance.transitionMixer, "SFXLowpass", 22000f, 0.5f);
+        VolumeController.Instance.FadeMixerParam(VolumeController.Instance.transitionMixer, "SFXPitch", 1f, 0.5f);
+        yield return new WaitForSeconds(0.6f);
+        transition.ExitTransition();
+        VolumeController.Instance.ResetMusicState();
 
         // riattivo collisioni e movimento
         col.enabled = true;

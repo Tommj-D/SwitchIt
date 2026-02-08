@@ -1,7 +1,8 @@
-using UnityEngine;
 using System.Collections;
-using UnityEngine.InputSystem;
+using System.Linq;
 using Unity.Cinemachine;
+using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class SwitchLevel : MonoBehaviour
 {
@@ -58,20 +59,20 @@ public class SwitchLevel : MonoBehaviour
         }
 
         // Transizione audio magica
-        if (VolumeController.Instance != null)
-        {
-            // Abbassa volume
-            VolumeController.Instance.DuckMusic(-4f, 0.3f);
 
-            // Lowpass ovattato
-            VolumeController.Instance.FadeMusicLowpass(1500f, 0.3f);
+        AudioTransitionManager transition = AudioManager.Instance.GetComponent<AudioTransitionManager>();
 
-            // Pitch shift
-            VolumeController.Instance.FadeMusicPitch(0.5f, 0.3f);
+        // Inizio transizione
+        transition.EnterTransition();
 
-            // Aumenta leggero riverbero e echo
-            VolumeController.Instance.SetMusicEcho(0.25f);  // 15% del send
-        }
+        VolumeController.Instance.DuckMixer(VolumeController.Instance.transitionMixer, "MusicVol", 3f, 0.5f);
+        VolumeController.Instance.FadeMixerParam(VolumeController.Instance.transitionMixer, "MusicLowpass", 1200f, 0.5f);
+        VolumeController.Instance.FadeMixerParam(VolumeController.Instance.transitionMixer, "MusicPitch", 0.70f, 0.5f);
+        VolumeController.Instance.FadeMixerParam(VolumeController.Instance.transitionMixer,"SFXLowpass", 18000f, 0.5f);
+        VolumeController.Instance.FadeMixerParam(VolumeController.Instance.transitionMixer, "SFXPitch", 0.95f, 0.5f);
+
+        // Piccolo delay o animazione
+        yield return new WaitForSeconds(0.1f);
 
         // Assorbimento verso la pietra magica
         yield return StartCoroutine(AbsorbPlayer(player));

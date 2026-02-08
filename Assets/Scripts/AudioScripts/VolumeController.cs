@@ -10,6 +10,7 @@ public class VolumeController : MonoBehaviour
 
     [Header("Audio Mixer")]
     public AudioMixer masterMixer;
+    public AudioMixer transitionMixer;
 
     [Header("UI Menu")]
     public GameObject volumeMenuCanvas; // UI scene-based
@@ -20,7 +21,6 @@ public class VolumeController : MonoBehaviour
 
     private float defaultMusicVolume = 0f;
     private float defaultSFXVolume = 0f;
-    private Coroutine musicFadeRoutine;
 
     void Awake()
     {
@@ -134,115 +134,111 @@ public class VolumeController : MonoBehaviour
             masterMixer.SetFloat("SFXVol", volume);
     }
 
-    //----------DUCKING MUSICA----------//
-    public void DuckMusic(float duckAmount, float duration)
+    //----------DUCKING----------//
+    public void DuckMixer(AudioMixer mixer, string paramName, float amount, float fadeTime)
     {
-        if (masterMixer == null) return;
-
-        if (musicFadeRoutine != null)
-            StopCoroutine(musicFadeRoutine);
-
-        masterMixer.GetFloat("MusicVol", out float currentVolume);
-
-        float targetVolume = currentVolume + duckAmount; // duckAmount negativo
-        musicFadeRoutine = StartCoroutine(FadeMusic(targetVolume, duration));
+        StartCoroutine(DuckMixerRoutine(mixer, paramName, amount, fadeTime));
     }
 
-    private IEnumerator FadeMusic(float targetVolume, float duration)
+    private IEnumerator DuckMixerRoutine(
+     AudioMixer mixer,
+     string paramName,
+     float amount,
+     float fadeTime)
     {
-        if (masterMixer == null) yield break;
+        if (mixer == null)
+            yield break;
 
-        masterMixer.GetFloat("MusicVol", out float startVolume);
+        if (!mixer.GetFloat(paramName, out float originalValue))
+            yield break;
+
+        float targetValue = originalValue - amount;
+
+        float t = 0f;
+        while (t < fadeTime)
+        {
+            t += Time.unscaledDeltaTime;
+            float value = Mathf.Lerp(originalValue, targetValue, t / fadeTime);
+            mixer.SetFloat(paramName, value);
+            yield return null;
+        }
+
+        mixer.SetFloat(paramName, targetValue);
+    }
+
+    //------------------------------------//
+    //Da usare solo se non so a quale parameto voglio tornare, altrimenti uso FadeMixerParam con il valore target specifico
+    public void RestoreMixerParam(AudioMixer mixer, string paramName, float fadeTime)
+    {
+        StartCoroutine(RestoreMixerParamRoutine(mixer, paramName, fadeTime));
+    }
+
+    private IEnumerator RestoreMixerParamRoutine(
+        AudioMixer mixer,
+        string paramName,
+        float fadeTime)
+    {
+        if (mixer == null)
+            yield break;
+
+        if (!mixer.GetFloat(paramName, out float currentValue))
+            yield break;
+
+        float targetValue = 0f;
+
+        float t = 0f;
+        while (t < fadeTime)
+        {
+            t += Time.unscaledDeltaTime;
+            float value = Mathf.Lerp(currentValue, targetValue, t / fadeTime);
+            mixer.SetFloat(paramName, value);
+            yield return null;
+        }
+
+        mixer.SetFloat(paramName, targetValue);
+    }
+    //------------------------------------//
+
+    //----------FADE PARAMETER----------//
+    public void FadeMixerParam(AudioMixer mixer, string paramName, float targetValue, float duration)
+    {
+        StartCoroutine(FadeMixerParamRoutine(mixer, paramName, targetValue, duration));
+    }
+
+    private IEnumerator FadeMixerParamRoutine(AudioMixer mixer, string paramName, float targetValue, float duration)
+    {
+        if (mixer == null) yield break;
+
+        mixer.GetFloat(paramName, out float startValue);
 
         float t = 0f;
         while (t < duration)
         {
             t += Time.unscaledDeltaTime;
-            float vol = Mathf.Lerp(startVolume, targetVolume, t / duration);
-            masterMixer.SetFloat("MusicVol", vol);
+            float value = Mathf.Lerp(startValue, targetValue, t / duration);
+            mixer.SetFloat(paramName, value);
             yield return null;
         }
 
-        masterMixer.SetFloat("MusicVol", targetVolume);
+        mixer.SetFloat(paramName, targetValue);
     }
-    public void RestoreMusic(float duration)
+
+
+    //----------RESET----------//
+    public void ResetMusicState()
     {
         if (masterMixer == null) return;
 
-        if (musicFadeRoutine != null)
-            StopCoroutine(musicFadeRoutine);
+        masterMixer.SetFloat("MusicVol", defaultMusicVolume);
+        masterMixer.SetFloat("MusicLowpass", 22000f);
 
-        musicFadeRoutine = StartCoroutine(FadeMusic(defaultMusicVolume, duration));
     }
 
-    //----------OFFUSCAMENTO MUSICA----------//
-    public void FadeMusicLowpass(float target, float duration)
+    public void ResetMusicState(float fadeTime)
     {
         if (masterMixer == null) return;
-        StartCoroutine(LowpassMusicFadeRoutine(target, duration));
-    }
 
-    private IEnumerator LowpassMusicFadeRoutine(float target, float duration)
-    {
-        if (masterMixer == null) yield break;
-
-        masterMixer.GetFloat("MusicLowpass", out float start);
-
-        float t = 0f;
-        while (t < duration)
-        {
-            t += Time.deltaTime;
-            float value = Mathf.Lerp(start, target, t / duration);
-            masterMixer.SetFloat("MusicLowpass", value);
-            yield return null;
-        }
-
-        masterMixer.SetFloat("MusicLowpass", target);
-    }
-
-    public void RestoreMusicLowpass(float duration)
-    {
-        FadeMusicLowpass(22000f, duration);
-    }
-
-    //----------PITCH SHIFT----------//
-
-    //----------MUISICA----------//
-    public void FadeMusicPitch(float targetPitch, float duration)
-    {
-        if (masterMixer == null) return;
-        StartCoroutine(FadeMusicPitchRoutine(targetPitch, duration));
-    }
-
-    private IEnumerator FadeMusicPitchRoutine(float target, float duration)
-    {
-        if (masterMixer == null) yield break;
-        masterMixer.GetFloat("MusicPitch", out float start);
-        float t = 0f;
-        while (t < duration)
-        {
-            t += Time.deltaTime;
-            float value = Mathf.Lerp(start, target, t / duration);
-            masterMixer.SetFloat("MusicPitch", value);
-            yield return null;
-        }
-        masterMixer.SetFloat("MusicPitch", target);
-    }
-
-    public void RestoreMusicPitch(float duration)
-    {
-        FadeMusicPitch(1f, duration);
-    }
-
-    //----------ECHO MUSICALE----------// 
-    public void SetMusicEcho(float echoAmount)
-    {
-        if (masterMixer != null)
-            masterMixer.SetFloat("MusicEchoMix", echoAmount);
-    }
-
-    public void RestoreMusicEcho()
-    {
-        SetMusicEcho(0f);
+        FadeMixerParam(masterMixer, "MusicVol", defaultMusicVolume, fadeTime);
+        FadeMixerParam(masterMixer, "MusicLowpass", 22000f, fadeTime);
     }
 }
