@@ -89,7 +89,7 @@ public class PlayerRespawn : MonoBehaviour
             AudioManager.Instance.PlaySFX(AudioManager.Instance.playerDeathSound);
         }
         //Abbasso il volume mentre il player muore
-        VolumeController.Instance.DuckMusic(-30f, 0.4f);
+        VolumeController.Instance.DuckMixer(VolumeController.Instance.masterMixer, "MusicVol", 30f, 0.4f);
 
         playerInput.enabled = false;
 
@@ -250,7 +250,12 @@ public class PlayerRespawn : MonoBehaviour
 
         //Rimetto la musica al volume normale
         AudioTransitionManager transition = AudioManager.Instance.GetComponent<AudioTransitionManager>();
-
+        
+        VolumeController.Instance.FadeMixerParam(VolumeController.Instance.transitionMixer, "MusicLowpass", 22000f, 0.5f);
+        VolumeController.Instance.FadeMixerParam(VolumeController.Instance.transitionMixer, "MusicPitch", 1f, 0.5f);
+        VolumeController.Instance.FadeMixerParam(VolumeController.Instance.transitionMixer, "SFXLowpass", 22000f, 0.5f);
+        VolumeController.Instance.FadeMixerParam(VolumeController.Instance.transitionMixer, "SFXPitch", 1f, 0.5f);
+        yield return new WaitForSeconds(0.6f);
         transition.ExitTransition();
         VolumeController.Instance.ResetMusicState();
 
