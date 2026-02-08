@@ -71,7 +71,19 @@ AudioMixerController:
   m_SuspendThreshold: -80
   m_EnableSuspend: 1
   m_UpdateMode: 0
-  m_ExposedParameters: []
+  m_ExposedParameters:
+  - guid: a7eda952e67e74f418c957cdbf8c1863
+    name: MusicVol
+  - guid: bb034a80e9da56d48baebbba0e4e87f6
+    name: MusicLowpass
+  - guid: 54a1365528bcd24448de5f05ec79706c
+    name: MusicPitch
+  - guid: 1420ba8f9ddace0458787d474c5e6c93
+    name: SFXVol
+  - guid: e766968bfd0af7f42b88ed876a448eac
+    name: SFXLowpass
+  - guid: 6e288d1cb4803b64cb19292f90ab403b
+    name: SFXPitch
   m_AudioMixerGroupViews:
   - guids:
     - 1a752efd9d386d7469a1c5089c69f643
@@ -137,6 +149,7 @@ AudioMixerSnapshotController:
     fa93358468685314ca724a0a5cbabb48: 0
     6dd08fc483c5633479a908e083a863d5: 22000
     9e334f253f09acf468c5d58c1ad0eb99: 22000
+    54a1365528bcd24448de5f05ec79706c: 1
     c1873485bcad121479ab96c0d99730e1: 0
     7b9dbbd5777e0a0408a1e8b82dcbf433: 0
     48860956cb128064c9f5a1cd7e96271f: 0
@@ -154,11 +167,13 @@ AudioMixerSnapshotController:
     970279eac128acf4180caef8128c00e7: 0
     e766968bfd0af7f42b88ed876a448eac: 22000
     930632cb54ae34d47be2894b5ef7f614: 1
+    6e288d1cb4803b64cb19292f90ab403b: 1
     d05ec2bc3c2def7488cb407a9d2590a4: 1
-    e2f807bcf3435284495416f588581895: 1
+    e2f807bcf3435284495416f588581895: 1.3
     cb87f64d5707d9949a09493525bda121: 1
     3e98a29db9806c549aec9417b5c37a8d: 16
     4cf97bddca3f50543a87788fa09d4d32: 0
+    646a20ed35661524a8b7351dd684e722: 1.3
     6ebc780edd65f2d4e93352be2cee49ce: 16
     29a3198e725518047a22a0071cc00d61: 1000
     62e4449e36b8bf145bf5b9ae44ad0872: 2000

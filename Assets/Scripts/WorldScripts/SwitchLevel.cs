@@ -65,9 +65,15 @@ public class SwitchLevel : MonoBehaviour
         // Inizio transizione
         transition.EnterTransition();
 
-        // Piccolo delay o animazione
         yield return new WaitForSeconds(0.1f);
 
+        VolumeController.Instance.DuckMusic(-3f, 0.5f);
+        VolumeController.Instance.FadeMixerParam("MusicLowpass", 1200f, 0.5f);
+        VolumeController.Instance.FadeMixerParam("MusicPitch", 0.55f, 0.5f);
+        VolumeController.Instance.FadeMixerParam("SFXLowpass", 16000f, 0.5f);
+        VolumeController.Instance.FadeMixerParam("SFXPitch", 0.9f, 0.5f);
+
+        // Piccolo delay o animazione
         yield return new WaitForSeconds(0.1f);
 
         // Assorbimento verso la pietra magica

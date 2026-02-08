@@ -224,7 +224,29 @@ public class VolumeController : MonoBehaviour
 
         masterMixer.SetFloat("MusicVol", defaultMusicVolume);
         masterMixer.SetFloat("MusicLowpass", 22000f);
-        masterMixer.SetFloat("MusicEchoMix", 0f);
+
+    }
+    public void FadeMixerParam(string paramName, float targetValue, float duration)
+    {
+        StartCoroutine(FadeMixerParamRoutine(paramName, targetValue, duration));
+    }
+
+    private IEnumerator FadeMixerParamRoutine(string paramName, float targetValue, float duration)
+    {
+        if (masterMixer == null) yield break;
+
+        masterMixer.GetFloat(paramName, out float startValue);
+
+        float t = 0f;
+        while (t < duration)
+        {
+            t += Time.unscaledDeltaTime;
+            float value = Mathf.Lerp(startValue, targetValue, t / duration);
+            masterMixer.SetFloat(paramName, value);
+            yield return null;
+        }
+
+        masterMixer.SetFloat(paramName, targetValue);
     }
 
 }
