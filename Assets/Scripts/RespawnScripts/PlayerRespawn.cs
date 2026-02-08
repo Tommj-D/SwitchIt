@@ -221,7 +221,6 @@ public class PlayerRespawn : MonoBehaviour
         GetComponent<PlayerMovement>().enabled = false;
 
 
-        VolumeController.Instance.RestoreMusicPitch(1.5f);
         float t = 0f;
         bool impulseGiven = false;
         while (t < 1f)
@@ -250,10 +249,15 @@ public class PlayerRespawn : MonoBehaviour
         }
 
         //Rimetto la musica al volume normale
-        VolumeController.Instance.RestoreMusic(1f);
-        VolumeController.Instance.RestoreMusicLowpass(1f);
-        VolumeController.Instance.RestoreMusicEcho();
-        VolumeController.Instance.RestoreMusicPitch(0.7f);
+        AudioSnapshotController snapshot = AudioManager.Instance.GetComponent<AudioSnapshotController>();
+
+
+        if (snapshot != null)
+        {
+            snapshot.ExitTransition();
+        }
+
+        VolumeController.Instance.ResetMusicState();
 
         // riattivo collisioni e movimento
         col.enabled = true;

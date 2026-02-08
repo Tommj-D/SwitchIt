@@ -55,10 +55,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5938122010318276097}
     m_Modifications:
-    - target: {fileID: 1115040162540533581, guid: 81249a29c5bd15949a2f408dd4782223, type: 3}
-      propertyPath: DopplerLevel
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 1284125330772375128, guid: 81249a29c5bd15949a2f408dd4782223, type: 3}
       propertyPath: m_Name
       value: AudioManager

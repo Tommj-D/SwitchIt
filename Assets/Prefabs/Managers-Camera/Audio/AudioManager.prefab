@@ -140,6 +140,7 @@ GameObject:
   - component: {fileID: 3839644858824086608}
   - component: {fileID: 6991497699843298835}
   - component: {fileID: 8353855458831400638}
+  - component: {fileID: 7365472004997593892}
   m_Layer: 0
   m_Name: AudioManager
   m_TagString: Untagged
@@ -211,6 +212,21 @@ MonoBehaviour:
   volumeMenuCanvas: {fileID: 0}
   musicSlider: {fileID: 0}
   sfxSlider: {fileID: 0}
+--- !u!114 &7365472004997593892
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1284125330772375128}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f52e8f06bdcc3b74da7dc9202dadaf60, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AudioSnapshotController
+  gameplaySnapshot: {fileID: 24500006, guid: bd895b5153b2e204ca4b0ca8a56c023b, type: 2}
+  transitionSnapshot: {fileID: 6643273766278106572, guid: bd895b5153b2e204ca4b0ca8a56c023b, type: 2}
+  transitionTime: 0.4
 --- !u!1 &3394312872380919852
 GameObject:
   m_ObjectHideFlags: 0
@@ -263,7 +279,7 @@ AudioSource:
   Spatialize: 0
   SpatializePostEffects: 0
   Priority: 128
-  DopplerLevel: 1
+  DopplerLevel: 0
   MinDistance: 1
   MaxDistance: 500
   Pan2D: 0

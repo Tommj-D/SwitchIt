@@ -58,19 +58,12 @@ public class SwitchLevel : MonoBehaviour
         }
 
         // Transizione audio magica
-        if (VolumeController.Instance != null)
+
+        AudioSnapshotController snapshot = AudioManager.Instance.GetComponent<AudioSnapshotController>();
+
+        if (snapshot != null)
         {
-            // Abbassa volume
-            VolumeController.Instance.DuckMusic(-4f, 0.3f);
-
-            // Lowpass ovattato
-            VolumeController.Instance.FadeMusicLowpass(1500f, 0.3f);
-
-            // Pitch shift
-            VolumeController.Instance.FadeMusicPitch(0.5f, 0.3f);
-
-            // Aumenta leggero riverbero e echo
-            VolumeController.Instance.SetMusicEcho(0.25f);  // 15% del send
+            snapshot.EnterTransition();
         }
 
         // Assorbimento verso la pietra magica

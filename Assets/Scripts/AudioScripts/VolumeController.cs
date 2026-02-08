@@ -205,35 +205,6 @@ public class VolumeController : MonoBehaviour
         FadeMusicLowpass(22000f, duration);
     }
 
-    //----------PITCH SHIFT----------//
-
-    //----------MUISICA----------//
-    public void FadeMusicPitch(float targetPitch, float duration)
-    {
-        if (masterMixer == null) return;
-        StartCoroutine(FadeMusicPitchRoutine(targetPitch, duration));
-    }
-
-    private IEnumerator FadeMusicPitchRoutine(float target, float duration)
-    {
-        if (masterMixer == null) yield break;
-        masterMixer.GetFloat("MusicPitch", out float start);
-        float t = 0f;
-        while (t < duration)
-        {
-            t += Time.deltaTime;
-            float value = Mathf.Lerp(start, target, t / duration);
-            masterMixer.SetFloat("MusicPitch", value);
-            yield return null;
-        }
-        masterMixer.SetFloat("MusicPitch", target);
-    }
-
-    public void RestoreMusicPitch(float duration)
-    {
-        FadeMusicPitch(1f, duration);
-    }
-
     //----------ECHO MUSICALE----------// 
     public void SetMusicEcho(float echoAmount)
     {
@@ -245,4 +216,15 @@ public class VolumeController : MonoBehaviour
     {
         SetMusicEcho(0f);
     }
+
+    //----------RESET MUSICALE----------//
+    public void ResetMusicState()
+    {
+        if (masterMixer == null) return;
+
+        masterMixer.SetFloat("MusicVol", defaultMusicVolume);
+        masterMixer.SetFloat("MusicLowpass", 22000f);
+        masterMixer.SetFloat("MusicEchoMix", 0f);
+    }
+
 }
