@@ -221,6 +221,8 @@ public class PlayerRespawn : MonoBehaviour
         GetComponent<PlayerMovement>().enabled = false;
 
 
+        VolumeController.Instance.FadeMixerParam(VolumeController.Instance.transitionMixer, "MusicPitch", 1f, 1.3f);
+
         float t = 0f;
         bool impulseGiven = false;
         while (t < 1f)
@@ -250,14 +252,14 @@ public class PlayerRespawn : MonoBehaviour
 
         //Rimetto la musica al volume normale
         AudioTransitionManager transition = AudioManager.Instance.GetComponent<AudioTransitionManager>();
-        VolumeController.Instance.FadeMixerParam(VolumeController.Instance.masterMixer, "MusicVol", 0f, 0.5f);
-        VolumeController.Instance.FadeMixerParam(VolumeController.Instance.transitionMixer, "MusicLowpass", 22000f, 0.5f);
-        VolumeController.Instance.FadeMixerParam(VolumeController.Instance.transitionMixer, "MusicPitch", 1f, 0.5f);
-        VolumeController.Instance.FadeMixerParam(VolumeController.Instance.transitionMixer, "SFXLowpass", 22000f, 0.5f);
-        VolumeController.Instance.FadeMixerParam(VolumeController.Instance.transitionMixer, "SFXPitch", 1f, 0.5f);
-        yield return new WaitForSeconds(0.6f);
+        VolumeController.Instance.FadeMixerParam(VolumeController.Instance.masterMixer, "MusicVol", 0f, 1.4f);
+        VolumeController.Instance.FadeMixerParam(VolumeController.Instance.transitionMixer, "MusicLowpass", 22000f, 1.1f);
+        VolumeController.Instance.FadeMixerParam(VolumeController.Instance.transitionMixer, "MusicHightpass", 10f, 1.1f);
+        VolumeController.Instance.FadeMixerParam(VolumeController.Instance.transitionMixer, "SFXLowpass", 22000f, 1.1f);
+
+        yield return new WaitForSeconds(1.4f);
         transition.ExitTransition();
-        VolumeController.Instance.ResetMusicState();
+        VolumeController.Instance.ResetMusicState(0.2f);
 
         // riattivo collisioni e movimento
         col.enabled = true;
