@@ -106,7 +106,8 @@ public class CaveController : MonoBehaviour
     {
         if (!other.CompareTag("Player")) return;
         // Ripristino musica all'uscita dalla grotta
-        VolumeController.Instance.ResetMusicState(0.4f);
+        if(GameManager.Instance != null && !GameManager.Instance.isChangingLevel)
+            VolumeController.Instance.ResetMusicState(0.4f);
 
         isPlayerInsideCave = false;
         LightManager.Instance.ExitCave();

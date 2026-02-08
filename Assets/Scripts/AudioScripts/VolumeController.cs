@@ -227,18 +227,24 @@ public class VolumeController : MonoBehaviour
     //----------RESET----------//
     public void ResetMusicState()
     {
-        if (masterMixer == null) return;
+        if (masterMixer==null || transitionMixer==null) return;
 
         masterMixer.SetFloat("MusicVol", defaultMusicVolume);
         masterMixer.SetFloat("MusicLowpass", 22000f);
+
+        transitionMixer.SetFloat("MusicVol", defaultMusicVolume);
+        transitionMixer.SetFloat("MusicLowpass", 22000f);
 
     }
 
     public void ResetMusicState(float fadeTime)
     {
-        if (masterMixer == null) return;
+        if (masterMixer == null || transitionMixer == null) return;
 
         FadeMixerParam(masterMixer, "MusicVol", defaultMusicVolume, fadeTime);
         FadeMixerParam(masterMixer, "MusicLowpass", 22000f, fadeTime);
+
+        FadeMixerParam(transitionMixer, "MusicVol", defaultMusicVolume, fadeTime);
+        FadeMixerParam(transitionMixer, "MusicLowpass", 22000f, fadeTime);
     }
 }
