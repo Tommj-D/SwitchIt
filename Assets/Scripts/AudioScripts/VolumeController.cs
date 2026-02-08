@@ -10,6 +10,7 @@ public class VolumeController : MonoBehaviour
 
     [Header("Audio Mixer")]
     public AudioMixer masterMixer;
+    public AudioMixer transitionMixer;
 
     [Header("UI Menu")]
     public GameObject volumeMenuCanvas; // UI scene-based
@@ -226,27 +227,26 @@ public class VolumeController : MonoBehaviour
         masterMixer.SetFloat("MusicLowpass", 22000f);
 
     }
-    public void FadeMixerParam(string paramName, float targetValue, float duration)
+    public void FadeMixerParam(AudioMixer mixer, string paramName, float targetValue, float duration)
     {
-        StartCoroutine(FadeMixerParamRoutine(paramName, targetValue, duration));
+        StartCoroutine(FadeMixerParamRoutine(mixer, paramName, targetValue, duration));
     }
 
-    private IEnumerator FadeMixerParamRoutine(string paramName, float targetValue, float duration)
+    private IEnumerator FadeMixerParamRoutine(AudioMixer mixer, string paramName, float targetValue, float duration)
     {
-        if (masterMixer == null) yield break;
+        if (mixer == null) yield break;
 
-        masterMixer.GetFloat(paramName, out float startValue);
+        mixer.GetFloat(paramName, out float startValue);
 
         float t = 0f;
         while (t < duration)
         {
             t += Time.unscaledDeltaTime;
             float value = Mathf.Lerp(startValue, targetValue, t / duration);
-            masterMixer.SetFloat(paramName, value);
+            mixer.SetFloat(paramName, value);
             yield return null;
         }
 
-        masterMixer.SetFloat(paramName, targetValue);
+        mixer.SetFloat(paramName, targetValue);
     }
-
 }

@@ -46421,6 +46421,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1522595025}
     - target: {fileID: 9122959382436324354, guid: 6951a6ce211dd3545bff03e0c7275bc7, type: 3}
+      propertyPath: transitionMixer
+      value: 
+      objectReference: {fileID: 24100000, guid: dc0b1b542786f7e47b87bd6e41b0103a, type: 2}
+    - target: {fileID: 9122959382436324354, guid: 6951a6ce211dd3545bff03e0c7275bc7, type: 3}
       propertyPath: volumeMenuCanvas
       value: 
       objectReference: {fileID: 141101769}
