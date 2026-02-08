@@ -99,11 +99,35 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 7365472004997593892, guid: 81249a29c5bd15949a2f408dd4782223, type: 3}
+    - {fileID: 4558125669054281663, guid: 81249a29c5bd15949a2f408dd4782223, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1284125330772375128, guid: 81249a29c5bd15949a2f408dd4782223, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1718772269222842807}
   m_SourcePrefab: {fileID: 100100000, guid: 81249a29c5bd15949a2f408dd4782223, type: 3}
+--- !u!1 &2064822712675724516 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1284125330772375128, guid: 81249a29c5bd15949a2f408dd4782223, type: 3}
+  m_PrefabInstance: {fileID: 969848963630193340}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1718772269222842807
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2064822712675724516}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9751b92040c7984cbb1481cc6becff8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AudioTransitionManager
+  musicTransitionGroup: {fileID: -4109058401518590058, guid: dc0b1b542786f7e47b87bd6e41b0103a, type: 2}
+  sfxTransitionGroup: {fileID: -1736533006646480893, guid: dc0b1b542786f7e47b87bd6e41b0103a, type: 2}
 --- !u!4 &4052308213249871596 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3839644858824086608, guid: 81249a29c5bd15949a2f408dd4782223, type: 3}

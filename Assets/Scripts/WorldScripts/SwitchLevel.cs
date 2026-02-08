@@ -1,7 +1,8 @@
-using UnityEngine;
 using System.Collections;
-using UnityEngine.InputSystem;
+using System.Linq;
 using Unity.Cinemachine;
+using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class SwitchLevel : MonoBehaviour
 {
@@ -59,12 +60,15 @@ public class SwitchLevel : MonoBehaviour
 
         // Transizione audio magica
 
-        AudioSnapshotController snapshot = AudioManager.Instance.GetComponent<AudioSnapshotController>();
+        AudioTransitionManager transition = AudioManager.Instance.GetComponent<AudioTransitionManager>();
 
-        if (snapshot != null)
-        {
-            snapshot.EnterTransition();
-        }
+        // Inizio transizione
+        transition.EnterTransition();
+
+        // Piccolo delay o animazione
+        yield return new WaitForSeconds(0.1f);
+
+        yield return new WaitForSeconds(0.1f);
 
         // Assorbimento verso la pietra magica
         yield return StartCoroutine(AbsorbPlayer(player));

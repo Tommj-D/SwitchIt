@@ -249,14 +249,9 @@ public class PlayerRespawn : MonoBehaviour
         }
 
         //Rimetto la musica al volume normale
-        AudioSnapshotController snapshot = AudioManager.Instance.GetComponent<AudioSnapshotController>();
+        AudioTransitionManager transition = AudioManager.Instance.GetComponent<AudioTransitionManager>();
 
-
-        if (snapshot != null)
-        {
-            snapshot.ExitTransition();
-        }
-
+        transition.ExitTransition();
         VolumeController.Instance.ResetMusicState();
 
         // riattivo collisioni e movimento
