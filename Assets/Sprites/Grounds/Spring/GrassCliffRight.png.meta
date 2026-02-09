@@ -121,8 +121,8 @@ TextureImporter:
     physicsShape:
     - - {x: -128, y: -128}
       - {x: 128, y: -128}
-      - {x: 128, y: 88}
-      - {x: -128, y: 88}
+      - {x: 128, y: 81}
+      - {x: -128, y: 81}
     bones: []
     spriteID: ab0145c54a7b56d4aba690296c870e9c
     internalID: -1662431278
