@@ -250,6 +250,10 @@ public class PlayerRespawn : MonoBehaviour
             yield return null;
         }
 
+        // riattivo collisioni e movimento
+        col.enabled = true;
+        GetComponent<PlayerMovement>().enabled = true;
+
         //Rimetto la musica al volume normale
         AudioTransitionManager transition = AudioManager.Instance.GetComponent<AudioTransitionManager>();
         VolumeController.Instance.FadeMixerParam(VolumeController.Instance.masterMixer, "MusicVol", 0f, 1.4f);
@@ -260,10 +264,6 @@ public class PlayerRespawn : MonoBehaviour
         yield return new WaitForSeconds(1.4f);
         transition.ExitTransition();
         VolumeController.Instance.ResetMusicState(0.2f);
-
-        // riattivo collisioni e movimento
-        col.enabled = true;
-        GetComponent<PlayerMovement>().enabled = true;
     }
 
     //---------SPAWN NUOVA SCENA---------

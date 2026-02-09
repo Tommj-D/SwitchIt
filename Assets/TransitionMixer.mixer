@@ -38,7 +38,6 @@ AudioMixerGroupController:
   m_Effects:
   - {fileID: -817493103198491739}
   - {fileID: 1019036883760355075}
-  - {fileID: 910060188286849873}
   m_UserColorIndex: 0
   m_Mute: 0
   m_Solo: 0
@@ -76,7 +75,7 @@ AudioMixerController:
   - guid: a7eda952e67e74f418c957cdbf8c1863
     name: MusicVol
   - guid: a368b3a46634f3d488e19a5936933510
-    name: Hightpass
+    name: MusicHightpass
   - guid: bb034a80e9da56d48baebbba0e4e87f6
     name: MusicLowpass
   - guid: 54a1365528bcd24448de5f05ec79706c
@@ -85,8 +84,6 @@ AudioMixerController:
     name: SFXVol
   - guid: e766968bfd0af7f42b88ed876a448eac
     name: SFXLowpass
-  - guid: 6e288d1cb4803b64cb19292f90ab403b
-    name: SFXPitch
   m_AudioMixerGroupViews:
   - guids:
     - 1a752efd9d386d7469a1c5089c69f643
@@ -224,28 +221,6 @@ AudioMixerEffectController:
   m_SendTarget: {fileID: 0}
   m_EnableWetMix: 0
   m_Bypass: 0
---- !u!244 &910060188286849873
-AudioMixerEffectController:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  m_EffectID: 21cc00348ab24b540ab302866eb11a1a
-  m_EffectName: Pitch Shifter
-  m_MixLevel: d7619d477bb455d4e837f0ed893dc5c3
-  m_Parameters:
-  - m_ParameterName: Pitch
-    m_GUID: 6e288d1cb4803b64cb19292f90ab403b
-  - m_ParameterName: FFT size
-    m_GUID: 74c401eca9c6c064aa266bde34dfe6ca
-  - m_ParameterName: Overlap
-    m_GUID: 6853a0fe56a7d4044a0e05024e819677
-  - m_ParameterName: Max channels
-    m_GUID: 19dce027091927e4bb8751ef9dcd6500
-  m_SendTarget: {fileID: 0}
-  m_EnableWetMix: 0
-  m_Bypass: 1
 --- !u!244 &1019036883760355075
 AudioMixerEffectController:
   m_ObjectHideFlags: 3
@@ -263,7 +238,7 @@ AudioMixerEffectController:
     m_GUID: 646a20ed35661524a8b7351dd684e722
   m_SendTarget: {fileID: 0}
   m_EnableWetMix: 0
-  m_Bypass: 1
+  m_Bypass: 0
 --- !u!244 &1787168414930219296
 AudioMixerEffectController:
   m_ObjectHideFlags: 3
@@ -299,4 +274,4 @@ AudioMixerEffectController:
     m_GUID: 76cabc6f10ef9c74eae14d6f34f73260
   m_SendTarget: {fileID: 0}
   m_EnableWetMix: 0
-  m_Bypass: 1
+  m_Bypass: 0
