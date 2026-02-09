@@ -10,9 +10,7 @@ public class AudioTransitionManager : MonoBehaviour
 
     private Dictionary<AudioSource, AudioMixerGroup> originalGroups = new Dictionary<AudioSource, AudioMixerGroup>();
 
-    /// <summary>
-    /// Sposta tutti i suoni esistenti sul TransitionMixer
-    /// </summary>
+    // Sposta tutti i suoni esistenti sul TransitionMixer
     public void EnterTransition()
     {
         AudioSource[] allSources = FindObjectsByType<AudioSource>(FindObjectsSortMode.None);
@@ -29,9 +27,7 @@ public class AudioTransitionManager : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Riporta tutti i suoni ai gruppi originali
-    /// </summary>
+    // Riporta tutti i suoni ai gruppi originali
     public void ExitTransition()
     {
         foreach (var kvp in originalGroups)

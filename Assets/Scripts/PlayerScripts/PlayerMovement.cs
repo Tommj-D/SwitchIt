@@ -209,7 +209,7 @@ public class PlayerMovement : MonoBehaviour
     //----------- GRAVITY INVERSION -------//   
     public void InvertGravity(InputAction.CallbackContext context)
     {
-        if (WorldSwitch.isFantasyWorldActive && !isFlipping)
+        if (WorldSwitch.Instance.isFantasyWorldActive && !isFlipping)
         {
             gravityDirection *= -1;
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0);
@@ -236,6 +236,14 @@ public class PlayerMovement : MonoBehaviour
 
         transform.rotation = targetRot;
         isFlipping = false;
+    }
+
+    //----------- WORLD SWITCH-----------//
+    public void DimensionSwitch(InputAction.CallbackContext context)
+    {
+        if (!context.performed) return;
+
+        WorldSwitch.Instance.SwitchWorld();
     }
 
     //----------- CAMERA OFFSET/SETTINGS -----------//

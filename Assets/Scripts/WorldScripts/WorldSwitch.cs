@@ -3,6 +3,8 @@ using UnityEngine.InputSystem; // Fondamentale per Keyboard.current
 
 public class WorldSwitch : MonoBehaviour
 {
+    public static WorldSwitch Instance;
+
     public bool canSwitchWorld = true;
 
     [Header("Worlds")]
@@ -14,8 +16,15 @@ public class WorldSwitch : MonoBehaviour
     public Color realWorldColor = Color.cyan;
     public Color fantasyWorldColor = Color.magenta;
 
-    public static bool isFantasyWorldActive = false;
+    [HideInInspector] public bool isFantasyWorldActive = false;
 
+    void Awake()
+    {
+        if (Instance == null)
+            Instance = this;
+        else
+            Destroy(gameObject);
+    }
     void Start()
     {
         // Setup iniziale
@@ -26,16 +35,7 @@ public class WorldSwitch : MonoBehaviour
             mainCamera.backgroundColor = realWorldColor;
     }
 
-    void Update()
-    {
-        // Controlla se il tasto E è stato premuto in questo frame
-        if (Keyboard.current != null && Keyboard.current.eKey.wasPressedThisFrame)
-        {
-            ToggleWorld();
-        }
-    }
-
-    private void ToggleWorld()
+    public void SwitchWorld()
     {
         if (!canSwitchWorld) return;
 
@@ -51,7 +51,5 @@ public class WorldSwitch : MonoBehaviour
         {
             mainCamera.backgroundColor = isFantasyWorldActive ? fantasyWorldColor : realWorldColor;
         }
-        
-        Debug.Log("Mondo Fantasy Attivo: " + isFantasyWorldActive);
     }
 }

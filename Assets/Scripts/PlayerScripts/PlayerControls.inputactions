@@ -158,7 +158,7 @@
                     "name": "",
                     "id": "0d7bfdbd-5b92-4a76-a621-7522d2b868e5",
                     "path": "<Keyboard>/e",
-                    "interactions": "",
+                    "interactions": "Press",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "Switch",
