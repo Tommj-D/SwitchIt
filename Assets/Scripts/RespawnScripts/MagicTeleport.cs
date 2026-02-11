@@ -10,8 +10,11 @@ public class MagicTeleport : MonoBehaviour
     public float durataFade = 0.5f; // Durata della transizione
 
     [Header("Impostazioni Fisiche")]
-    [Tooltip("La forza con cui il giocatore viene sparato fuori dal buco di uscita.")]
     public float forzaSaltoUscita = 15f; 
+
+    [Header("Camera Confiner")]
+    public CameraConfinerManager cameraConfinerManager;
+    public Collider2D confinerDestinazione;
 
     private bool inCorso = false;
     private Vector3 scalaOriginalePlayer; // Per ricordare quanto era grande il player
@@ -64,6 +67,8 @@ public class MagicTeleport : MonoBehaviour
         
         // Resetta immediatamente la grandezza originale PRIMA che si veda
         player.transform.localScale = scalaOriginalePlayer;
+        
+        cameraConfinerManager.SetConfiner(confinerDestinazione);
         
         // Brevissima pausa per far aggiornare la camera
         yield return new WaitForSeconds(0.1f);
