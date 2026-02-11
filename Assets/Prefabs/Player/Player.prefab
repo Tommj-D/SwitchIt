@@ -14892,7 +14892,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   grassFX: {fileID: 1825088081390162120}
   jumpFX: {fileID: 4266267843451266039}
-  moveSpeed: 6
+  moveSpeed: 7
   jumpPower: 10.5
   maxJumps: 2
   groundCheckPos: {fileID: 2937229356370115362}
@@ -15319,7 +15319,7 @@ MonoBehaviour:
     m_ActionName: 'Player/Jump[/Keyboard/w,/Keyboard/space,/Keyboard/upArrow]'
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 5469857426969550463}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: PlayerMovement, Assembly-CSharp
         m_MethodName: DimensionSwitch
         m_Mode: 0
