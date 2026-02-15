@@ -6,6 +6,7 @@ public class WorldSwitch : MonoBehaviour
     public static WorldSwitch Instance;
 
     public bool canSwitchWorld = true;
+    public bool canSwitchGravity = true;    
 
     [Header("Worlds")]
     public GameObject realWorld;
