@@ -1,5 +1,5 @@
+using System.Collections;
 using UnityEngine;
-using UnityEngine.InputSystem; // Fondamentale per Keyboard.current
 
 public class WorldSwitch : MonoBehaviour
 {
@@ -17,7 +17,12 @@ public class WorldSwitch : MonoBehaviour
     public Color realWorldColor = Color.cyan;
     public Color fantasyWorldColor = Color.magenta;
 
+    [Header("Transition")]
+    public WorldSwitchTransition transition;
+
     [HideInInspector] public bool isFantasyWorldActive = false;
+
+    private bool isSwitching = false;
 
     void Awake()
     {
@@ -38,19 +43,30 @@ public class WorldSwitch : MonoBehaviour
 
     public void SwitchWorld()
     {
-        if (!canSwitchWorld) return;
+        if (!canSwitchWorld || isSwitching) return;
 
-        // Inverte lo stato attuale
+        StartCoroutine(SwitchRoutine());
+    }
+
+    private IEnumerator SwitchRoutine()
+    {
+        isSwitching = true;
+
+        if (transition != null)
+            yield return transition.PlayTransition(this);
+
+        isSwitching = false;
+    }
+
+
+    public void ApplyWorldChange()
+    {
         isFantasyWorldActive = !isFantasyWorldActive;
 
-        // Attiva/Disattiva i mondi
         if (realWorld != null) realWorld.SetActive(!isFantasyWorldActive);
         if (fantasyWorld != null) fantasyWorld.SetActive(isFantasyWorldActive);
 
-        // Cambia colore alla camera
         if (mainCamera != null)
-        {
             mainCamera.backgroundColor = isFantasyWorldActive ? fantasyWorldColor : realWorldColor;
-        }
     }
 }
