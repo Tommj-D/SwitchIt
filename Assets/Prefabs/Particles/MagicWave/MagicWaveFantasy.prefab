@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7882903419160827213}
   - component: {fileID: 3992172492632400602}
   m_Layer: 0
-  m_Name: MagicWave
+  m_Name: MagicWaveFantasy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -174,7 +174,7 @@ SpriteRenderer:
   m_SortingOrder: 40
   m_MaskInteraction: 0
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
-  m_Color: {r: 0.5411765, g: 0.1686275, b: 0.8862746, a: 0.27450982}
+  m_Color: {r: 0.2941177, g: 0, b: 0.509804, a: 0.27450982}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
