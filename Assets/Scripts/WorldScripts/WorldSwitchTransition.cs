@@ -17,16 +17,11 @@ public class WorldSwitchTransition : MonoBehaviour
     public IEnumerator PlayTransition(WorldSwitch worldSwitch)
     {
         bool goingToFantasy = !worldSwitch.isFantasyWorldActive;
-        yield return StartCoroutine(FreezeEffect());
-        yield return StartCoroutine(GlitchEffect());
-        yield return StartCoroutine(WaveEffect(worldSwitch, goingToFantasy));
-    }
 
-    private IEnumerator FreezeEffect()
-    {
-        Time.timeScale = 0.2f;
-        yield return new WaitForSecondsRealtime(freezeTime);
-        Time.timeScale = 1f;
+        StartCoroutine(GlitchEffect());
+        StartCoroutine(PlayerColorShift(goingToFantasy));
+
+        yield return StartCoroutine(WaveEffect(worldSwitch, goingToFantasy));
     }
 
     private IEnumerator GlitchEffect()
@@ -36,25 +31,35 @@ public class WorldSwitchTransition : MonoBehaviour
         if (originalSprite == null)
             yield break;
 
-        // Crea GameObject solo grafico
-        GameObject ghost = new GameObject("PlayerGhost");
+        float elapsed = 0f;
 
-        SpriteRenderer ghostSprite = ghost.AddComponent<SpriteRenderer>();
-        ghostSprite.sprite = originalSprite.sprite;
-        ghostSprite.flipX = originalSprite.flipX;
-        ghostSprite.sortingLayerID = originalSprite.sortingLayerID;
-        ghostSprite.sortingOrder = originalSprite.sortingOrder - 1;
+        while (elapsed < waveDuration)
+        {
+            GameObject ghost = new GameObject("PlayerGhost");
 
-        ghostSprite.color = new Color(0.8f, 0f, 1f, 0.6f); 
+            SpriteRenderer ghostSprite = ghost.AddComponent<SpriteRenderer>();
+            ghostSprite.sprite = originalSprite.sprite;
+            ghostSprite.flipX = originalSprite.flipX;
+            ghostSprite.sortingLayerID = originalSprite.sortingLayerID;
+            ghostSprite.sortingOrder = originalSprite.sortingOrder - 1;
 
-        ghost.transform.position = player.position + new Vector3(0.15f, 0f, 0f);
-        ghost.transform.localScale = player.localScale;
+            ghostSprite.color = new Color(0.8f, 0f, 1f, 0.4f);
 
-        yield return new WaitForSeconds(glitchDuration);
+            // Piccolo offset casuale
+            Vector3 offset = new Vector3(
+                Random.Range(-0.15f, 0.15f),
+                Random.Range(-0.05f, 0.05f),
+                0f);
 
-        Destroy(ghost);
+            ghost.transform.position = player.position + offset;
+            ghost.transform.localScale = player.localScale;
+
+            Destroy(ghost, 0.08f);
+
+            elapsed += 0.03f;
+            yield return new WaitForSeconds(0.03f);
+        }
     }
-
 
     private IEnumerator WaveEffect(WorldSwitch worldSwitch, bool goingToFantasy)
     {
@@ -74,8 +79,6 @@ public class WorldSwitchTransition : MonoBehaviour
         // Colore finale: LUCE PURA
         Color pureLightColor = new Color(0.95f, 0.98f, 1f, 1f);
 
-
-
         float elapsed = 0f;
         bool worldChanged = false;
 
@@ -93,8 +96,6 @@ public class WorldSwitchTransition : MonoBehaviour
             // Rotazione continua
             wave.transform.Rotate(0f, 0f, 400f * Time.deltaTime);
 
-
-
             if (sr != null)
             {
                 float fade = Mathf.InverseLerp(0.5f, 1f, t);
@@ -106,15 +107,6 @@ public class WorldSwitchTransition : MonoBehaviour
 
                 sr.color = new Color(currentColor.r, currentColor.g, currentColor.b, finalAlpha);
             }
-
-
-
-            // Fade solo dopo metà
-            /*if (sr != null && t > 0.5f)
-            {
-                float fade = Mathf.InverseLerp(0.5f, 1f, t);
-                sr.color = new Color(0.8f, 0f, 1f, 1f - fade);
-            }*/
 
             // Cambio mondo al picco
             if (!worldChanged && t >= 0.45f)
@@ -134,6 +126,44 @@ public class WorldSwitchTransition : MonoBehaviour
         wave.transform.localScale = startScale * overshoot;
 
         Destroy(wave);
+    }
+
+    private IEnumerator PlayerColorShift(bool goingToFantasy)
+    {
+        SpriteRenderer sr = player.GetComponent<SpriteRenderer>();
+        if (sr == null)
+            yield break;
+
+        Color originalColor = sr.color;
+
+        Color targetColor = goingToFantasy
+            ? new Color(0.85f, 0.75f, 1f, 1f)   // leggermente viola
+            : new Color(0.75f, 0.9f, 1f, 1f);   // leggermente azzurro
+
+        float duration = waveDuration * 0.6f;
+        float elapsed = 0f;
+
+        // Andata verso colore dimensionale
+        while (elapsed < duration)
+        {
+            float t = elapsed / duration;
+            sr.color = Color.Lerp(originalColor, targetColor, t);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        elapsed = 0f;
+
+        // Ritorno al colore originale
+        while (elapsed < duration)
+        {
+            float t = elapsed / duration;
+            sr.color = Color.Lerp(targetColor, originalColor, t);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        sr.color = originalColor;
     }
 
 }
