@@ -14,6 +14,14 @@ public class PlayerMovement : MonoBehaviour
     [Header("Particle Systems")]
     public ParticleSystem grassFX; // riferimento all'effetto particellare di erba che solleva il player
     public ParticleSystem jumpFX; // riferimento all'effetto particellare di salto
+    
+    [Header("Particle Colors")]
+    public Color fantasyGrassColor = Color.magenta;
+    public Color fantasyJumpColor = Color.cyan;
+
+    // Colori della dimensione reale (quelli originali)
+    private Color realGrassColor;
+    private Color realJumpColor;
 
     private float nextBlinkTime;
 
@@ -78,6 +86,8 @@ public class PlayerMovement : MonoBehaviour
             currentOffsetX = cameraOffsetX;
             targetOffsetX = cameraOffsetX;
         }
+        realGrassColor = grassFX.main.startColor.color;
+        realJumpColor = jumpFX.main.startColor.color;
     }
 
     void Update()
@@ -122,6 +132,9 @@ public class PlayerMovement : MonoBehaviour
 
             if (isGrounded)
             {
+                var grassMain = grassFX.main;
+                grassMain.startColor = WorldSwitch.Instance.isFantasyWorldActive ? fantasyGrassColor : realGrassColor;
+
                 grassFX.Play();
                 if (AudioManager.Instance.walkSound != null)
                 {
@@ -143,6 +156,10 @@ public class PlayerMovement : MonoBehaviour
                     {
                         AudioManager.Instance.PlaySFX(AudioManager.Instance.jumpSound);
                         animator.SetTrigger("DoubleJump");
+
+                        var jumpMain = jumpFX.main;
+                        jumpMain.startColor = WorldSwitch.Instance.isFantasyWorldActive ? fantasyJumpColor : realJumpColor;
+
                         jumpFX.Play();
                     }
                     rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpPower * gravityDirection);

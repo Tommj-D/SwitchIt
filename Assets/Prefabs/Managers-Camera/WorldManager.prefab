@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8974726903861807885}
   - component: {fileID: 7433374775185673090}
+  - component: {fileID: 4046727084526456589}
   m_Layer: 0
   m_Name: WorldManager
   m_TagString: Untagged
@@ -45,8 +46,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WorldSwitch
   canSwitchWorld: 1
+  canSwitchGravity: 0
   realWorld: {fileID: 0}
   fantasyWorld: {fileID: 0}
   mainCamera: {fileID: 0}
   realWorldColor: {r: 0.5372549, g: 0.9843138, b: 0.9803922, a: 1}
-  fantasyWorldColor: {r: 0.5411765, g: 0.1686275, b: 0.8862746, a: 1}
+  fantasyWorldColor: {r: 0.32941177, g: 0.121568635, b: 0.9215687, a: 1}
+  transition: {fileID: 4046727084526456589}
+  isFantasyWorldActive: 0
+--- !u!114 &4046727084526456589
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6373571417956606279}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0fcd544a91ea3f040ad50480bdb3f530, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WorldSwitchTransition
+  fantasyWavePrefab: {fileID: 4359276244795776523, guid: 24e975433a706c442b73070e99a70284, type: 3}
+  realWavePrefab: {fileID: 4359276244795776523, guid: 2208c853f3e619d4eb4be2320559d9be, type: 3}
+  player: {fileID: 0}
+  waveDuration: 0.35
+  waveMaxScale: 65
+  glitchDuration: 0
+  freezeTime: 0
