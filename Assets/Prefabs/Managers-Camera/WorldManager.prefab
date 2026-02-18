@@ -71,5 +71,5 @@ MonoBehaviour:
   player: {fileID: 0}
   waveDuration: 0.35
   waveMaxScale: 65
-  glitchDuration: 0
-  freezeTime: 0
+  realToFantasyParticles: {fileID: 1460362729370040631, guid: fc2bffbb74217466ab6873e7bdd22233, type: 3}
+  fantasyToRealParticles: {fileID: 1460362729370040631, guid: e2b89009948ba42b9b52720b3ae0417d, type: 3}
