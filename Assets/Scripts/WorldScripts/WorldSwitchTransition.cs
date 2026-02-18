@@ -10,13 +10,16 @@ public class WorldSwitchTransition : MonoBehaviour
     public float waveDuration = 0.3f;
     public float waveMaxScale = 20f;
 
-    [Header("Glitch")]
-    public float glitchDuration = 0.1f;
-    public float freezeTime = 0.05f;
+    [Header("Particles")]
+    public GameObject realToFantasyParticles;
+    public GameObject fantasyToRealParticles;
+
 
     public IEnumerator PlayTransition(WorldSwitch worldSwitch)
     {
         bool goingToFantasy = !worldSwitch.isFantasyWorldActive;
+
+        SpawnParticles(goingToFantasy);
 
         StartCoroutine(GlitchEffect());
         StartCoroutine(PlayerColorShift(goingToFantasy));
@@ -86,7 +89,7 @@ public class WorldSwitchTransition : MonoBehaviour
         {
             float t = elapsed / waveDuration;
 
-            // Easing più morbido
+            // Easing piï¿½ morbido
             float eased = Mathf.Sin(t * Mathf.PI * 0.5f);
 
             // Scala principale
@@ -164,6 +167,28 @@ public class WorldSwitchTransition : MonoBehaviour
         }
 
         sr.color = originalColor;
+    }
+
+    private void SpawnParticles(bool goingToFantasy)
+    {
+        GameObject selectedParticles = goingToFantasy
+            ? realToFantasyParticles
+            : fantasyToRealParticles;
+
+        if (selectedParticles == null)
+            return;
+
+        GameObject particles = Instantiate(selectedParticles, player.position, Quaternion.identity);
+
+        particles.transform.SetParent(player);
+
+        ParticleSystem ps = particles.GetComponent<ParticleSystem>();
+
+        if (ps != null)
+        {
+            ps.Play();
+            Destroy(particles, ps.main.duration + ps.main.startLifetime.constantMax);
+        }
     }
 
 }
