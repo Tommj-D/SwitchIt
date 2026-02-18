@@ -809,7 +809,7 @@ ParticleSystem:
           m_PostInfinity: 2
           m_RotationOrder: 4
     arc:
-      value: 360
+      value: 180
       mode: 0
       spread: 0
       speed:
@@ -5182,7 +5182,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 1.5
+      scalar: 0.9
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -5875,7 +5875,7 @@ ParticleSystem:
       countCurve:
         serializedVersion: 2
         minMaxState: 0
-        scalar: 30
+        scalar: 15
         minScalar: 30
         maxCurve:
           serializedVersion: 2
