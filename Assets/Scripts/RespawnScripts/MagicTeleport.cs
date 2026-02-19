@@ -16,6 +16,10 @@ public class MagicTeleport : MonoBehaviour
     public CameraConfinerManager cameraConfinerManager;
     public Collider2D confinerDestinazione;
 
+    [Header("Effetti Sonori (Opzionali)")]
+    public AudioClip suonoEntrata; // Suono di caduta/risucchio
+    public AudioClip suonoUscita;  // Suono di comparsa/salto
+
     private bool inCorso = false;
     private Vector3 scalaOriginalePlayer; // Per ricordare quanto era grande il player
 
@@ -34,6 +38,15 @@ public class MagicTeleport : MonoBehaviour
         
         // Salviamo la grandezza originale del player (es. 1,1,1)
         scalaOriginalePlayer = player.transform.localScale;
+
+        // --- 🎵 SUONO ENTRATA ---
+        if (suonoEntrata != null)
+        {
+            if (AudioManager.Instance != null)
+                AudioManager.Instance.PlaySFX(suonoEntrata);
+            else
+                AudioSource.PlayClipAtPoint(suonoEntrata, transform.position);
+        }
 
         // --- FASE 1: CADUTA, RIMPICCIOLIMENTO E FADE OUT ---
         float timer = 0;
@@ -73,6 +86,15 @@ public class MagicTeleport : MonoBehaviour
         // Brevissima pausa per far aggiornare la camera
         yield return new WaitForSeconds(0.1f);
 
+
+        // --- 🎵 SUONO USCITA ---
+        if (suonoUscita != null)
+        {
+            if (AudioManager.Instance != null)
+                AudioManager.Instance.PlaySFX(suonoUscita);
+            else
+                AudioSource.PlayClipAtPoint(suonoUscita, destinazione.position);
+        }
 
         // --- FASE 3: SALTO IN USCITA E FADE IN ---
         // Applica il salto verso l'alto
