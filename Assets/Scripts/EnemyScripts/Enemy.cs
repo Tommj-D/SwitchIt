@@ -127,7 +127,7 @@ public abstract class Enemy : MonoBehaviour
         isDead = false;
         isKillable = true;
 
-        isActive = false;
+        isActive = true;
         isVisible = false;
 
         // Riattiva Rigidbody
