@@ -149,6 +149,9 @@ public class PlayerRespawn : MonoBehaviour
         // Reset mondo
         if (RespawnManager.Instance != null)
             RespawnManager.Instance.ResetAll();
+        if(WorldSwitch.Instance.isFantasyWorldActive) 
+            WorldSwitch.Instance.SwitchWorldWithoutAnimation();
+
 
         if (animator != null)
         {

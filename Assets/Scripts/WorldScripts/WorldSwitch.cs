@@ -69,4 +69,9 @@ public class WorldSwitch : MonoBehaviour
         if (mainCamera != null)
             mainCamera.backgroundColor = isFantasyWorldActive ? fantasyWorldColor : realWorldColor;
     }
+    public void SwitchWorldWithoutAnimation()
+    {
+        if (!canSwitchWorld || isSwitching) return;
+        ApplyWorldChange();
+    }
 }
