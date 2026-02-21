@@ -19,7 +19,7 @@ public class Spike_Head : MonoBehaviour
             }
 
             // Distruggi la spina
-            gameObject.SetActive(false);
+            transform.parent.gameObject.SetActive(false);
         }
     }
 }
