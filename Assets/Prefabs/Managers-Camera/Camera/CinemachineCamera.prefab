@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6907379130471642857}
   - component: {fileID: 1990459432548345834}
   - component: {fileID: 5380002766347411743}
+  - component: {fileID: 6906094838924874659}
   m_Layer: 0
   m_Name: CinemachineCamera
   m_TagString: Untagged
@@ -109,7 +110,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 886251e9a18ece04ea8e61686c173e1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Cinemachine::Unity.Cinemachine.CinemachinePositionComposer
-  CameraDistance: 10
+  CameraDistance: 27
   DeadZoneDepth: 0
   Composition:
     ScreenPosition: {x: 0, y: 0}
@@ -128,3 +129,15 @@ MonoBehaviour:
     Time: 0.3
     Smoothing: 10
     IgnoreY: 0
+--- !u!114 &6906094838924874659
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8352147678539986030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ea8d8b105eb049c4bf8d88933e2f1ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraConfinerManager
