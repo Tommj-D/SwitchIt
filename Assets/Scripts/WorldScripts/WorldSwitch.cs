@@ -20,6 +20,9 @@ public class WorldSwitch : MonoBehaviour
     [Header("Transition")]
     public WorldSwitchTransition transition;
 
+    [Header("MagicFog")]
+    public GameObject MagicDust;
+
     [HideInInspector] public bool isFantasyWorldActive = false;
 
     private bool isSwitching = false;
@@ -36,9 +39,8 @@ public class WorldSwitch : MonoBehaviour
         // Setup iniziale
         if (realWorld != null) realWorld.SetActive(true);
         if (fantasyWorld != null) fantasyWorld.SetActive(false);
-
-        if (mainCamera != null)
-            mainCamera.backgroundColor = realWorldColor;
+        if (mainCamera != null) mainCamera.backgroundColor = realWorldColor;
+        if(MagicDust != null) MagicDust.SetActive(false);
     }
 
     public void SwitchWorld()
@@ -66,8 +68,9 @@ public class WorldSwitch : MonoBehaviour
         if (realWorld != null) realWorld.SetActive(!isFantasyWorldActive);
         if (fantasyWorld != null) fantasyWorld.SetActive(isFantasyWorldActive);
 
-        if (mainCamera != null)
-            mainCamera.backgroundColor = isFantasyWorldActive ? fantasyWorldColor : realWorldColor;
+        if (mainCamera != null) mainCamera.backgroundColor = isFantasyWorldActive ? fantasyWorldColor : realWorldColor;
+
+        if (MagicDust != null) MagicDust.SetActive(isFantasyWorldActive);
     }
     public void SwitchWorldWithoutAnimation()
     {
