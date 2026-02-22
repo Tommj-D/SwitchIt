@@ -15,7 +15,7 @@ public class EnemyHead : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player"))
+        if (collision.CompareTag("Player")&&!PlayerRespawn.isDying)
         {
             // Uccidi il nemico (il parent)
             enemy.OnStomped(collision.gameObject);

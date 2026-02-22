@@ -25,7 +25,7 @@ public class PlayerRespawn : MonoBehaviour
     private Collider2D col;
     private SpriteRenderer fullSpriteRenderer;
 
-    private bool isDying = false;
+    [HideInInspector] public static bool isDying = false;
 
     private void Awake()
     {
@@ -104,7 +104,9 @@ public class PlayerRespawn : MonoBehaviour
         // Particelle
         if (deathParticle != null)
         {
-            GameObject particles = Instantiate(deathParticle, transform.position, Quaternion.identity);
+            Vector3 spawnPos = transform.position;
+            spawnPos.z = riggedBody.transform.position.z;
+            GameObject particles = Instantiate(deathParticle, spawnPos, Quaternion.identity);
         }
 
         if (fullSprite != null)
