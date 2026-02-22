@@ -11,7 +11,6 @@ public class SceneController : MonoBehaviour
 
     private ScreenFade sceneFade;
 
-
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -106,5 +105,15 @@ public class SceneController : MonoBehaviour
             yield return null;
         }
         LightManager.Instance.UnlockLight();
+    }
+
+    public IEnumerator FadeOut(float duration)
+    {
+        yield return ScreenFade.Instance.FadeOutCoroutine(duration);
+    }
+
+    public IEnumerator FadeIn(float duration)
+    {
+        yield return ScreenFade.Instance.FadeInCoroutine(duration);
     }
 }

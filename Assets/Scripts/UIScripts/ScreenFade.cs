@@ -4,10 +4,20 @@ using System.Collections;
 
 public class ScreenFade : MonoBehaviour
 {
+    public static ScreenFade Instance { get; private set; }
+
     private Image fadeImage;
 
-    private void Awake() 
+    private void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+
         fadeImage = GetComponent<Image>();
     }
 

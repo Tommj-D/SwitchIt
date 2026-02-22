@@ -7,9 +7,6 @@ public class PlayerRespawn : MonoBehaviour
 {
     private PlayerInput playerInput;
 
-    public ScreenFade screenFade;
-    public SceneController sceneController;
-
     [Header("Magic Respawn")]
     private float spawnScale = 0.1f;
     public float growDuration = 0.6f;
@@ -134,7 +131,7 @@ public class PlayerRespawn : MonoBehaviour
         yield return new WaitForSeconds(respawnDelay);
 
         // FADE OUT
-        yield return screenFade.FadeOutCoroutine(sceneController.fadeDuration);
+        yield return SceneController.Instance.FadeOut(SceneController.Instance.fadeDuration);
 
         // Prepara il player (ancora invisibile)
         yield return StartCoroutine(PrepareRespawn());
@@ -149,9 +146,10 @@ public class PlayerRespawn : MonoBehaviour
         // Reset mondo
         if (RespawnManager.Instance != null)
             RespawnManager.Instance.ResetAll();
-        if(WorldSwitch.Instance.isFantasyWorldActive) 
+        if(WorldSwitch.Instance!=null && WorldSwitch.Instance.isFantasyWorldActive) 
             WorldSwitch.Instance.SwitchWorldWithoutAnimation();
 
+        StartCoroutine(SceneController.Instance.FadeIn(SceneController.Instance.fadeDuration));
 
         if (animator != null)
         {
@@ -162,14 +160,11 @@ public class PlayerRespawn : MonoBehaviour
 
         playerInput.enabled = true;
 
-        // FADE IN
-        yield return screenFade.FadeInCoroutine(sceneController.fadeDuration);
-
         isDying = false;
 
     }
 
-    private IEnumerator PrepareRespawn()
+    public IEnumerator PrepareRespawn()
     {
         if (fullSpriteRenderer == null)
             yield break;

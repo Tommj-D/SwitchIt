@@ -14894,7 +14894,7 @@ MonoBehaviour:
   jumpFX: {fileID: 4266267843451266039}
   fantasyGrassColor: {r: 0, g: 1, b: 0.5411765, a: 1}
   fantasyJumpColor: {r: 0, g: 0, b: 0.8039216, a: 0.54901963}
-  moveSpeed: 7
+  moveSpeed: 6.5
   jumpPower: 10.5
   maxJumps: 2
   groundCheckPos: {fileID: 2937229356370115362}
@@ -15111,8 +15111,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2876eac4debf470419f62364888c48a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerRespawn
-  screenFade: {fileID: 0}
-  sceneController: {fileID: 0}
   growDuration: 1
   upwardForce: 14
   blackScreenHoldTime: 0.6
@@ -15320,35 +15318,11 @@ MonoBehaviour:
     m_ActionId: 1c644143-4a38-40bd-ad62-59518b20694f
     m_ActionName: 'Player/Jump[/Keyboard/w,/Keyboard/space,/Keyboard/upArrow]'
   - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 5469857426969550463}
-        m_TargetAssemblyTypeName: PlayerMovement, Assembly-CSharp
-        m_MethodName: DimensionSwitch
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_ActionId: ede89702-df78-4969-b5a0-6a32169c7706
     m_ActionName: 'Player/Switch[/Keyboard/e]'
   - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 5469857426969550463}
-        m_TargetAssemblyTypeName: PlayerMovement, Assembly-CSharp
-        m_MethodName: InvertGravity
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_ActionId: 3c724c7b-34e4-4a6e-965f-686b0faea74d
     m_ActionName: 'Player/Gravity[/Keyboard/g]'
   m_NeverAutoSwitchControlSchemes: 0
