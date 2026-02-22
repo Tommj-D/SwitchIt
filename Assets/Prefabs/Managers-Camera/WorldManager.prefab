@@ -53,6 +53,11 @@ MonoBehaviour:
   realWorldColor: {r: 0.5372549, g: 0.9843138, b: 0.9803922, a: 1}
   fantasyWorldColor: {r: 0.32941177, g: 0.121568635, b: 0.9215687, a: 1}
   transition: {fileID: 4046727084526456589}
+  MagicDust: {fileID: 0}
+  MagicFog: {fileID: 0}
+  musicSource: {fileID: 0}
+  musicRealGroup: {fileID: -1793385470781041295, guid: bd895b5153b2e204ca4b0ca8a56c023b, type: 2}
+  musicFantasyGroup: {fileID: 7943864735557571258, guid: bd895b5153b2e204ca4b0ca8a56c023b, type: 2}
   isFantasyWorldActive: 0
 --- !u!114 &4046727084526456589
 MonoBehaviour:

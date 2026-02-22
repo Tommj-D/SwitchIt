@@ -259,12 +259,13 @@ public class PlayerRespawn : MonoBehaviour
 
         //Rimetto la musica al volume normale
         AudioTransitionManager transition = AudioManager.Instance.GetComponent<AudioTransitionManager>();
-        VolumeController.Instance.FadeMixerParam(VolumeController.Instance.masterMixer, "MusicVol", 0f, 1.4f);
-        VolumeController.Instance.FadeMixerParam(VolumeController.Instance.transitionMixer, "MusicLowpass", 22000f, 1.1f);
-        VolumeController.Instance.FadeMixerParam(VolumeController.Instance.transitionMixer, "MusicHightpass", 10f, 1.1f);
-        VolumeController.Instance.FadeMixerParam(VolumeController.Instance.transitionMixer, "SFXLowpass", 22000f, 1.1f);
+        VolumeController.Instance.FadeMixerParam(VolumeController.Instance.masterMixer, "MusicVol", 0f, 2f);
+        VolumeController.Instance.FadeMixerParam(VolumeController.Instance.transitionMixer, "MusicVol", 0f, 3f);
+        VolumeController.Instance.FadeMixerParam(VolumeController.Instance.transitionMixer, "MusicLowpass", 22000f, 2f);
+        VolumeController.Instance.FadeMixerParam(VolumeController.Instance.transitionMixer, "MusicHightpass", 10f, 2f);
+        VolumeController.Instance.FadeMixerParam(VolumeController.Instance.transitionMixer, "SFXLowpass", 22000f, 2f);
 
-        yield return new WaitForSeconds(1.4f);
+        yield return new WaitForSeconds(3f);
         transition.ExitTransition();
         VolumeController.Instance.ResetMusicState(0.2f);
     }

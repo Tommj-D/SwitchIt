@@ -11,7 +11,6 @@ public class VolumeController : MonoBehaviour
     [Header("Audio Mixer")]
     public AudioMixer masterMixer;
     public AudioMixer transitionMixer;
-    public AudioMixer fantasyWorldMixer;
 
     [Header("UI Menu")]
     public GameObject volumeMenuCanvas; 
@@ -158,8 +157,8 @@ public class VolumeController : MonoBehaviour
         float t = 0f;
         while (t < fadeTime)
         {
-            t += Time.unscaledDeltaTime;
-            float value = Mathf.Lerp(originalValue, targetValue, t / fadeTime);
+            t += Time.unscaledDeltaTime; 
+            float value = Mathf.Lerp(originalValue, targetValue, Mathf.SmoothStep(0f, 1f, t / fadeTime));
             mixer.SetFloat(paramName, value);
             yield return null;
         }

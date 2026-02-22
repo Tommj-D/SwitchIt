@@ -65,7 +65,7 @@ public class SwitchLevel : MonoBehaviour
         // Inizio transizione
         transition.EnterTransition();
 
-        VolumeController.Instance.DuckMixer(VolumeController.Instance.transitionMixer, "MusicVol", 3f, 0.6f);
+        VolumeController.Instance.DuckMixer(VolumeController.Instance.transitionMixer, "MusicVol", 6f, 0.3f);
         VolumeController.Instance.FadeMixerParam(VolumeController.Instance.transitionMixer, "MusicLowpass", 1500f, 0.6f);
         VolumeController.Instance.FadeMixerParam(VolumeController.Instance.transitionMixer, "MusicHightpass", 1500f, 0.6f);
         VolumeController.Instance.FadeMixerParam(VolumeController.Instance.transitionMixer, "MusicPitch", 0.95f, 0.6f);
