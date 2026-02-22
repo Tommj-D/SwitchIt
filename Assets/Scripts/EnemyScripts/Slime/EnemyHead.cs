@@ -15,26 +15,25 @@ public class EnemyHead : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player")&&!GetComponent<PlayerRespawn>().IsDying())
-        {
-            // Uccidi il nemico (il parent)
-            enemy.OnStomped(collision.gameObject);
+        if (!collision.CompareTag("Player")) return;
 
-            // Rimbalzo del player
-            Rigidbody2D rb = collision.GetComponent<Rigidbody2D>();
+        PlayerRespawn playerRespawn = collision.GetComponent<PlayerRespawn>();
+        if (playerRespawn == null || playerRespawn.IsDying())
+            return;
+
+        enemy.OnStomped(collision.gameObject);
+
+        Rigidbody2D rb = collision.GetComponent<Rigidbody2D>();
+        if (rb != null)
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpingForce);
 
-            PlayerMovement playerMovement = collision.GetComponent<PlayerMovement>();
-            if (playerMovement != null)
-            {
-                playerMovement.ResetJumps();
-            }
+        PlayerMovement playerMovement = collision.GetComponent<PlayerMovement>();
+        if (playerMovement != null)
+            playerMovement.ResetJumps();
 
-            Collider2D[] colliders = GetComponents<Collider2D>();
-            foreach (Collider2D col in colliders)
-            {
-                col.enabled = false;
-            }
+        foreach (Collider2D col in GetComponents<Collider2D>())
+        {
+            col.enabled = false;
         }
     }
 }

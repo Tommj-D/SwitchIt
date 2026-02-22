@@ -26,12 +26,10 @@ public class WorldSwitch : MonoBehaviour
     public GameObject MagicFog;
 
     [Header("Audio Music")]
-    public AudioSource musicSource;
     public AudioMixerGroup musicRealGroup;
     public AudioMixerGroup musicFantasyGroup;
 
     [Header("Audio SFX")]
-    public AudioSource sfxSource;
     public AudioMixerGroup sfxRealGroup;
     public AudioMixerGroup sfxFantasyGroup;
 
@@ -55,8 +53,14 @@ public class WorldSwitch : MonoBehaviour
         if(MagicDust != null) MagicDust.SetActive(false);
         if(MagicFog != null) MagicFog.SetActive(false);
 
-        if (musicSource != null) musicSource.outputAudioMixerGroup = musicRealGroup;
-        if (sfxSource != null) sfxSource.outputAudioMixerGroup = sfxRealGroup;
+        if (AudioManager.Instance != null)
+        {
+            if (AudioManager.Instance.musicSource != null)
+                AudioManager.Instance.musicSource.outputAudioMixerGroup = musicRealGroup;
+
+            if (AudioManager.Instance.sfxSource != null)
+                AudioManager.Instance.sfxSource.outputAudioMixerGroup = sfxRealGroup;
+        }
     }
 
     public void SwitchWorld()
@@ -90,11 +94,19 @@ public class WorldSwitch : MonoBehaviour
         if (MagicFog != null) MagicFog.SetActive(isFantasyWorldActive);
 
         // Cambio audio
-        if (musicSource != null)
-            musicSource.outputAudioMixerGroup = isFantasyWorldActive ? musicFantasyGroup : musicRealGroup;
+        if (AudioManager.Instance != null)
+        {
+            AudioSource music = AudioManager.Instance.musicSource;
+            AudioSource sfx = AudioManager.Instance.sfxSource;
 
-        if (sfxSource != null)
-            sfxSource.outputAudioMixerGroup = isFantasyWorldActive ? sfxFantasyGroup : sfxRealGroup;
+            if (music != null)
+                music.outputAudioMixerGroup =
+                    isFantasyWorldActive ? musicFantasyGroup : musicRealGroup;
+
+            if (sfx != null)
+                sfx.outputAudioMixerGroup =
+                    isFantasyWorldActive ? sfxFantasyGroup : sfxRealGroup;
+        }
     }
 
     public void SwitchWorldWithoutAnimation()
