@@ -133,7 +133,8 @@ public class PlayerMovement : MonoBehaviour
             if (isGrounded)
             {
                 var grassMain = grassFX.main;
-                grassMain.startColor = WorldSwitch.Instance.isFantasyWorldActive ? fantasyGrassColor : realGrassColor;
+                if(WorldSwitch.Instance!=null)
+                    grassMain.startColor = WorldSwitch.Instance.isFantasyWorldActive ? fantasyGrassColor : realGrassColor;
 
                 grassFX.Play();
                 if (AudioManager.Instance.walkSound != null)
@@ -158,7 +159,8 @@ public class PlayerMovement : MonoBehaviour
                         animator.SetTrigger("DoubleJump");
 
                         var jumpMain = jumpFX.main;
-                        jumpMain.startColor = WorldSwitch.Instance.isFantasyWorldActive ? fantasyJumpColor : realJumpColor;
+                        if (WorldSwitch.Instance != null)
+                            jumpMain.startColor = WorldSwitch.Instance.isFantasyWorldActive ? fantasyJumpColor : realJumpColor;
 
                         jumpFX.Play();
                     }
