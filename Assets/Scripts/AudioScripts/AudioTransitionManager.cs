@@ -4,13 +4,18 @@ using System.Collections.Generic;
 
 public class AudioTransitionManager : MonoBehaviour
 {
-    [Header("Gruppi Transizione")]
-    public AudioMixerGroup musicTransitionGroup;
-    public AudioMixerGroup sfxTransitionGroup;
+    [System.Serializable]
+    public class MixerTransition
+    {
+        public AudioMixerGroup originalGroup;
+        public AudioMixerGroup transitionGroup;
+    }
+
+    [Header("Mappature Transizione")]
+    public List<MixerTransition> mixerTransitions = new List<MixerTransition>();
 
     private Dictionary<AudioSource, AudioMixerGroup> originalGroups = new Dictionary<AudioSource, AudioMixerGroup>();
 
-    // Sposta tutti i suoni esistenti sul TransitionMixer
     public void EnterTransition()
     {
         AudioSource[] allSources = FindObjectsByType<AudioSource>(FindObjectsSortMode.None);
@@ -20,14 +25,17 @@ public class AudioTransitionManager : MonoBehaviour
             if (!originalGroups.ContainsKey(src))
                 originalGroups[src] = src.outputAudioMixerGroup;
 
-            if (src.outputAudioMixerGroup.name.ToLower().Contains("music"))
-                src.outputAudioMixerGroup = musicTransitionGroup;
-            else
-                src.outputAudioMixerGroup = sfxTransitionGroup;
+            foreach (var mapping in mixerTransitions)
+            {
+                if (src.outputAudioMixerGroup == mapping.originalGroup)
+                {
+                    src.outputAudioMixerGroup = mapping.transitionGroup;
+                    break;
+                }
+            }
         }
     }
 
-    // Riporta tutti i suoni ai gruppi originali
     public void ExitTransition()
     {
         foreach (var kvp in originalGroups)
@@ -35,6 +43,7 @@ public class AudioTransitionManager : MonoBehaviour
             if (kvp.Key != null)
                 kvp.Key.outputAudioMixerGroup = kvp.Value;
         }
+
         originalGroups.Clear();
     }
 }

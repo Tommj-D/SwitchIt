@@ -11,11 +11,12 @@ public class VolumeController : MonoBehaviour
     [Header("Audio Mixer")]
     public AudioMixer masterMixer;
     public AudioMixer transitionMixer;
+    public AudioMixer fantasyWorldMixer;
 
     [Header("UI Menu")]
-    public GameObject volumeMenuCanvas; // UI scene-based
-    public Slider musicSlider;          // UI scene-based
-    public Slider sfxSlider;            // UI scene-based
+    public GameObject volumeMenuCanvas; 
+    public Slider musicSlider;          
+    public Slider sfxSlider;            
 
     private bool isMenuOpen = false;
 

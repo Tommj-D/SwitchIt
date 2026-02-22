@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class WorldSwitch : MonoBehaviour
 {
@@ -23,6 +24,11 @@ public class WorldSwitch : MonoBehaviour
     [Header("MagicFog")]
     public GameObject MagicDust;
     public GameObject MagicFog;
+
+    [Header("Audio")]
+    public AudioSource musicSource;
+    public AudioMixerGroup musicRealGroup;
+    public AudioMixerGroup musicFantasyGroup;
 
     [HideInInspector] public bool isFantasyWorldActive = false;
 
@@ -74,7 +80,15 @@ public class WorldSwitch : MonoBehaviour
 
         if (MagicDust != null) MagicDust.SetActive(isFantasyWorldActive);
         if (MagicFog != null) MagicFog.SetActive(isFantasyWorldActive);
+
+        // Cambio audio
+        if (musicSource != null)
+        {
+            musicSource.outputAudioMixerGroup =
+                isFantasyWorldActive ? musicFantasyGroup : musicRealGroup;
+        }
     }
+
     public void SwitchWorldWithoutAnimation()
     {
         if (!canSwitchWorld || isSwitching) return;
