@@ -47,6 +47,22 @@ AudioMixerEffectController:
   m_SendTarget: {fileID: 0}
   m_EnableWetMix: 0
   m_Bypass: 0
+--- !u!244 &-5653718391620375415
+AudioMixerEffectController:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_EffectID: 07e141822857c6a41afe907f43383c60
+  m_EffectName: Lowpass Simple
+  m_MixLevel: 48eb7aa37f4da4d4289cd68c9d30dc83
+  m_Parameters:
+  - m_ParameterName: Cutoff freq
+    m_GUID: df01e8f6da6373f4fb6ffcab821bdd0a
+  m_SendTarget: {fileID: 0}
+  m_EnableWetMix: 0
+  m_Bypass: 0
 --- !u!243 &-5180735091833922158
 AudioMixerGroupController:
   m_ObjectHideFlags: 0
@@ -248,6 +264,8 @@ AudioMixerSnapshotController:
     879687615c3425c4997b79c6baf353cb: 0
     8d3c8381eb35c2f45a374808a1d7dd6d: -10000
     68bd9b81f76afd2459c1b6e60ad5d97a: 0.2
+    6891cdf1fb013ca47ae09facd723f3e3: 10
+    3dd1413295bd8cb47b3aa4499867a1af: 1
     5941374276285e34494543a4c1a75f33: 1
     299628c2aaa3e48498f66e6551d36170: 1
     4e116a038d254bc49a8b757c229ad7a8: 0
@@ -256,6 +274,7 @@ AudioMixerSnapshotController:
     214494433f189e3469c05edceaff1649: 1
     c0513a533739acf4fba4187a34ba8ec3: 401
     7d4ebd531b70243438da7d06aa19789a: 256
+    265f5fa3830ea304881dfe1c3afd1864: 0.9
     549cf2142be781c4c97869bd157f960f: 100
     59b37344845e93840b408407d3eeca0e: -3418
     25c4f87465dbfc345812e928c818bfce: 0
@@ -274,6 +293,7 @@ AudioMixerSnapshotController:
     7998dba6f17a33c4f8c4edad53bcb72d: 0.61
     4ac7f8d615e9b9f4ab992efcfb9d53d9: 0
     0e3f2ae663dfb1942ba303f45772dcc4: 1
+    df01e8f6da6373f4fb6ffcab821bdd0a: 2000
     da9172b7053c52c4b9f99d2ce49011b9: 10.9
     e6869fd74894ad046aa7fc5858f20928: 0
     e403051836124cf4fb3a75d36184640f: 0.69
@@ -301,10 +321,12 @@ AudioMixerSnapshotController:
     e766968bfd0af7f42b88ed876a448eac: 22000
     930632cb54ae34d47be2894b5ef7f614: 1
     56c544eb1fe4a864c96ac865559fb1b2: 94
+    db06e82cf1caebb46803a9596b7308e4: 100
     07959b3cecaec8641b8eb3871e0ba1b0: 0.26
     8becea5c90b083b49b1044238dd6a749: 3736
     d05ec2bc3c2def7488cb407a9d2590a4: 1
     e2f807bcf3435284495416f588581895: 1
+    6cca97ec0e4de114183a19ca5a7e9753: 0
     6eddad3ddb256c144b52457f2a95a1e9: 0.7
     cb87f64d5707d9949a09493525bda121: 1
     5fff427d5dd67ec4993061a3d0a04afc: 80020
@@ -364,6 +386,7 @@ AudioMixerGroupController:
   m_Send: 00000000000000000000000000000000
   m_Effects:
   - {fileID: -1330727109287944163}
+  - {fileID: -5653718391620375415}
   m_UserColorIndex: 0
   m_Mute: 0
   m_Solo: 0

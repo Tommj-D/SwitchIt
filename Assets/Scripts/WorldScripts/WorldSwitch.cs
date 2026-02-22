@@ -25,10 +25,15 @@ public class WorldSwitch : MonoBehaviour
     public GameObject MagicDust;
     public GameObject MagicFog;
 
-    [Header("Audio")]
+    [Header("Audio Music")]
     public AudioSource musicSource;
     public AudioMixerGroup musicRealGroup;
     public AudioMixerGroup musicFantasyGroup;
+
+    [Header("Audio SFX")]
+    public AudioSource sfxSource;
+    public AudioMixerGroup sfxRealGroup;
+    public AudioMixerGroup sfxFantasyGroup;
 
     [HideInInspector] public bool isFantasyWorldActive = false;
 
@@ -49,6 +54,9 @@ public class WorldSwitch : MonoBehaviour
         if (mainCamera != null) mainCamera.backgroundColor = realWorldColor;
         if(MagicDust != null) MagicDust.SetActive(false);
         if(MagicFog != null) MagicFog.SetActive(false);
+
+        if (musicSource != null) musicSource.outputAudioMixerGroup = musicRealGroup;
+        if (sfxSource != null) sfxSource.outputAudioMixerGroup = sfxRealGroup;
     }
 
     public void SwitchWorld()
@@ -83,10 +91,10 @@ public class WorldSwitch : MonoBehaviour
 
         // Cambio audio
         if (musicSource != null)
-        {
-            musicSource.outputAudioMixerGroup =
-                isFantasyWorldActive ? musicFantasyGroup : musicRealGroup;
-        }
+            musicSource.outputAudioMixerGroup = isFantasyWorldActive ? musicFantasyGroup : musicRealGroup;
+
+        if (sfxSource != null)
+            sfxSource.outputAudioMixerGroup = isFantasyWorldActive ? sfxFantasyGroup : sfxRealGroup;
     }
 
     public void SwitchWorldWithoutAnimation()

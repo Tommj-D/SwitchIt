@@ -58,6 +58,9 @@ MonoBehaviour:
   musicSource: {fileID: 0}
   musicRealGroup: {fileID: -1793385470781041295, guid: bd895b5153b2e204ca4b0ca8a56c023b, type: 2}
   musicFantasyGroup: {fileID: 7943864735557571258, guid: bd895b5153b2e204ca4b0ca8a56c023b, type: 2}
+  sfxSource: {fileID: 0}
+  sfxRealGroup: {fileID: -8022069700662271292, guid: bd895b5153b2e204ca4b0ca8a56c023b, type: 2}
+  sfxFantasyGroup: {fileID: 4745786433679059978, guid: bd895b5153b2e204ca4b0ca8a56c023b, type: 2}
   isFantasyWorldActive: 0
 --- !u!114 &4046727084526456589
 MonoBehaviour:
