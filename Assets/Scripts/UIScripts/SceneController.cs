@@ -105,6 +105,11 @@ public class SceneController : MonoBehaviour
             yield return null;
         }
         LightManager.Instance.UnlockLight();
+
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.isChangingLevel = false;
+        }
     }
 
     public IEnumerator FadeOut(float duration)

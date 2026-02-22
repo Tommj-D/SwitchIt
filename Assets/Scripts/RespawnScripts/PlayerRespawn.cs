@@ -25,7 +25,7 @@ public class PlayerRespawn : MonoBehaviour
     private Collider2D col;
     private SpriteRenderer fullSpriteRenderer;
 
-    [HideInInspector] public static bool isDying = false;
+    private bool isDying = false;
 
     private void Awake()
     {
@@ -158,11 +158,7 @@ public class PlayerRespawn : MonoBehaviour
             animator.SetTrigger("Respawn");
         }
 
-        StartCoroutine(PlayRespawnAnimation());
-
-        playerInput.enabled = true;
-
-        isDying = false;
+        yield return StartCoroutine(PlayRespawnAnimation());
 
     }
 
@@ -253,6 +249,9 @@ public class PlayerRespawn : MonoBehaviour
         // riattivo collisioni e movimento
         col.enabled = true;
         GetComponent<PlayerMovement>().enabled = true;
+        playerInput.enabled = true;
+
+        isDying = false;
 
         //Rimetto la musica al volume normale
         AudioTransitionManager transition = AudioManager.Instance.GetComponent<AudioTransitionManager>();
