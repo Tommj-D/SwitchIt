@@ -9,6 +9,7 @@ public class ShockWaveManager : MonoBehaviour
     private Coroutine shockWaveCoroutine;
     private Material _material;
     private static int waveDistanceFromCenter = Shader.PropertyToID("_WaveDistanceFromCenter");
+    private static int waveCenterID = Shader.PropertyToID("_WaveCenter");
 
     private void Awake()
     {
@@ -19,16 +20,21 @@ public class ShockWaveManager : MonoBehaviour
     {
         if(Keyboard.current.hKey.wasPressedThisFrame)
         {
-            callShockWave();
+            CallShockWave(new Vector3(Random.Range(-5f, 5f), Random.Range(-5f, 5f), 0));
         }
     }
-    public void callShockWave()
+    public void CallShockWave(Vector3 worldPosition)
     {
+        Vector3 screenPos = Camera.main.WorldToViewportPoint(worldPosition);
+
+        _material.SetVector(waveCenterID,
+            new Vector4(screenPos.x, screenPos.y, 0, 0));
+
         if (shockWaveCoroutine != null)
-        {
             StopCoroutine(shockWaveCoroutine);
-        }
-        shockWaveCoroutine = StartCoroutine(ShockWaveAction(-0.1f, 1f));
+
+        shockWaveCoroutine = StartCoroutine(
+            ShockWaveAction(-0.1f, 1f));
     }
 
     private IEnumerator ShockWaveAction(float startPos, float endPos)
