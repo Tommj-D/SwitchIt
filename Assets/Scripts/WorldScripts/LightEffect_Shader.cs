@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 
 public class LightEffect_Shader : MonoBehaviour
 {
-    [SerializeField] private float _duration = 0.25f;
+    public float _duration = 0.25f;
 
     private int _hitEffectAmount = Shader.PropertyToID("_HitEffectAmount");
 
