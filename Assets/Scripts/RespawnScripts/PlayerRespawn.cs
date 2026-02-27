@@ -218,9 +218,10 @@ public class PlayerRespawn : MonoBehaviour
 
 
         VolumeController.Instance.FadeMixerParam(VolumeController.Instance.transitionMixer, "MusicPitch", 1f, 1.3f);
-
+    
         float t = 0f;
         bool impulseGiven = false;
+        bool shockWaveCalled = false;
         while (t < 1f)
         {
             t += Time.deltaTime / growDuration;
@@ -233,7 +234,14 @@ public class PlayerRespawn : MonoBehaviour
             c.a = Mathf.Lerp(0f, 1f, t);
             fullSpriteRenderer.color = c;
 
-            // Dai impulso dopo un po'
+            // Shockwave al 20% della chiamata
+            if (!shockWaveCalled && t >= 0.2f)
+            {
+                ShockWaveManager.Instance.CallShockWave(transform.position);
+                shockWaveCalled = true;
+            }
+
+            // Da impulso dopo un po'
             if (!impulseGiven && t >= 0.3f)
             {
                 rb.simulated = true;

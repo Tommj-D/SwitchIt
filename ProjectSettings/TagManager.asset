@@ -63,5 +63,8 @@ TagManager:
   - name: UI
     uniqueID: 2960379461
     locked: 0
+  - name: ShockWave
+    uniqueID: 6508053
+    locked: 0
   m_RenderingLayers:
   - Default
