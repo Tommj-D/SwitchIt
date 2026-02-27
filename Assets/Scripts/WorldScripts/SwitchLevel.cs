@@ -2,6 +2,7 @@ using System.Collections;
 using System.Linq;
 using Unity.Cinemachine;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.InputSystem;
 
 public class SwitchLevel : MonoBehaviour
@@ -14,6 +15,14 @@ public class SwitchLevel : MonoBehaviour
     [Header("Effects")]
     public GameObject teleportEffect;
     public Transform magicStonePoint;
+
+    [Header("Audio Music")]
+    public AudioMixerGroup musicGroup;
+    public AudioMixerGroup musicTransitionGroup;
+
+    [Header("Audio SFX")]
+    public AudioMixerGroup sfxGroup;
+    public AudioMixerGroup sfxTransitionGroup;
 
     public CinemachineCamera vcam;
 
@@ -59,12 +68,22 @@ public class SwitchLevel : MonoBehaviour
         }
 
         // Transizione audio
+        if (AudioManager.Instance != null)
+        {
+            AudioSource music = AudioManager.Instance.musicSource;
+            AudioSource sfx = AudioManager.Instance.sfxSource;
 
-        /*VolumeController.Instance.DuckMixer(VolumeController.Instance.transitionMixer, "MusicVol", 6f, 0.3f);
-        VolumeController.Instance.FadeMixerParam(VolumeController.Instance.transitionMixer, "MusicLowpass", 1500f, 0.6f);
-        VolumeController.Instance.FadeMixerParam(VolumeController.Instance.transitionMixer, "MusicHightpass", 1500f, 0.6f);
-        VolumeController.Instance.FadeMixerParam(VolumeController.Instance.transitionMixer, "MusicPitch", 0.95f, 0.6f);
-        VolumeController.Instance.FadeMixerParam(VolumeController.Instance.transitionMixer,"SFXLowpass", 18000f, 0.6f);*/
+            if (music != null)
+                music.outputAudioMixerGroup = musicTransitionGroup;
+
+            if (sfx != null)
+                sfx.outputAudioMixerGroup = sfxTransitionGroup;
+        }
+        VolumeController.Instance.DuckMixer(VolumeController.Instance.masterMixer, "MusicTransitionVol", 6f, 0.3f);
+        VolumeController.Instance.FadeMixerParam(VolumeController.Instance.masterMixer, "MusicTransitionLowPass", 1500f, 0.6f);
+        VolumeController.Instance.FadeMixerParam(VolumeController.Instance.masterMixer, "MusicTransitionHightPass", 1500f, 0.6f);
+        VolumeController.Instance.FadeMixerParam(VolumeController.Instance.masterMixer, "MusicTransitionPitch", 0.95f, 0.6f);
+        VolumeController.Instance.FadeMixerParam(VolumeController.Instance.masterMixer, "SFXTransitionLowpass", 18000f, 0.6f);
 
         // Piccolo delay
         yield return new WaitForSeconds(0.1f);

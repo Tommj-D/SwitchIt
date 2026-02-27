@@ -93,6 +93,34 @@ public class WorldSwitch : MonoBehaviour
         if (MagicDust != null) MagicDust.SetActive(isFantasyWorldActive);
         if (MagicFog != null) MagicFog.SetActive(isFantasyWorldActive);
 
+        if (isFantasyWorldActive)
+        {
+            VolumeController.Instance.FadeMixerParam(
+                VolumeController.Instance.masterMixer,
+                "MusicRealVol",
+                -25f,
+                0.5f);
+
+            VolumeController.Instance.FadeMixerParam(
+                VolumeController.Instance.masterMixer,
+                "MusicFantasyVol",
+                0f,
+                0.5f);
+        }
+        else
+        {
+            VolumeController.Instance.FadeMixerParam(
+                VolumeController.Instance.masterMixer,
+                "MusicRealVol",
+                0f,
+                0.5f);
+
+            VolumeController.Instance.FadeMixerParam(
+                VolumeController.Instance.masterMixer,
+                "MusicFantasyVol",
+                -25f,
+                0.5f);
+        }
         // Cambio audio
         if (AudioManager.Instance != null)
         {
