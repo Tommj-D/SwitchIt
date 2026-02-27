@@ -260,7 +260,7 @@ public class PlayerMovement : MonoBehaviour
     //----------- WORLD SWITCH-----------//
     public void DimensionSwitch(InputAction.CallbackContext context)
     {
-        if (!context.performed || GetComponent<PlayerRespawn>().IsDying() || GameManager.Instance.isChangingLevel) return;
+        if (!context.performed || GetComponent<PlayerRespawn>().IsDying() || GameManager.Instance.isChangingLevel ||WorldSwitch.Instance==null) return;
 
         WorldSwitch.Instance.SwitchWorld();
     }
