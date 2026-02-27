@@ -58,10 +58,10 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _ShockWaveStrenght: -0.1
+    - _ShockWaveStrenght: -0.5
     - _Size: 0.05
-    - _WaveDistanceFromCenter: -0.1
-    - _XSizeRatio: 1.777
+    - _WaveDistanceFromCenter: 0.72
+    - _XSizeRatio: 1
     m_Colors:
     - White: {r: 1, g: 1, b: 1, a: 1}
     - _RingSpawnPosition: {r: 0.5, g: 0.5, b: 0, a: 0}

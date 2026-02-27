@@ -4,28 +4,28 @@ using UnityEngine.InputSystem;
 
 public class ShockWaveManager : MonoBehaviour
 {
+    public static ShockWaveManager Instance;
+
     public float shockWaveTime = 0.75f;
 
     private Coroutine shockWaveCoroutine;
     private Material _material;
     private static int waveDistanceFromCenter = Shader.PropertyToID("_WaveDistanceFromCenter");
-    private static int waveCenterID = Shader.PropertyToID("_WaveCenter");
+    private static int waveCenterID = Shader.PropertyToID("_RingSpawnPosition");
+    private Camera _cam;
 
     private void Awake()
     {
+        Instance = this;
+        _cam = Camera.main;
         _material = GetComponent<SpriteRenderer>().material;
-    }
-
-    private void Update()
-    {
-        if(Keyboard.current.hKey.wasPressedThisFrame)
-        {
-            CallShockWave(new Vector3(Random.Range(-5f, 5f), Random.Range(-5f, 5f), 0));
-        }
     }
     public void CallShockWave(Vector3 worldPosition)
     {
-        Vector3 screenPos = Camera.main.WorldToViewportPoint(worldPosition);
+        Vector3 screenPos = _cam.WorldToViewportPoint(worldPosition);
+
+        if (screenPos.z < 0)
+            return;
 
         _material.SetVector(waveCenterID,
             new Vector4(screenPos.x, screenPos.y, 0, 0));

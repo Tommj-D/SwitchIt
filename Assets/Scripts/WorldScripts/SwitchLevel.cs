@@ -58,11 +58,9 @@ public class SwitchLevel : MonoBehaviour
             AudioManager.Instance.PlaySFX(AudioManager.Instance.switchLevelSound);
         }
 
-        // Transizione audio magica
-
+        // Transizione audio
         AudioTransitionManager transition = AudioManager.Instance.GetComponent<AudioTransitionManager>();
 
-        // Inizio transizione
         transition.EnterTransition();
 
         VolumeController.Instance.DuckMixer(VolumeController.Instance.transitionMixer, "MusicVol", 6f, 0.3f);
@@ -71,8 +69,10 @@ public class SwitchLevel : MonoBehaviour
         VolumeController.Instance.FadeMixerParam(VolumeController.Instance.transitionMixer, "MusicPitch", 0.95f, 0.6f);
         VolumeController.Instance.FadeMixerParam(VolumeController.Instance.transitionMixer,"SFXLowpass", 18000f, 0.6f);
 
-        // Piccolo delay o animazione
+        // Piccolo delay
         yield return new WaitForSeconds(0.1f);
+
+        ShockWaveManager.Instance.CallShockWave(magicStonePoint.position);
 
         // Assorbimento verso la pietra magica
         yield return StartCoroutine(AbsorbPlayer(player));
