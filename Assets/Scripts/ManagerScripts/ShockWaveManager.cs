@@ -20,15 +20,26 @@ public class ShockWaveManager : MonoBehaviour
         _cam = Camera.main;
         _material = GetComponent<SpriteRenderer>().material;
     }
-    public void CallShockWave(Vector3 worldPosition)
+    public void CallShockWave(Vector3 worldPosition, float strenght)
     {
         Vector3 screenPos = _cam.WorldToViewportPoint(worldPosition);
 
         if (screenPos.z < 0)
+        {
+            Debug.LogWarning("il campo 'Z' dell'oggetto deve essere<0");
             return;
+        }
+
+        if(strenght<-5f||strenght>5f)
+        {
+            Debug.LogWarning("La forza dello shockwave deve essere compresa tra -5 e 5");
+            return;
+        }
 
         _material.SetVector(waveCenterID,
             new Vector4(screenPos.x, screenPos.y, 0, 0));
+
+        _material.SetFloat("_ShockWaveStrenght", strenght);
 
         if (shockWaveCoroutine != null)
             StopCoroutine(shockWaveCoroutine);

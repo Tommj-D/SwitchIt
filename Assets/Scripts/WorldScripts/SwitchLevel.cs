@@ -72,7 +72,7 @@ public class SwitchLevel : MonoBehaviour
         // Piccolo delay
         yield return new WaitForSeconds(0.1f);
 
-        ShockWaveManager.Instance.CallShockWave(magicStonePoint.position);
+        ShockWaveManager.Instance.CallShockWave(magicStonePoint.position, -0.5f);
 
         // Assorbimento verso la pietra magica
         yield return StartCoroutine(AbsorbPlayer(player));

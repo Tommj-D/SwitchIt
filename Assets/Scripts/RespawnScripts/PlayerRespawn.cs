@@ -234,10 +234,10 @@ public class PlayerRespawn : MonoBehaviour
             c.a = Mathf.Lerp(0f, 1f, t);
             fullSpriteRenderer.color = c;
 
-            // Shockwave al 20% della chiamata
+            // Shockwave al 20% della chia>mata
             if (!shockWaveCalled && t >= 0.2f)
             {
-                ShockWaveManager.Instance.CallShockWave(transform.position);
+                ShockWaveManager.Instance.CallShockWave(transform.position, -0.1f);
                 shockWaveCalled = true;
             }
 
