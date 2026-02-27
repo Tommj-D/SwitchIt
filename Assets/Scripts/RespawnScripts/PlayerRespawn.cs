@@ -216,9 +216,6 @@ public class PlayerRespawn : MonoBehaviour
         col.enabled = false;
         GetComponent<PlayerMovement>().enabled = false;
 
-
-        VolumeController.Instance.FadeMixerParam(VolumeController.Instance.transitionMixer, "MusicPitch", 1f, 1.3f);
-    
         float t = 0f;
         bool impulseGiven = false;
         bool shockWaveCalled = false;

@@ -10,7 +10,6 @@ public class VolumeController : MonoBehaviour
 
     [Header("Audio Mixer")]
     public AudioMixer masterMixer;
-    public AudioMixer transitionMixer;
 
     [Header("UI Menu")]
     public GameObject volumeMenuCanvas; 
@@ -227,24 +226,17 @@ public class VolumeController : MonoBehaviour
     //----------RESET----------//
     public void ResetMusicState()
     {
-        if (masterMixer==null || transitionMixer==null) return;
+        if (masterMixer==null) return;
 
         masterMixer.SetFloat("MusicVol", defaultMusicVolume);
         masterMixer.SetFloat("MusicLowpass", 22000f);
-
-        transitionMixer.SetFloat("MusicVol", defaultMusicVolume);
-        transitionMixer.SetFloat("MusicLowpass", 22000f);
-
     }
 
     public void ResetMusicState(float fadeTime)
     {
-        if (masterMixer == null || transitionMixer == null) return;
+        if (masterMixer == null) return;
 
         FadeMixerParam(masterMixer, "MusicVol", defaultMusicVolume, fadeTime);
         FadeMixerParam(masterMixer, "MusicLowpass", 22000f, fadeTime);
-
-        FadeMixerParam(transitionMixer, "MusicVol", defaultMusicVolume, fadeTime);
-        FadeMixerParam(transitionMixer, "MusicLowpass", 22000f, fadeTime);
     }
 }

@@ -83,7 +83,6 @@ public class CaveController : MonoBehaviour
         //Modifico musica all'interno della grotta
         VolumeController.Instance.FadeMixerParam(VolumeController.Instance.masterMixer, "MusicLowpass", 800f, 0.4f);
         VolumeController.Instance.DuckMixer(VolumeController.Instance.masterMixer, "MusicVol", 3f, 0.4f);
-        VolumeController.Instance.DuckMixer(VolumeController.Instance.transitionMixer, "MusicVol", 3f, 0.4f);
 
         if (AudioManager.Instance != null&&!isActivated)
         {

@@ -59,15 +59,12 @@ public class SwitchLevel : MonoBehaviour
         }
 
         // Transizione audio
-        AudioTransitionManager transition = AudioManager.Instance.GetComponent<AudioTransitionManager>();
 
-        transition.EnterTransition();
-
-        VolumeController.Instance.DuckMixer(VolumeController.Instance.transitionMixer, "MusicVol", 6f, 0.3f);
+        /*VolumeController.Instance.DuckMixer(VolumeController.Instance.transitionMixer, "MusicVol", 6f, 0.3f);
         VolumeController.Instance.FadeMixerParam(VolumeController.Instance.transitionMixer, "MusicLowpass", 1500f, 0.6f);
         VolumeController.Instance.FadeMixerParam(VolumeController.Instance.transitionMixer, "MusicHightpass", 1500f, 0.6f);
         VolumeController.Instance.FadeMixerParam(VolumeController.Instance.transitionMixer, "MusicPitch", 0.95f, 0.6f);
-        VolumeController.Instance.FadeMixerParam(VolumeController.Instance.transitionMixer,"SFXLowpass", 18000f, 0.6f);
+        VolumeController.Instance.FadeMixerParam(VolumeController.Instance.transitionMixer,"SFXLowpass", 18000f, 0.6f);*/
 
         // Piccolo delay
         yield return new WaitForSeconds(0.1f);
