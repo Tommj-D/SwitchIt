@@ -262,7 +262,7 @@ public class PlayerRespawn : MonoBehaviour
         isDying = false;
 
         //Rimetto la musica al volume normale
-        AudioTransitionManager transition = AudioManager.Instance.GetComponent<AudioTransitionManager>();
+        /*AudioTransitionManager transition = AudioManager.Instance.GetComponent<AudioTransitionManager>();
         VolumeController.Instance.FadeMixerParam(VolumeController.Instance.masterMixer, "MusicVol", 0f, 2f);
         VolumeController.Instance.FadeMixerParam(VolumeController.Instance.transitionMixer, "MusicVol", 0f, 3f);
         VolumeController.Instance.FadeMixerParam(VolumeController.Instance.transitionMixer, "MusicLowpass", 22000f, 2f);
@@ -271,7 +271,7 @@ public class PlayerRespawn : MonoBehaviour
 
         yield return new WaitForSeconds(3f);
         transition.ExitTransition();
-        VolumeController.Instance.ResetMusicState(0.2f);
+        VolumeController.Instance.ResetMusicState(0.2f);*/
     }
 
     //---------SPAWN NUOVA SCENA---------
