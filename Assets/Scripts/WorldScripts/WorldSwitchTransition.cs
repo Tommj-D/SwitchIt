@@ -14,6 +14,10 @@ public class WorldSwitchTransition : MonoBehaviour
     public GameObject realToFantasyParticles;
     public GameObject fantasyToRealParticles;
 
+    [Header("ShockWave")]
+    public float shockWaveDuration = 1f;
+    [Range(-5f, 5f)]
+    public float shockWaveStrenght = -0.1f;
 
     public IEnumerator PlayTransition(WorldSwitch worldSwitch)
     {
@@ -84,9 +88,14 @@ public class WorldSwitchTransition : MonoBehaviour
 
         float elapsed = 0f;
         bool worldChanged = false;
-
+        bool schockWaveApplied = false;
         while (elapsed < waveDuration)
         {
+            if(!schockWaveApplied)
+            {
+                ShockWaveManager.Instance.CallShockWave(player.position, shockWaveStrenght, shockWaveDuration);
+                schockWaveApplied = true;
+            }
             float t = elapsed / waveDuration;
 
             // Easing pi� morbido
