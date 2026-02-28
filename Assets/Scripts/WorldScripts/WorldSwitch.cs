@@ -55,10 +55,10 @@ public class WorldSwitch : MonoBehaviour
 
         if (AudioManager.Instance != null)
         {
-            if (AudioManager.Instance.musicSource != null)
+            if (AudioManager.Instance.musicSource != null&&!GameManager.Instance.isChangingLevel)
                 AudioManager.Instance.musicSource.outputAudioMixerGroup = musicRealGroup;
 
-            if (AudioManager.Instance.sfxSource != null)
+            if (AudioManager.Instance.sfxSource != null&&!GameManager.Instance.isChangingLevel)
                 AudioManager.Instance.sfxSource.outputAudioMixerGroup = sfxRealGroup;
         }
     }
