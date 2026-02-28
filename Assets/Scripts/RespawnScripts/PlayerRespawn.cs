@@ -25,6 +25,13 @@ public class PlayerRespawn : MonoBehaviour
     [Range(-5f, 5f)]
     public float shockWaveStrenght = -0.1f;
 
+    [Header("DeathLightEffect")]
+    [ColorUsage(true, true)] public Color deathColor = new Color(0.75f, 0.9f, 1f, 1f);
+    public float playerFadeInTime = 0.2f;
+    public float playerFadeOutTime = 0.2f;
+    [Range(0f, 1f)]
+    public float MaxIntensity = 1f;
+
     private Animator animator;
     private Rigidbody2D rb;
     private Collider2D col;
@@ -65,7 +72,7 @@ public class PlayerRespawn : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (!isDying && collision.gameObject.CompareTag("Enemy"))
-        {
+        {   
             StartCoroutine(DeathSequence());
         }
     }
@@ -128,6 +135,7 @@ public class PlayerRespawn : MonoBehaviour
             riggedBody.transform.localScale = transform.localScale;
 
             riggedBody.SetActive(true);
+            LightEffect_Shader.Instance.PlayEffect(deathColor, MaxIntensity, playerFadeInTime, playerFadeOutTime);
         }
 
         // Animazione morte
