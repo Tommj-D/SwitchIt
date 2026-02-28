@@ -20,6 +20,7 @@ public class VolumeController : MonoBehaviour
     private const string SFXMASTER_VOL = "SFXMasterVol";
     private const string SFX_VOL = "SFXVol";
     private const string MUSIC_VOL = "MusicVol";
+    private const string MUSIC_LP = "MusicLowpass";
 
     private const string MUSIC_TRANSITION_VOL = "MusicTransitionVol";
     private const string MUSIC_TRANSITION_PITCH = "MusicTransitionPitch";
@@ -297,7 +298,7 @@ public class VolumeController : MonoBehaviour
 
         FadeMixerParam(masterMixer, MUSIC_VOL, baseMusicGameplayVolume, fadeTime);
         FadeMixerParam(masterMixer, SFX_VOL, baseSFXGameplayVolume, fadeTime);
-        FadeMixerParam(masterMixer, MUSIC_TRANSITION_LP, 22000f, fadeTime);
+        FadeMixerParam(masterMixer, MUSIC_LP, 22000f, fadeTime);
     }
 
     // Ripristina tutti i parametri di transizione
