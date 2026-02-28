@@ -40,12 +40,15 @@ public class AudioManager : MonoBehaviour
     public AudioMixerGroup musicTransitionGroup;
     public AudioMixerGroup sfxDefaultGroup;
     public AudioMixerGroup sfxTransitionGroup;
+    public AudioMixerGroup musicFantasyGroup;
+    public AudioMixerGroup sfxFantasyGroup;
     public enum AudioState
     {
         Normal,
-        Transition
+        Transition,
+        Fantasy
     }
-    private AudioState currentState = AudioState.Normal;
+    private AudioState currentState;
 
     void Awake()
     {
@@ -58,52 +61,63 @@ public class AudioManager : MonoBehaviour
         UnityEngine.SceneManagement.SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
+    void Start()
+    {
+        currentState = (AudioState)(-1);
+        
+        // Fa partire la musica di sottofondo all'inizio
+        musicSource.clip = backgroundMusic;
+        musicSource.Play();
+
+        SetAudioState(AudioState.Normal);
+    }
+
     private void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, UnityEngine.SceneManagement.LoadSceneMode mode)
     {
         if (VolumeController.Instance != null)
             VolumeController.Instance.RefreshUISliders();
-            
-        // Assicura che ogni volta che carichiamo una scena, torniamo al gruppo audio di default
-        ExitTransitionState();
-    }
 
-    void Start()
-    {
-        // Fa partire la musica di sottofondo all'inizio
-        musicSource.clip = backgroundMusic;
-        musicSource.Play();
+        // Torna allo stato normale quando carichi una scena
+        SetAudioState(AudioState.Normal);
     }
 
     public void PlaySFX(AudioClip clip)
     {
         // Riproduce l'effetto sonoro senza interrompere quello precedente
+        if (clip == null || sfxSource == null) return;
+
         sfxSource.PlayOneShot(clip);
     }
 
-    // Entra nello stato di transizione (es. cambio livello)
-    public void EnterTransitionState()
+    public void SetAudioState(AudioState newState)
     {
-        if (currentState == AudioState.Transition)
+        if (currentState == newState)
             return;
 
-        currentState = AudioState.Transition;
+        currentState = newState;
 
-        musicSource.outputAudioMixerGroup = musicTransitionGroup;
-        sfxSource.outputAudioMixerGroup = sfxTransitionGroup;
+        switch (currentState)
+        {
+            case AudioState.Normal:
+                ApplyMixer(musicDefaultGroup, sfxDefaultGroup);
+                break;
+
+            case AudioState.Fantasy:
+                ApplyMixer(musicFantasyGroup, sfxFantasyGroup);
+                break;
+
+            case AudioState.Transition:
+                ApplyMixer(musicTransitionGroup, sfxTransitionGroup);
+                break;
+        }
     }
 
-    //Ritorna al volume default
-    public void ExitTransitionState()
+    private void ApplyMixer(AudioMixerGroup musicGroup, AudioMixerGroup sfxGroup)
     {
-        if (currentState == AudioState.Normal)
-            return;
+        if (musicSource != null && musicGroup != null)
+            musicSource.outputAudioMixerGroup = musicGroup;
 
-        currentState = AudioState.Normal;
-
-        musicSource.outputAudioMixerGroup = musicDefaultGroup;
-        sfxSource.outputAudioMixerGroup = sfxDefaultGroup;
-
-        if (VolumeController.Instance != null)
-            VolumeController.Instance.ResetAllTransitionParams(0.3f);
+        if (sfxSource != null && sfxGroup != null)
+            sfxSource.outputAudioMixerGroup = sfxGroup;
     }
 }

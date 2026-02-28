@@ -25,14 +25,6 @@ public class WorldSwitch : MonoBehaviour
     public GameObject MagicDust;
     public GameObject MagicFog;
 
-    [Header("Audio Music")]
-    public AudioMixerGroup musicRealGroup;
-    public AudioMixerGroup musicFantasyGroup;
-
-    [Header("Audio SFX")]
-    public AudioMixerGroup sfxRealGroup;
-    public AudioMixerGroup sfxFantasyGroup;
-
     [HideInInspector] public bool isFantasyWorldActive = false;
 
     private bool isSwitching = false;
@@ -52,15 +44,6 @@ public class WorldSwitch : MonoBehaviour
         if (mainCamera != null) mainCamera.backgroundColor = realWorldColor;
         if(MagicDust != null) MagicDust.SetActive(false);
         if(MagicFog != null) MagicFog.SetActive(false);
-
-        if (AudioManager.Instance != null)
-        {
-            if (AudioManager.Instance.musicSource != null&&!GameManager.Instance.isChangingLevel)
-                AudioManager.Instance.musicSource.outputAudioMixerGroup = musicRealGroup;
-
-            if (AudioManager.Instance.sfxSource != null&&!GameManager.Instance.isChangingLevel)
-                AudioManager.Instance.sfxSource.outputAudioMixerGroup = sfxRealGroup;
-        }
     }
 
     public void SwitchWorld()
@@ -124,16 +107,10 @@ public class WorldSwitch : MonoBehaviour
         // Cambio audio
         if (AudioManager.Instance != null)
         {
-            AudioSource music = AudioManager.Instance.musicSource;
-            AudioSource sfx = AudioManager.Instance.sfxSource;
-
-            if (music != null)
-                music.outputAudioMixerGroup =
-                    isFantasyWorldActive ? musicFantasyGroup : musicRealGroup;
-
-            if (sfx != null)
-                sfx.outputAudioMixerGroup =
-                    isFantasyWorldActive ? sfxFantasyGroup : sfxRealGroup;
+            if (isFantasyWorldActive)
+                AudioManager.Instance.SetAudioState(AudioManager.AudioState.Fantasy);
+            else
+                AudioManager.Instance.SetAudioState(AudioManager.AudioState.Normal);
         }
     }
 

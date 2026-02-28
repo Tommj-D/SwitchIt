@@ -195,10 +195,12 @@ MonoBehaviour:
   respawnSound: {fileID: 8300000, guid: 9d4fb855d7948604ab102a4baaa93d20, type: 3}
   switchLevelSound: {fileID: 8300000, guid: 91dbe1fa30d8d9340beb4b717f0b42bb, type: 3}
   secretEntranceSound: {fileID: 8300000, guid: 1ee053960432f50469e8fc4c385d40b8, type: 3}
-  musicDefaultGroup: {fileID: -5180735091833922158, guid: bd895b5153b2e204ca4b0ca8a56c023b, type: 2}
+  musicDefaultGroup: {fileID: -1793385470781041295, guid: bd895b5153b2e204ca4b0ca8a56c023b, type: 2}
   musicTransitionGroup: {fileID: -1707065884832712539, guid: bd895b5153b2e204ca4b0ca8a56c023b, type: 2}
-  sfxDefaultGroup: {fileID: 8874887374745109064, guid: bd895b5153b2e204ca4b0ca8a56c023b, type: 2}
+  sfxDefaultGroup: {fileID: -8022069700662271292, guid: bd895b5153b2e204ca4b0ca8a56c023b, type: 2}
   sfxTransitionGroup: {fileID: -5879198417475625132, guid: bd895b5153b2e204ca4b0ca8a56c023b, type: 2}
+  musicFantasyGroup: {fileID: 7943864735557571258, guid: bd895b5153b2e204ca4b0ca8a56c023b, type: 2}
+  sfxFantasyGroup: {fileID: 4745786433679059978, guid: bd895b5153b2e204ca4b0ca8a56c023b, type: 2}
 --- !u!114 &8353855458831400638
 MonoBehaviour:
   m_ObjectHideFlags: 0

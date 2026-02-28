@@ -57,7 +57,7 @@ public class SwitchLevel : MonoBehaviour
         if (AudioManager.Instance != null)
         {
             AudioManager.Instance.PlaySFX(AudioManager.Instance.switchLevelSound);
-            AudioManager.Instance.EnterTransitionState();
+            AudioManager.Instance.SetAudioState(AudioManager.AudioState.Transition);
         }
 
         if (VolumeController.Instance != null)
