@@ -3,26 +3,47 @@ using UnityEngine.Audio;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using System.Collections;
+using System.Collections.Generic;
 
 public class VolumeController : MonoBehaviour
 {
+    // ==============================
+    // NOMI PARAMETRI MIXER (costanti per evitare errori di scrittura)
+    // ==============================
+    private const string MUSIC_VOL = "MusicVol";
+    private const string SFX_VOL = "SFXVol";
+    private const string MUSIC_TRANSITION_PITCH = "MusicTransitionPitch";
+    private const string MUSIC_TRANSITION_LP = "MusicTransitionLowPass";
+    private const string MUSIC_TRANSITION_HP = "MusicTransitionHightPass";
+    private const string SFX_TRANSITION_LP = "SFXTransitionLowpass";
+
+    // Tiene traccia delle coroutine attive per ogni parametro
+    // Serve per evitare che più fade scrivano contemporaneamente sullo stesso parametro
+    private Dictionary<string, Coroutine> activeFades = new Dictionary<string, Coroutine>();
+
+    // Salva i valori originali dei parametri del mixer
+    // Così possiamo sempre tornare allo stato iniziale corretto
+    private Dictionary<string, float> defaultParams = new Dictionary<string, float>();
+
     public static VolumeController Instance;
 
     [Header("Audio Mixer")]
     public AudioMixer masterMixer;
 
     [Header("UI Menu")]
-    public GameObject volumeMenuCanvas; 
-    public Slider musicSlider;          
-    public Slider sfxSlider;            
+    public GameObject volumeMenuCanvas;
+    public Slider musicSlider;
+    public Slider sfxSlider;
 
     private bool isMenuOpen = false;
 
+    // Salviamo il volume di default della musica e SFX
     private float defaultMusicVolume = 0f;
     private float defaultSFXVolume = 0f;
 
     void Awake()
     {
+        // Singleton pattern
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -30,14 +51,30 @@ public class VolumeController : MonoBehaviour
         }
         Instance = this;
 
-        masterMixer.GetFloat("MusicVol", out defaultMusicVolume);
-        masterMixer.GetFloat("SFXVol", out defaultSFXVolume);
+        // Salva i volumi iniziali dal mixer
+        masterMixer.GetFloat(MUSIC_VOL, out defaultMusicVolume);
+        masterMixer.GetFloat(SFX_VOL, out defaultSFXVolume);
+
+        // Salva i valori di default dei parametri di transizione
+        SaveDefaultParam(MUSIC_TRANSITION_PITCH);
+        SaveDefaultParam(MUSIC_TRANSITION_LP);
+        SaveDefaultParam(MUSIC_TRANSITION_HP);
+        SaveDefaultParam(SFX_TRANSITION_LP);
+    }
+
+    // Salva il valore iniziale di un parametro del mixer
+    // Serve per poterlo ripristinare correttamente dopo una transizione
+    private void SaveDefaultParam(string param)
+    {
+        if (masterMixer.GetFloat(param, out float value))
+            defaultParams[param] = value;
     }
 
     void Update()
     {
-        // Nuovo modo di leggere il tasto ESC con l'Input System
-        if (Keyboard.current.escapeKey.wasPressedThisFrame)
+        // Gestione apertura/chiusura menu con ESC usando il nuovo Input System
+        if (Keyboard.current != null &&
+            Keyboard.current.escapeKey.wasPressedThisFrame)
         {
             if (isMenuOpen)
                 CloseMenu();
@@ -46,8 +83,12 @@ public class VolumeController : MonoBehaviour
         }
     }
 
-    //----------GESTIONE UI, MENU, SLIDER----------//
-    // Aggiorna i riferimenti agli slider UI ogni volta che cambi scena
+    // ==========================================================
+    // GESTIONE UI
+    // ==========================================================
+
+    // Ricollega gli slider quando cambi scena
+    // Utile perché la UI viene distrutta ma il VolumeController no (DontDestroyOnLoad)
     public void RefreshUISliders()
     {
         if (volumeMenuCanvas == null || musicSlider == null || sfxSlider == null)
@@ -62,6 +103,7 @@ public class VolumeController : MonoBehaviour
         sfxSlider.value = defaultSFXVolume;
     }
 
+    // Pulisce i riferimenti UI quando una scena viene distrutta
     public void ClearUI(GameObject uiRoot)
     {
         if (volumeMenuCanvas == uiRoot)
@@ -73,6 +115,7 @@ public class VolumeController : MonoBehaviour
         }
     }
 
+    // Imposta nuovi riferimenti UI quando entri in una scena
     public void SetUI(GameObject menuCanvas, Slider music, Slider sfx)
     {
         volumeMenuCanvas = menuCanvas;
@@ -93,21 +136,24 @@ public class VolumeController : MonoBehaviour
             sfxSlider.value = defaultSFXVolume;
         }
     }
+
+    // Apre il menu volume e mette il gioco in pausa
     public void OpenMenu()
     {
-            if (volumeMenuCanvas == null)
-                return;
+        if (volumeMenuCanvas == null)
+            return;
 
-            volumeMenuCanvas.SetActive(true);
-            Time.timeScale = 0f;
-            isMenuOpen = true;
+        volumeMenuCanvas.SetActive(true);
+        Time.timeScale = 0f;
+        isMenuOpen = true;
 
-            Cursor.visible = true;
-            Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
 
-            UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(null);
+        UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(null);
     }
 
+    // Chiude il menu volume e ripristina il tempo di gioco
     public void CloseMenu()
     {
         if (volumeMenuCanvas == null)
@@ -118,32 +164,42 @@ public class VolumeController : MonoBehaviour
         isMenuOpen = false;
     }
 
-    // SET VOLUME
+    // ==========================================================
+    // SET VOLUME BASE
+    // ==========================================================
+
+    // Imposta il volume musica nel mixer
     public void SetMusicVolume(float volume)
     {
         defaultMusicVolume = volume;
         if (masterMixer != null)
-            masterMixer.SetFloat("MusicVol", volume);
+            masterMixer.SetFloat(MUSIC_VOL, volume);
     }
 
+    // Imposta il volume SFX nel mixer
     public void SetSFXVolume(float volume)
     {
         defaultSFXVolume = volume;
         if (masterMixer != null)
-            masterMixer.SetFloat("SFXVol", volume);
+            masterMixer.SetFloat(SFX_VOL, volume);
     }
 
-    //----------DUCKING----------//
+    // ==========================================================
+    // DUCKING
+    // ==========================================================
+
+    // Riduce temporaneamente un parametro (es: volume)
+    // amount = quanto abbassare
     public void DuckMixer(AudioMixer mixer, string paramName, float amount, float fadeTime)
     {
         StartCoroutine(DuckMixerRoutine(mixer, paramName, amount, fadeTime));
     }
 
     private IEnumerator DuckMixerRoutine(
-     AudioMixer mixer,
-     string paramName,
-     float amount,
-     float fadeTime)
+        AudioMixer mixer,
+        string paramName,
+        float amount,
+        float fadeTime)
     {
         if (mixer == null)
             yield break;
@@ -156,7 +212,7 @@ public class VolumeController : MonoBehaviour
         float t = 0f;
         while (t < fadeTime)
         {
-            t += Time.unscaledDeltaTime; 
+            t += Time.unscaledDeltaTime;
             float value = Mathf.Lerp(originalValue, targetValue, Mathf.SmoothStep(0f, 1f, t / fadeTime));
             mixer.SetFloat(paramName, value);
             yield return null;
@@ -165,43 +221,24 @@ public class VolumeController : MonoBehaviour
         mixer.SetFloat(paramName, targetValue);
     }
 
-    //------------------------------------//
-    //Da usare solo se non so a quale parameto voglio tornare, altrimenti uso FadeMixerParam con il valore target specifico
-    public void RestoreMixerParam(AudioMixer mixer, string paramName, float fadeTime)
-    {
-        StartCoroutine(RestoreMixerParamRoutine(mixer, paramName, fadeTime));
-    }
+    // ==========================================================
+    // FADE PARAMETRO GENERICO
+    // ==========================================================
 
-    private IEnumerator RestoreMixerParamRoutine(
-        AudioMixer mixer,
-        string paramName,
-        float fadeTime)
-    {
-        if (mixer == null)
-            yield break;
-
-        if (!mixer.GetFloat(paramName, out float currentValue))
-            yield break;
-
-        float targetValue = 0f;
-
-        float t = 0f;
-        while (t < fadeTime)
-        {
-            t += Time.unscaledDeltaTime;
-            float value = Mathf.Lerp(currentValue, targetValue, t / fadeTime);
-            mixer.SetFloat(paramName, value);
-            yield return null;
-        }
-
-        mixer.SetFloat(paramName, targetValue);
-    }
-    //------------------------------------//
-
-    //----------FADE PARAMETER----------//
+    // Effettua una transizione fluida verso un valore target
+    // Blocca eventuali fade precedenti sullo stesso parametro
     public void FadeMixerParam(AudioMixer mixer, string paramName, float targetValue, float duration)
     {
-        StartCoroutine(FadeMixerParamRoutine(mixer, paramName, targetValue, duration));
+        if (mixer == null) return;
+
+        if (activeFades.ContainsKey(paramName))
+        {
+            StopCoroutine(activeFades[paramName]);
+            activeFades.Remove(paramName);
+        }
+
+        Coroutine c = StartCoroutine(FadeMixerParamRoutine(mixer, paramName, targetValue, duration));
+        activeFades.Add(paramName, c);
     }
 
     private IEnumerator FadeMixerParamRoutine(AudioMixer mixer, string paramName, float targetValue, float duration)
@@ -222,21 +259,35 @@ public class VolumeController : MonoBehaviour
         mixer.SetFloat(paramName, targetValue);
     }
 
+    // ==========================================================
+    // RESET
+    // ==========================================================
 
-    //----------RESET----------//
+    // Ripristina musica ai valori base istantaneamente
     public void ResetMusicState()
     {
-        if (masterMixer==null) return;
+        if (masterMixer == null) return;
 
-        masterMixer.SetFloat("MusicVol", defaultMusicVolume);
-        masterMixer.SetFloat("MusicLowpass", 22000f);
+        masterMixer.SetFloat(MUSIC_VOL, defaultMusicVolume);
+        masterMixer.SetFloat(MUSIC_TRANSITION_LP, 22000f);
     }
 
+    // Ripristina musica con fade
     public void ResetMusicState(float fadeTime)
     {
         if (masterMixer == null) return;
 
-        FadeMixerParam(masterMixer, "MusicVol", defaultMusicVolume, fadeTime);
-        FadeMixerParam(masterMixer, "MusicLowpass", 22000f, fadeTime);
+        FadeMixerParam(masterMixer, MUSIC_VOL, defaultMusicVolume, fadeTime);
+        FadeMixerParam(masterMixer, MUSIC_TRANSITION_LP, 22000f, fadeTime);
+    }
+
+    // Ripristina tutti i parametri di transizione
+    // Usa i valori salvati all'avvio
+    public void ResetAllTransitionParams(float fadeTime)
+    {
+        foreach (var param in defaultParams)
+        {
+            FadeMixerParam(masterMixer, param.Key, param.Value, fadeTime);
+        }
     }
 }

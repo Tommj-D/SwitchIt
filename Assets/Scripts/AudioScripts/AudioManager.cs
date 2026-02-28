@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class AudioManager : MonoBehaviour
 {
@@ -34,6 +35,17 @@ public class AudioManager : MonoBehaviour
     public AudioClip switchLevelSound;
     public AudioClip secretEntranceSound;
     
+    [Header("Mixer Groups")]
+    public AudioMixerGroup musicDefaultGroup;
+    public AudioMixerGroup musicTransitionGroup;
+    public AudioMixerGroup sfxDefaultGroup;
+    public AudioMixerGroup sfxTransitionGroup;
+    public enum AudioState
+    {
+        Normal,
+        Transition
+    }
+    private AudioState currentState = AudioState.Normal;
 
     void Awake()
     {
@@ -50,6 +62,9 @@ public class AudioManager : MonoBehaviour
     {
         if (VolumeController.Instance != null)
             VolumeController.Instance.RefreshUISliders();
+            
+        // Assicura che ogni volta che carichiamo una scena, torniamo al gruppo audio di default
+        ExitTransitionState();
     }
 
     void Start()
@@ -63,5 +78,32 @@ public class AudioManager : MonoBehaviour
     {
         // Riproduce l'effetto sonoro senza interrompere quello precedente
         sfxSource.PlayOneShot(clip);
+    }
+
+    // Entra nello stato di transizione (es. cambio livello)
+    public void EnterTransitionState()
+    {
+        if (currentState == AudioState.Transition)
+            return;
+
+        currentState = AudioState.Transition;
+
+        musicSource.outputAudioMixerGroup = musicTransitionGroup;
+        sfxSource.outputAudioMixerGroup = sfxTransitionGroup;
+    }
+
+    //Ritorna al volume default
+    public void ExitTransitionState()
+    {
+        if (currentState == AudioState.Normal)
+            return;
+
+        currentState = AudioState.Normal;
+
+        musicSource.outputAudioMixerGroup = musicDefaultGroup;
+        sfxSource.outputAudioMixerGroup = sfxDefaultGroup;
+
+        if (VolumeController.Instance != null)
+            VolumeController.Instance.ResetAllTransitionParams(0.3f);
     }
 }
