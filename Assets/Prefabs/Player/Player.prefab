@@ -15122,9 +15122,9 @@ MonoBehaviour:
   shockWaveDuration: 1
   shockWaveStrenght: -0.1
   deathColor: {r: 4, g: 0, b: 0, a: 1}
-  playerFadeInTime: 0.2
-  playerFadeOutTime: 0.2
-  MaxIntensity: 1
+  playerFadeInTime: 0.1
+  playerFadeOutTime: 0.1
+  MaxIntensity: 0.5
 --- !u!114 &5875718408125815725
 MonoBehaviour:
   m_ObjectHideFlags: 0
