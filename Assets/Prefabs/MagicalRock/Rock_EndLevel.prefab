@@ -146,6 +146,8 @@ MonoBehaviour:
   teleportEffect: {fileID: 5354946170535676697, guid: 3cb30b0e9ccce9844b18449c8f1ba94a, type: 3}
   magicStonePoint: {fileID: 6165062635176916578}
   vcam: {fileID: 0}
+  shockWaveDuration: 1.2
+  shockWaveStrenght: -0.5
 --- !u!50 &6514443634441177400
 Rigidbody2D:
   serializedVersion: 5

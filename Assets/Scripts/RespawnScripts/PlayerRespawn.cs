@@ -19,7 +19,12 @@ public class PlayerRespawn : MonoBehaviour
     public GameObject deathParticle;
     public GameObject fullSprite;      
     public GameObject riggedBody;
-  
+
+    [Header("ShockWave")]
+    public float shockWaveDuration = 1f;
+    [Range(-5f, 5f)]
+    public float shockWaveStrenght = -0.1f;
+
     private Animator animator;
     private Rigidbody2D rb;
     private Collider2D col;
@@ -243,7 +248,7 @@ public class PlayerRespawn : MonoBehaviour
             // Shockwave al 20% della chia>mata
             if (!shockWaveCalled && t >= 0.2f)
             {
-                ShockWaveManager.Instance.CallShockWave(transform.position, -0.1f);
+                ShockWaveManager.Instance.CallShockWave(transform.position, shockWaveStrenght, shockWaveDuration);
                 shockWaveCalled = true;
             }
 

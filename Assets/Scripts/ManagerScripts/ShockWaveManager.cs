@@ -20,7 +20,7 @@ public class ShockWaveManager : MonoBehaviour
         _cam = Camera.main;
         _material = GetComponent<SpriteRenderer>().material;
     }
-    public void CallShockWave(Vector3 worldPosition, float strenght)
+    public void CallShockWave(Vector3 worldPosition, float strenght, float duration)
     {
         Vector3 screenPos = _cam.WorldToViewportPoint(worldPosition);
 
@@ -36,6 +36,12 @@ public class ShockWaveManager : MonoBehaviour
             return;
         }
 
+        if(duration<=0f)
+        {
+            Debug.LogWarning("La durata dello shockwave deve essere maggiore di 0");
+            return;
+        }
+
         _material.SetVector(waveCenterID,
             new Vector4(screenPos.x, screenPos.y, 0, 0));
 
@@ -45,13 +51,14 @@ public class ShockWaveManager : MonoBehaviour
             StopCoroutine(shockWaveCoroutine);
 
         shockWaveCoroutine = StartCoroutine(
-            ShockWaveAction(-0.1f, 1f));
+            ShockWaveAction(-0.1f, 1f, duration));
     }
 
-    private IEnumerator ShockWaveAction(float startPos, float endPos)
-    {
+    private IEnumerator ShockWaveAction(float startPos, float endPos, float duration)
+    {   
         _material.SetFloat(waveDistanceFromCenter, startPos);
 
+        shockWaveTime = duration;
         float lerpedAmount=0f;
         float elapsedTime=0f;
 

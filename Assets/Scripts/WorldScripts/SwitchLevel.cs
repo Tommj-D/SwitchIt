@@ -16,6 +16,10 @@ public class SwitchLevel : MonoBehaviour
     public GameObject teleportEffect;
     public Transform magicStonePoint;
     public CinemachineCamera vcam;
+    [Header("ShockWave")]
+    public float shockWaveDuration = 1.4f;
+    [Range(-5f, 5f)]
+    public float shockWaveStrenght= -0.5f;
 
     private bool activated = false;
 
@@ -71,7 +75,8 @@ public class SwitchLevel : MonoBehaviour
         // Piccolo delay
         yield return new WaitForSeconds(0.1f);
 
-        ShockWaveManager.Instance.CallShockWave(magicStonePoint.position, -0.5f);
+        //Shader Onda d'urto
+        ShockWaveManager.Instance.CallShockWave(magicStonePoint.position, shockWaveStrenght, shockWaveDuration);
 
         // Assorbimento verso la pietra magica
         yield return StartCoroutine(AbsorbPlayer(player));
