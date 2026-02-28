@@ -67,7 +67,7 @@ public class SwitchLevel : MonoBehaviour
             VolumeController.Instance.FadeMixerParam(VolumeController.Instance.masterMixer, "MusicTransitionHightPass", 1500f, 0.6f);
             VolumeController.Instance.FadeMixerParam(VolumeController.Instance.masterMixer, "MusicTransitionPitch", 0.95f, 0.6f);
             VolumeController.Instance.FadeMixerParam(VolumeController.Instance.masterMixer, "SFXTransitionLowpass", 18000f, 0.6f);
-}
+        }
         // Piccolo delay
         yield return new WaitForSeconds(0.1f);
 

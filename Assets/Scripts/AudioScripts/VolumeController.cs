@@ -1,19 +1,27 @@
-using UnityEngine;
-using UnityEngine.Audio;
-using UnityEngine.UI;
-using UnityEngine.InputSystem;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Audio;
+using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class VolumeController : MonoBehaviour
 {
+
+
+    public static VolumeController Instance;
+
+
     // ==============================
     // NOMI PARAMETRI MIXER (costanti per evitare errori di scrittura)
     // ==============================
     private const string MUSICMASTER_VOL = "MusicMasterVol";
+    private const string SFXMASTER_VOL = "SFXMasterVol";
     private const string SFX_VOL = "SFXVol";
     private const string MUSIC_VOL = "MusicVol";
-    private const string SFXMASTER_VOL = "SFXMasterVol";
+
+    private const string MUSIC_TRANSITION_VOL = "MusicTransitionVol";
     private const string MUSIC_TRANSITION_PITCH = "MusicTransitionPitch";
     private const string MUSIC_TRANSITION_LP = "MusicTransitionLowPass";
     private const string MUSIC_TRANSITION_HP = "MusicTransitionHightPass";
@@ -26,8 +34,6 @@ public class VolumeController : MonoBehaviour
     // Salva i valori originali dei parametri del mixer
     // Così possiamo sempre tornare allo stato iniziale corretto
     private Dictionary<string, float> defaultParams = new Dictionary<string, float>();
-
-    public static VolumeController Instance;
 
     [Header("Audio Mixer")]
     public AudioMixer masterMixer;
@@ -65,6 +71,7 @@ public class VolumeController : MonoBehaviour
         masterMixer.GetFloat(SFX_VOL, out baseSFXGameplayVolume);
 
         // Salva i valori di default dei parametri di transizione
+        SaveDefaultParam(MUSIC_TRANSITION_VOL);
         SaveDefaultParam(MUSIC_TRANSITION_PITCH);
         SaveDefaultParam(MUSIC_TRANSITION_LP);
         SaveDefaultParam(MUSIC_TRANSITION_HP);
@@ -274,20 +281,22 @@ public class VolumeController : MonoBehaviour
     // ==========================================================
 
     // Ripristina musica ai valori base istantaneamente
-    public void ResetMusicState()
+    public void ResetGameplayVolumes()
     {
         if (masterMixer == null) return;
 
         masterMixer.SetFloat(MUSIC_VOL, baseMusicGameplayVolume);
+        masterMixer.SetFloat(SFX_VOL, baseSFXGameplayVolume);
         masterMixer.SetFloat(MUSIC_TRANSITION_LP, 22000f);
     }
 
     // Ripristina musica con fade
-    public void ResetMusicState(float fadeTime)
+    public void ResetGameplayVolumes(float fadeTime)
     {
         if (masterMixer == null) return;
 
         FadeMixerParam(masterMixer, MUSIC_VOL, baseMusicGameplayVolume, fadeTime);
+        FadeMixerParam(masterMixer, SFX_VOL, baseSFXGameplayVolume, fadeTime);
         FadeMixerParam(masterMixer, MUSIC_TRANSITION_LP, 22000f, fadeTime);
     }
 

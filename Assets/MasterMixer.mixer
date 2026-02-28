@@ -324,7 +324,7 @@ AudioMixerController:
   - guid: 4ac7f8d615e9b9f4ab992efcfb9d53d9
     name: SFXVol
   - guid: a2e145d5cf1b85343b367681575f9f9b
-    name: MyExposedParam
+    name: SFXMasterVol
   - guid: 11ef50e8e1b64364cb5b9447c7c6ac58
     name: SFXTransitionLowpass
   m_AudioMixerGroupViews:
@@ -461,6 +461,7 @@ AudioMixerSnapshotController:
     213e775b83dde274790264b57962c384: 1
     42c6387b8ebbf8b4a89416838deb9f09: 1
     e766968bfd0af7f42b88ed876a448eac: 22000
+    b9e9899b4c10a4d4aa465926e06151e9: -25
     930632cb54ae34d47be2894b5ef7f614: 1
     56c544eb1fe4a864c96ac865559fb1b2: 94
     db06e82cf1caebb46803a9596b7308e4: 100

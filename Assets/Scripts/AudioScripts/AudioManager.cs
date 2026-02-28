@@ -79,6 +79,8 @@ public class AudioManager : MonoBehaviour
 
         // Torna allo stato normale quando carichi una scena
         SetAudioState(AudioState.Normal);
+        VolumeController.Instance.ResetGameplayVolumes();
+        VolumeController.Instance.ResetAllTransitionParams(3f);
     }
 
     public void PlaySFX(AudioClip clip)
