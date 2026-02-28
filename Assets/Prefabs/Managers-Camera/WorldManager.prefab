@@ -55,12 +55,6 @@ MonoBehaviour:
   transition: {fileID: 4046727084526456589}
   MagicDust: {fileID: 0}
   MagicFog: {fileID: 0}
-  musicSource: {fileID: 0}
-  musicRealGroup: {fileID: -1793385470781041295, guid: bd895b5153b2e204ca4b0ca8a56c023b, type: 2}
-  musicFantasyGroup: {fileID: 7943864735557571258, guid: bd895b5153b2e204ca4b0ca8a56c023b, type: 2}
-  sfxSource: {fileID: 0}
-  sfxRealGroup: {fileID: -8022069700662271292, guid: bd895b5153b2e204ca4b0ca8a56c023b, type: 2}
-  sfxFantasyGroup: {fileID: 4745786433679059978, guid: bd895b5153b2e204ca4b0ca8a56c023b, type: 2}
   isFantasyWorldActive: 0
 --- !u!114 &4046727084526456589
 MonoBehaviour:
@@ -77,7 +71,16 @@ MonoBehaviour:
   fantasyWavePrefab: {fileID: 4359276244795776523, guid: 24e975433a706c442b73070e99a70284, type: 3}
   realWavePrefab: {fileID: 4359276244795776523, guid: 2208c853f3e619d4eb4be2320559d9be, type: 3}
   player: {fileID: 0}
-  waveDuration: 0.35
-  waveMaxScale: 65
+  waveDuration: 0.4
+  waveMaxScale: 80
+  fantasyWaveColor: {r: 0.8, g: 0, b: 1, a: 1}
+  realWaveColor: {r: 0.6, g: 0.9, b: 1, a: 1}
   realToFantasyParticles: {fileID: 1460362729370040631, guid: fc2bffbb74217466ab6873e7bdd22233, type: 3}
   fantasyToRealParticles: {fileID: 1460362729370040631, guid: e2b89009948ba42b9b52720b3ae0417d, type: 3}
+  shockWaveDuration: 1.1
+  shockWaveStrenght: -0.1
+  realWorldPlayerColor: {r: 0, g: 11.984313, b: 15.999999, a: 1}
+  fantasyWorldPlayerColor: {r: 37.647064, g: 0, b: 65.25491, a: 1}
+  playerFadeInTime: 0.15
+  playerFadeOutTime: 0.15
+  MaxIntensity: 1

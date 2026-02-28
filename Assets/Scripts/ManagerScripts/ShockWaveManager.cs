@@ -20,6 +20,13 @@ public class ShockWaveManager : MonoBehaviour
         _cam = Camera.main;
         _material = GetComponent<SpriteRenderer>().material;
     }
+
+    /// <summary>
+    /// Attiva l'effetto shockwave in un punto specifico del mondo, con una forza e una durata definite.
+    /// </summary>
+    /// <param name="worldPosition">Posizione da cui parte</param>
+    /// <param name="strenght">Forza/grandezza</param>
+    /// <param name="duration">Durata</param>
     public void CallShockWave(Vector3 worldPosition, float strenght, float duration)
     {
         Vector3 screenPos = _cam.WorldToViewportPoint(worldPosition);

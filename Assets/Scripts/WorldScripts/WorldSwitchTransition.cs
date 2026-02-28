@@ -9,6 +9,9 @@ public class WorldSwitchTransition : MonoBehaviour
     public Transform player;
     public float waveDuration = 0.3f;
     public float waveMaxScale = 20f;
+    [Header("WaveColor")]
+    public Color fantasyWaveColor = new Color(0.8f, 0f, 1f, 1f);        // viola
+    public Color realWaveColor = new Color(0.6f, 0.9f, 1f, 1f);     // azzurro chiaro
 
     [Header("Particles")]
     public GameObject realToFantasyParticles;
@@ -19,18 +22,43 @@ public class WorldSwitchTransition : MonoBehaviour
     [Range(-5f, 5f)]
     public float shockWaveStrenght = -0.1f;
 
+    [Header("PlayerLightEffect")]
+    [ColorUsage(true, true)] public Color realWorldPlayerColor = new Color(0.75f, 0.9f, 1f, 1f);
+    [ColorUsage(true, true)]  public Color fantasyWorldPlayerColor = new Color(0.85f, 0.75f, 1f, 1f);
+    public float playerFadeInTime = 0.2f;
+    public float playerFadeOutTime = 0.2f;
+    [Range(0f, 1f)]
+    public float MaxIntensity = 1f;
+
+    // Inizia la transizione, gestendo particelle, effetti e cambi di mondo
     public IEnumerator PlayTransition(WorldSwitch worldSwitch)
     {
+        // Determina verso quale mondo stiamo andando
         bool goingToFantasy = !worldSwitch.isFantasyWorldActive;
 
+        // 1) Particelle
         SpawnParticles(goingToFantasy);
 
+        // 2) Effetto glitch (after-image)
         StartCoroutine(GlitchEffect());
-        StartCoroutine(PlayerColorShift(goingToFantasy));
 
+        // 3) Effetto luce shader sul player
+        Color targetColor = goingToFantasy
+            ? fantasyWorldPlayerColor
+            : realWorldPlayerColor;
+
+        LightEffect_Shader.Instance.PlayEffect(
+            targetColor,
+            MaxIntensity,
+            playerFadeInTime,
+            playerFadeOutTime
+        );
+
+        // 4) Onda principale (questa controlla anche il cambio mondo)
         yield return StartCoroutine(WaveEffect(worldSwitch, goingToFantasy));
     }
 
+    // Crea un effetto di glitch attorno al player durante la transizione
     private IEnumerator GlitchEffect()
     {
         SpriteRenderer originalSprite = player.GetComponent<SpriteRenderer>();
@@ -68,6 +96,7 @@ public class WorldSwitchTransition : MonoBehaviour
         }
     }
 
+    // Crea l'effetto onda che simula il passaggio tra i mondi, gestendo anche il cambio di mondo al momento giusto
     private IEnumerator WaveEffect(WorldSwitch worldSwitch, bool goingToFantasy)
     {
         GameObject selectedPrefab = goingToFantasy ? fantasyWavePrefab : realWavePrefab;
@@ -79,9 +108,10 @@ public class WorldSwitchTransition : MonoBehaviour
 
         float baseAlpha = sr != null ? sr.color.a : 1f;
 
+        // Colore iniziale in base al mondo
         Color startColor = goingToFantasy
-        ? new Color(0.8f, 0f, 1f, 1f)        // viola
-        : new Color(0.6f, 0.9f, 1f, 1f);     // azzurro chiaro
+        ? fantasyWaveColor        // viola
+        : realWaveColor;     // azzurro chiaro
 
         // Colore finale: LUCE PURA
         Color pureLightColor = new Color(0.95f, 0.98f, 1f, 1f);
@@ -91,14 +121,15 @@ public class WorldSwitchTransition : MonoBehaviour
         bool schockWaveApplied = false;
         while (elapsed < waveDuration)
         {
-            if(!schockWaveApplied)
+            // Applica shockwave una sola volta all'inizio
+            if (!schockWaveApplied)
             {
                 ShockWaveManager.Instance.CallShockWave(player.position, shockWaveStrenght, shockWaveDuration);
                 schockWaveApplied = true;
             }
             float t = elapsed / waveDuration;
 
-            // Easing pi� morbido
+            
             float eased = Mathf.Sin(t * Mathf.PI * 0.5f);
 
             // Scala principale
@@ -130,54 +161,10 @@ public class WorldSwitchTransition : MonoBehaviour
             elapsed += Time.deltaTime;
             yield return null;
         }
-
-        // Implosione finale
-        Vector3 startScale = wave.transform.localScale;
-
-        float overshoot = 1.1f;
-        wave.transform.localScale = startScale * overshoot;
-
         Destroy(wave);
     }
 
-    private IEnumerator PlayerColorShift(bool goingToFantasy)
-    {
-        SpriteRenderer sr = player.GetComponent<SpriteRenderer>();
-        if (sr == null)
-            yield break;
-
-        Color originalColor = sr.color;
-
-        Color targetColor = goingToFantasy
-            ? new Color(0.85f, 0.75f, 1f, 1f)   // leggermente viola
-            : new Color(0.75f, 0.9f, 1f, 1f);   // leggermente azzurro
-
-        float duration = waveDuration * 0.6f;
-        float elapsed = 0f;
-
-        // Andata verso colore dimensionale
-        while (elapsed < duration)
-        {
-            float t = elapsed / duration;
-            sr.color = Color.Lerp(originalColor, targetColor, t);
-            elapsed += Time.deltaTime;
-            yield return null;
-        }
-
-        elapsed = 0f;
-
-        // Ritorno al colore originale
-        while (elapsed < duration)
-        {
-            float t = elapsed / duration;
-            sr.color = Color.Lerp(targetColor, originalColor, t);
-            elapsed += Time.deltaTime;
-            yield return null;
-        }
-
-        sr.color = originalColor;
-    }
-
+    //Istanzia e gestisce le particelle legate al cambio mondo.
     private void SpawnParticles(bool goingToFantasy)
     {
         GameObject selectedParticles = goingToFantasy
