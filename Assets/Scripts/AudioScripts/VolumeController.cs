@@ -10,8 +10,10 @@ public class VolumeController : MonoBehaviour
     // ==============================
     // NOMI PARAMETRI MIXER (costanti per evitare errori di scrittura)
     // ==============================
-    private const string MUSIC_VOL = "MusicVol";
+    private const string MUSICMASTER_VOL = "MusicMasterVol";
     private const string SFX_VOL = "SFXVol";
+    private const string MUSIC_VOL = "MusicVol";
+    private const string SFXMASTER_VOL = "SFXMasterVol";
     private const string MUSIC_TRANSITION_PITCH = "MusicTransitionPitch";
     private const string MUSIC_TRANSITION_LP = "MusicTransitionLowPass";
     private const string MUSIC_TRANSITION_HP = "MusicTransitionHightPass";
@@ -38,8 +40,12 @@ public class VolumeController : MonoBehaviour
     private bool isMenuOpen = false;
 
     // Salviamo il volume di default della musica e SFX
-    private float defaultMusicVolume = 0f;
-    private float defaultSFXVolume = 0f;
+    // Questi valori vengono aggiornati quando l'utente cambia il volume tramite gli slider
+    private float userMusicVolume = 0f; 
+    private float userSFXVolume = 0f;
+    // Questi valori vengono salvati all'avvio e rappresentano i livelli di volume "normali" durante il gameplay, prima di qualsiasi transizione o ducking
+    private float baseMusicGameplayVolume = 0f; 
+    private float baseSFXGameplayVolume = 0f;
 
     void Awake()
     {
@@ -52,8 +58,11 @@ public class VolumeController : MonoBehaviour
         Instance = this;
 
         // Salva i volumi iniziali dal mixer
-        masterMixer.GetFloat(MUSIC_VOL, out defaultMusicVolume);
-        masterMixer.GetFloat(SFX_VOL, out defaultSFXVolume);
+        masterMixer.GetFloat(MUSICMASTER_VOL, out userMusicVolume);
+        masterMixer.GetFloat(SFXMASTER_VOL, out userSFXVolume);
+
+        masterMixer.GetFloat(MUSIC_VOL, out baseMusicGameplayVolume);
+        masterMixer.GetFloat(SFX_VOL, out baseSFXGameplayVolume);
 
         // Salva i valori di default dei parametri di transizione
         SaveDefaultParam(MUSIC_TRANSITION_PITCH);
@@ -96,11 +105,11 @@ public class VolumeController : MonoBehaviour
 
         musicSlider.onValueChanged.RemoveAllListeners();
         musicSlider.onValueChanged.AddListener(SetMusicVolume);
-        musicSlider.value = defaultMusicVolume;
+        musicSlider.value = userMusicVolume;
 
         sfxSlider.onValueChanged.RemoveAllListeners();
         sfxSlider.onValueChanged.AddListener(SetSFXVolume);
-        sfxSlider.value = defaultSFXVolume;
+        sfxSlider.value = userSFXVolume;
     }
 
     // Pulisce i riferimenti UI quando una scena viene distrutta
@@ -126,14 +135,14 @@ public class VolumeController : MonoBehaviour
         {
             musicSlider.onValueChanged.RemoveAllListeners();
             musicSlider.onValueChanged.AddListener(SetMusicVolume);
-            musicSlider.value = defaultMusicVolume;
+            musicSlider.value = userMusicVolume;
         }
 
         if (sfxSlider != null)
         {
             sfxSlider.onValueChanged.RemoveAllListeners();
             sfxSlider.onValueChanged.AddListener(SetSFXVolume);
-            sfxSlider.value = defaultSFXVolume;
+            sfxSlider.value = userSFXVolume;
         }
     }
 
@@ -171,17 +180,18 @@ public class VolumeController : MonoBehaviour
     // Imposta il volume musica nel mixer
     public void SetMusicVolume(float volume)
     {
-        defaultMusicVolume = volume;
+        userMusicVolume = volume;
+
         if (masterMixer != null)
-            masterMixer.SetFloat(MUSIC_VOL, volume);
+            masterMixer.SetFloat(MUSICMASTER_VOL, volume);
     }
 
-    // Imposta il volume SFX nel mixer
     public void SetSFXVolume(float volume)
     {
-        defaultSFXVolume = volume;
+        userSFXVolume = volume;
+
         if (masterMixer != null)
-            masterMixer.SetFloat(SFX_VOL, volume);
+            masterMixer.SetFloat(SFXMASTER_VOL, volume);
     }
 
     // ==========================================================
@@ -268,7 +278,7 @@ public class VolumeController : MonoBehaviour
     {
         if (masterMixer == null) return;
 
-        masterMixer.SetFloat(MUSIC_VOL, defaultMusicVolume);
+        masterMixer.SetFloat(MUSIC_VOL, baseMusicGameplayVolume);
         masterMixer.SetFloat(MUSIC_TRANSITION_LP, 22000f);
     }
 
@@ -277,7 +287,7 @@ public class VolumeController : MonoBehaviour
     {
         if (masterMixer == null) return;
 
-        FadeMixerParam(masterMixer, MUSIC_VOL, defaultMusicVolume, fadeTime);
+        FadeMixerParam(masterMixer, MUSIC_VOL, baseMusicGameplayVolume, fadeTime);
         FadeMixerParam(masterMixer, MUSIC_TRANSITION_LP, 22000f, fadeTime);
     }
 
