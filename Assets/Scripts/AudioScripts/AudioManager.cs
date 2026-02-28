@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -76,11 +77,6 @@ public class AudioManager : MonoBehaviour
     {
         if (VolumeController.Instance != null)
             VolumeController.Instance.RefreshUISliders();
-
-        // Torna allo stato normale quando carichi una scena
-        SetAudioState(AudioState.Normal);
-        VolumeController.Instance.ResetGameplayVolumes();
-        VolumeController.Instance.ResetAllTransitionParams(3f);
     }
 
     public void PlaySFX(AudioClip clip)
@@ -121,5 +117,38 @@ public class AudioManager : MonoBehaviour
 
         if (sfxSource != null && sfxGroup != null)
             sfxSource.outputAudioMixerGroup = sfxGroup;
+    }
+
+    // Metodo per resettare l'audio quando il giocatore respawna
+    public IEnumerator ResetAudioOnPlayerSpawn(float transitionTime = 3.5f)
+    {
+        if (VolumeController.Instance == null)
+            yield break;
+
+        // Trova un'istanza di PlayerRespawn nella scena
+        PlayerRespawn playerRespawn = Object.FindFirstObjectByType<PlayerRespawn>();
+
+        //Se il giocatore sta morendo torno subito allo stato normale e solo la musica va resettata
+        if (playerRespawn != null && playerRespawn.IsDying())
+        {
+            // Torna allo stato normale
+            SetAudioState(AudioState.Normal);
+
+            VolumeController.Instance.ResetGameplayVolumes(2f);
+        }
+
+        //Altrimenti se sta facendo altre transizioni esempio fine livello o switch mondo, aspetto un po' prima di tornare allo stato normale 
+        //rettando prima i volumi e parametri di transizione
+        else
+        {
+            VolumeController.Instance.ResetGameplayVolumes(transitionTime);
+            VolumeController.Instance.ResetAllTransitionParams(transitionTime);
+
+            //aspetta che fniscano le transitioni prima di tornare allo stato normale
+            yield return new WaitForSecondsRealtime(transitionTime+1f);
+
+            // Torna allo stato normale
+            SetAudioState(AudioState.Normal);
+        }
     }
 }

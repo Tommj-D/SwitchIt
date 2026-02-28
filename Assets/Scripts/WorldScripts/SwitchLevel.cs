@@ -65,7 +65,7 @@ public class SwitchLevel : MonoBehaviour
             VolumeController.Instance.DuckMixer(VolumeController.Instance.masterMixer, "MusicTransitionVol", 6f, 0.3f);
             VolumeController.Instance.FadeMixerParam(VolumeController.Instance.masterMixer, "MusicTransitionLowPass", 1500f, 0.6f);
             VolumeController.Instance.FadeMixerParam(VolumeController.Instance.masterMixer, "MusicTransitionHightPass", 1500f, 0.6f);
-            VolumeController.Instance.FadeMixerParam(VolumeController.Instance.masterMixer, "MusicTransitionPitch", 0.95f, 0.6f);
+            VolumeController.Instance.FadeMixerParam(VolumeController.Instance.masterMixer, "MusicTransitionPitch", 0.8f, 0.6f);
             VolumeController.Instance.FadeMixerParam(VolumeController.Instance.masterMixer, "SFXTransitionLowpass", 18000f, 0.6f);
         }
         // Piccolo delay

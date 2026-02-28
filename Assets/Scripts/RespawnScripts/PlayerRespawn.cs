@@ -196,6 +196,15 @@ public class PlayerRespawn : MonoBehaviour
     {
         if (fullSpriteRenderer == null) yield break;
 
+        //Inizio a restettare la musica se non è un respawn di morte
+        bool musicResetCalled = false;
+        if (!isDying && !musicResetCalled)
+        {
+            Debug.Log("Transizione");
+            StartCoroutine(AudioManager.Instance.ResetAudioOnPlayerSpawn());
+            musicResetCalled = true;
+        }
+
         if (AudioManager.Instance != null)
                 {
                     AudioManager.Instance.PlaySFX(AudioManager.Instance.respawnSound);
@@ -256,19 +265,12 @@ public class PlayerRespawn : MonoBehaviour
         GetComponent<PlayerMovement>().enabled = true;
         playerInput.enabled = true;
 
+        if (!musicResetCalled) {
+            //Rimetto la musica al volume normale chimanando un metodo che sta in AudioManager che resetta i parametri di transizione
+            StartCoroutine(AudioManager.Instance.ResetAudioOnPlayerSpawn());
+        }
+
         isDying = false;
-
-        //Rimetto la musica al volume normale
-        /*AudioTransitionManager transition = AudioManager.Instance.GetComponent<AudioTransitionManager>();
-        VolumeController.Instance.FadeMixerParam(VolumeController.Instance.masterMixer, "MusicVol", 0f, 2f);
-        VolumeController.Instance.FadeMixerParam(VolumeController.Instance.transitionMixer, "MusicVol", 0f, 3f);
-        VolumeController.Instance.FadeMixerParam(VolumeController.Instance.transitionMixer, "MusicLowpass", 22000f, 2f);
-        VolumeController.Instance.FadeMixerParam(VolumeController.Instance.transitionMixer, "MusicHightpass", 10f, 2f);
-        VolumeController.Instance.FadeMixerParam(VolumeController.Instance.transitionMixer, "SFXLowpass", 22000f, 2f);
-
-        yield return new WaitForSeconds(3f);
-        transition.ExitTransition();
-        VolumeController.Instance.ResetMusicState(0.2f);*/
     }
 
     //---------SPAWN NUOVA SCENA---------
