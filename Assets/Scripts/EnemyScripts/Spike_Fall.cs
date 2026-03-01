@@ -12,42 +12,38 @@ public class Spike_Fall : MonoBehaviour
     private bool isShaking = false;
     private bool activated = false; // impedisce ri-attivazioni
 
-    private Vector3 originalPosition;
+    private Vector3 startPosition;
 
-    void Awake()
+    private void Awake()
     {
-        // salva la posizione iniziale qui 
-        originalPosition = transform.position;
+        startPosition = transform.position;
     }
 
-    void OnEnable()
+    private void OnEnable()
     {
-        // Quando l'oggetto viene riattivato, resetta stato e posizione
-        isFalling = false;
-        isShaking = false;
-        activated = false;
-        transform.position = originalPosition;
+        ResetSpike();
     }
 
-    void Start()
+    private void Update()
     {
-        originalPosition = transform.position;
-    }
-
-    void Update()
-    {
-        // Tremolio
         if (isShaking)
         {
             Vector2 rand = Random.insideUnitCircle * shakeAmount;
-            transform.position = originalPosition + new Vector3(rand.x, rand.y, 0f);
+            transform.position = startPosition + new Vector3(rand.x, rand.y, 0f);
         }
 
-        // Caduta
         if (isFalling)
         {
             transform.Translate(Vector3.down * fallSpeed * Time.deltaTime);
         }
+    }
+
+    public void ResetSpike()
+    {
+        StopAllCoroutines();
+        isFalling = false;
+        isShaking = false;
+        activated = false;
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -70,7 +66,7 @@ public class Spike_Fall : MonoBehaviour
         yield return new WaitForSeconds(shakeDuration);
 
         isShaking = false;
-        transform.position = originalPosition;
+        transform.position = startPosition;
 
         isFalling = true;
     }

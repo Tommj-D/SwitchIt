@@ -101,6 +101,12 @@ public class RespawnableObject : MonoBehaviour
         var enemy = GetComponent<Enemy>();
         if (enemy != null)
             enemy.ResetEnemy();
+
+        var spike = GetComponent<Spike_Fall>();
+        if (spike != null)
+        {
+            spike.StopAllCoroutines();
+        }
     }
 }
 
