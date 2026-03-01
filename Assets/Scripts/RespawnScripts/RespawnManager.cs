@@ -65,14 +65,11 @@ public class RespawnManager : MonoBehaviour
     // Resetta tutti gli oggetti registrati
     public void ResetAll()
     {
-        Debug.Log("Tot respawnables: " + allRespawnables.Count);
-
         for (int i = 0; i < allRespawnables.Count; i++)
         {
             var r = allRespawnables[i];
             if (r != null)
             {
-                Debug.Log("Resetto: " + r.name);
                 r.ResetToStart();
             }
         }

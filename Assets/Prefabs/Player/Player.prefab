@@ -15121,9 +15121,9 @@ MonoBehaviour:
   riggedBody: {fileID: 6610645402375781762}
   shockWaveDuration: 1
   shockWaveStrenght: -0.1
-  deathColor: {r: 4, g: 0, b: 0, a: 1}
-  playerFadeInTime: 0.1
-  playerFadeOutTime: 0.1
+  deathColor: {r: 8, g: 0, b: 0, a: 1}
+  playerFadeInTime: 0.15
+  playerFadeOutTime: 0.15
   MaxIntensity: 0.5
 --- !u!114 &5875718408125815725
 MonoBehaviour:

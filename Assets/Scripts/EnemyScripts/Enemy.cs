@@ -127,7 +127,7 @@ public abstract class Enemy : MonoBehaviour
         isDead = false;
         isKillable = true;
 
-        isActive = true;
+        isActive = false;
         isVisible = false;
 
         // Riattiva Rigidbody
@@ -144,5 +144,12 @@ public abstract class Enemy : MonoBehaviour
         var colliders = GetComponentsInChildren<Collider2D>();
         foreach (var c in colliders)
             c.enabled = true;
+
+        var renderer = GetComponent<Renderer>();
+        if (renderer != null && renderer.isVisible)
+        {
+            isActive = true;
+            isVisible = true;
+        }
     }
 }
