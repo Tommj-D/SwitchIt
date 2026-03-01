@@ -89,7 +89,7 @@ public abstract class Enemy : MonoBehaviour
 
     private void Flip()
     {
-        if (WorldSwitch.Instance.isSwitching) return;
+        if (WorldSwitch.Instance!=null && WorldSwitch.Instance.isSwitching) return;
         direction *= -1; 
         Vector3 scale = transform.localScale;
         scale.x *= -1;   
