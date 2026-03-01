@@ -6,23 +6,22 @@ public class EnemyHead : MonoBehaviour
 
     public float jumpingForce = 8f;
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("Enemy"))
-        {
-            enemy.OnStomped(collision.gameObject);
-        }
-    }
+    private bool hasBeenStomped = false;
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!collision.CompareTag("Player")) return;
+        if (hasBeenStomped) return;
 
         PlayerRespawn playerRespawn = collision.GetComponent<PlayerRespawn>();
         if (playerRespawn == null || playerRespawn.IsDying())
             return;
 
-        enemy.OnStomped(collision.gameObject);
+        hasBeenStomped = true;
 
+        // Uccido il nemico
+        enemy.OnStomped();
+
+        // Rimbalzo player
         Rigidbody2D rb = collision.GetComponent<Rigidbody2D>();
         if (rb != null)
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpingForce);
@@ -31,9 +30,20 @@ public class EnemyHead : MonoBehaviour
         if (playerMovement != null)
             playerMovement.ResetJumps();
 
+        // Disattivo i collider della testa
         foreach (Collider2D col in GetComponents<Collider2D>())
         {
             col.enabled = false;
         }
+    }
+
+    //Chiamata da enemy resetta la testa del nemico, in modo che possa essere nuovamente calpestata se il nemico respawna
+    public void ResetHead()
+    {
+        hasBeenStomped = false;
+
+        // Riattiva i collider della testa
+        foreach (Collider2D col in GetComponents<Collider2D>())
+            col.enabled = true;
     }
 }

@@ -33,6 +33,8 @@ public abstract class Enemy : MonoBehaviour
 
     protected virtual void OnCollisionEnter2D(Collision2D collision)
     {
+        if (isDead) return; //in modo che non può più uccidere il player
+
         if (collision.gameObject.CompareTag("Player") && !isDead)
         {
             var respawn = collision.gameObject.GetComponent<PlayerRespawn>();
@@ -47,7 +49,7 @@ public abstract class Enemy : MonoBehaviour
         // Se il nemico cade in un buco o tocca un'area di morte
         if (collision.gameObject.CompareTag("Death"))
         {
-            Death();
+            OnStomped();
         }
         
         // Se tocca un muro o un ostacolo, cambia direzione
@@ -57,47 +59,32 @@ public abstract class Enemy : MonoBehaviour
         }
     }
 
-    public virtual void OnStomped(GameObject player)
+    public void OnStomped()
     {
-        if (!isKillable || isDead) return;
-        
-        Death();
+        if (isDead) return;
 
-        // Fa rimbalzare il giocatore verso l'alto
-        var playerRb = player.GetComponent<Rigidbody2D>();
-        if (playerRb != null)
-            playerRb.linearVelocity = new Vector2(playerRb.linearVelocity.x, 8f);
-
-        // Disabilita definitivamente l'oggetto dopo 3 secondi
-        Invoke(nameof(DisableEnemy), 3f);
-    }
-
-    private void Death()
-    {
-        if (isDead) return; // Evita di chiamare la morte più volte
         isDead = true;
+        isActive = false;
 
         // Suono morte
         Sound();
 
-        // Disabilita tutti i collider per evitare altre collisioni
-        Collider2D[] colliders = GetComponents<Collider2D>();
-        foreach (Collider2D col in colliders)
-        {
+        // Disabilita tutti i collider del nemico (corpo + figli)
+        var allColliders = GetComponentsInChildren<Collider2D>();
+        foreach (var col in allColliders)
             col.enabled = false;
-        }
 
-        // Avvia l'animazione di morte
-        if (animator != null)
-            animator.SetTrigger("Die");
-
-        // Disabilita la fisica per farlo "scivolare" o restare fermo
+        // Imposta Rigidbody kinematic e zero velocity
         var rb = GetComponent<Rigidbody2D>();
-        if (rb)
+        if (rb != null)
         {
             rb.bodyType = RigidbodyType2D.Kinematic;
             rb.linearVelocity = Vector2.zero;
         }
+
+        // Animazione morte
+        if (animator != null)
+            animator.SetTrigger("Die");
     }
 
     private void Flip()
@@ -115,11 +102,6 @@ public abstract class Enemy : MonoBehaviour
             isActive = true;
             isVisible = true;
         }
-    }
-
-    private void DisableEnemy()
-    {
-        gameObject.SetActive(false);
     }
 
     public virtual void ResetEnemy()
@@ -144,6 +126,11 @@ public abstract class Enemy : MonoBehaviour
         var colliders = GetComponentsInChildren<Collider2D>();
         foreach (var c in colliders)
             c.enabled = true;
+
+        // Reset delle EnemyHead
+        var heads = GetComponentsInChildren<EnemyHead>();
+        foreach (var head in heads)
+            head.ResetHead();
 
         var renderer = GetComponent<Renderer>();
         if (renderer != null && renderer.isVisible)
