@@ -12,6 +12,7 @@ public class WorldSwitch : MonoBehaviour
     [Header("Worlds")]
     public GameObject realWorld;
     public GameObject fantasyWorld;
+    public CloudsManager cloudsManager;
 
     [Header("Camera Settings")]
     public Camera mainCamera;
@@ -76,6 +77,12 @@ public class WorldSwitch : MonoBehaviour
         if (MagicDust != null) MagicDust.SetActive(isFantasyWorldActive);
         if (MagicFog != null) MagicFog.SetActive(isFantasyWorldActive);
 
+        // Aggiorna colori nuvole
+        if (cloudsManager != null)
+        {
+            cloudsManager.UpdateCloudColors(isFantasyWorldActive);
+        }
+        
         if (isFantasyWorldActive)
         {
             VolumeController.Instance.FadeMixerParam(
