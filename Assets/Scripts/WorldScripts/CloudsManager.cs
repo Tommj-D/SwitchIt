@@ -1,4 +1,6 @@
 using UnityEngine;
+using System.Collections.Generic;
+
 
 public class CloudsManager : MonoBehaviour
 {
@@ -25,10 +27,23 @@ public class CloudsManager : MonoBehaviour
     private float[] randomOffsets;
     private float[] floatAmounts;
     private float[] floatSpeeds;
+   
+    //Valori di default settati in start
+    private float defaultMoveSpeed;
+    private float defaultBaseFloatSpeed;
+    private float defaultBaseFloatAmount;
+    //========================================//
     private SpriteRenderer[] spriteRenderers;
+    
+
+    public static List<CloudsManager> AllCloudManagers = new List<CloudsManager>();
 
     private void Start()
     {
+        defaultMoveSpeed = moveSpeed;
+        defaultBaseFloatSpeed = baseFloatSpeed;
+        defaultBaseFloatAmount = baseFloatAmount;
+
         int count = transform.childCount;
 
         clouds = new Transform[count];
@@ -115,15 +130,43 @@ public class CloudsManager : MonoBehaviour
         spriteRenderers[index].color = randomColor;
     }
 
-    //Chiamato da worldSwitch quando cambia mondo, aggiorna i colori delle nuvole in base al mondo attivo
-    public void UpdateCloudColors(bool isFantasy)
+    //Chiamato da worldSwitch quando cambia mondo, aggiorna i colori e la velocità delle nuvole in base al mondo attivo
+    public void UpdateCloudDimension(bool isFantasy)
     {
         for (int i = 0; i < clouds.Length; i++)
         {
+            // Cambio Colori
             if (isFantasy)
                 ApplyRandomColor(i, FantasycloudColors);
             else
                 ApplyRandomColor(i, RealcloudColors);
         }
+
+        // Cambio velocità
+            if (isFantasy)
+            {
+                moveSpeed = defaultMoveSpeed + 0.15f;
+                baseFloatSpeed = defaultBaseFloatSpeed + 0.15f;
+                baseFloatAmount = defaultBaseFloatAmount + 0.1f;
+            }
+            else
+            {
+                moveSpeed = defaultMoveSpeed;
+                baseFloatSpeed = defaultBaseFloatSpeed;
+                baseFloatAmount = defaultBaseFloatAmount;
+            }   
+    }
+
+
+    private void OnEnable()
+    {
+        if (!AllCloudManagers.Contains(this))
+            AllCloudManagers.Add(this);
+    }
+
+    private void OnDisable()
+    {
+        if (AllCloudManagers.Contains(this))
+            AllCloudManagers.Remove(this);
     }
 }

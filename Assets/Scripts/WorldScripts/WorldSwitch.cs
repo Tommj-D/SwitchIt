@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Audio;
 
 public class WorldSwitch : MonoBehaviour
 {
@@ -12,7 +11,6 @@ public class WorldSwitch : MonoBehaviour
     [Header("Worlds")]
     public GameObject realWorld;
     public GameObject fantasyWorld;
-    public CloudsManager cloudsManager;
 
     [Header("Camera Settings")]
     public Camera mainCamera;
@@ -78,9 +76,9 @@ public class WorldSwitch : MonoBehaviour
         if (MagicFog != null) MagicFog.SetActive(isFantasyWorldActive);
 
         // Aggiorna colori nuvole
-        if (cloudsManager != null)
+        foreach (CloudsManager manager in CloudsManager.AllCloudManagers)
         {
-            cloudsManager.UpdateCloudColors(isFantasyWorldActive);
+            manager.UpdateCloudDimension(isFantasyWorldActive);
         }
         
         if (isFantasyWorldActive)
@@ -120,7 +118,6 @@ public class WorldSwitch : MonoBehaviour
                 AudioManager.Instance.SetAudioState(AudioManager.AudioState.Normal);
         }
     }
-
     public void SwitchWorldWithoutAnimation()
     {
         if (!canSwitchWorld || isSwitching) return;
