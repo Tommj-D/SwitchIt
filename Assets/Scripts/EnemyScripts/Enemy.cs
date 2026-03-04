@@ -33,14 +33,16 @@ public abstract class Enemy : MonoBehaviour
 
     protected virtual void OnCollisionEnter2D(Collision2D collision)
     {
-        if (isDead) return; //in modo che non può più uccidere il player
+        if (isDead) return;
+        if (WorldSwitch.Instance != null && WorldSwitch.Instance.isSwitching) return;
 
-        if (collision.gameObject.CompareTag("Player") && !isDead)
+        if (collision.gameObject.CompareTag("Player"))
         {
             var respawn = collision.gameObject.GetComponent<PlayerRespawn>();
             if (respawn != null)
                 respawn.Die();
         }
+
         Flip();
     }
 
@@ -89,7 +91,7 @@ public abstract class Enemy : MonoBehaviour
 
     private void Flip()
     {
-        if (WorldSwitch.Instance!=null && WorldSwitch.Instance.isSwitching) return;
+        //if (WorldSwitch.Instance!=null && WorldSwitch.Instance.isSwitching) return;
         direction *= -1; 
         Vector3 scale = transform.localScale;
         scale.x *= -1;   
