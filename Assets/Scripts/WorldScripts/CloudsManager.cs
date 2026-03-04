@@ -22,6 +22,11 @@ public class CloudsManager : MonoBehaviour
 
     public Color[] RealcloudColors; // Array di colori per le nuvole reali (bianco o grigio chiaro)
     public Color[] FantasycloudColors; // Array di colori per le nuvole fantasy (sul viola)
+
+    //Per mantenere i colori assegnati ad ogni nuvola durante il cambio dimensione//
+    private Color[] realAssignedColors;
+    private Color[] fantasyAssignedColors;
+    //====================================//
     private Transform[] clouds;
     private float[] baseYPositions;
     private float[] randomOffsets;
@@ -52,6 +57,8 @@ public class CloudsManager : MonoBehaviour
         randomOffsets = new float[count];
         floatAmounts = new float[count];
         floatSpeeds = new float[count];
+        realAssignedColors = new Color[count];
+        fantasyAssignedColors = new Color[count];
 
         for (int i = 0; i < count; i++)
         {
@@ -65,8 +72,12 @@ public class CloudsManager : MonoBehaviour
             floatAmounts[i] = baseFloatAmount + Random.Range(-floatAmountVariation, floatAmountVariation);
             floatSpeeds[i] = baseFloatSpeed + Random.Range(-floatSpeedVariation, floatSpeedVariation);
 
-            // Colore iniziale (es. mondo reale)
-            ApplyRandomColor(i, RealcloudColors);
+            // Assegna colore fisso per entrambe le dimensioni
+            realAssignedColors[i] = RealcloudColors[Random.Range(0, RealcloudColors.Length)];
+            fantasyAssignedColors[i] = FantasycloudColors[Random.Range(0, FantasycloudColors.Length)];
+
+            // Parte nel mondo reale
+            spriteRenderers[i].color = realAssignedColors[i];
         }
     }
 
@@ -133,13 +144,13 @@ public class CloudsManager : MonoBehaviour
     //Chiamato da worldSwitch quando cambia mondo, aggiorna i colori e la velocità delle nuvole in base al mondo attivo
     public void UpdateCloudDimension(bool isFantasy)
     {
+        // Cambio colori
         for (int i = 0; i < clouds.Length; i++)
-        {
-            // Cambio Colori
-            if (isFantasy)
-                ApplyRandomColor(i, FantasycloudColors);
-            else
-                ApplyRandomColor(i, RealcloudColors);
+        {   
+        if (isFantasy)
+            spriteRenderers[i].color = fantasyAssignedColors[i];
+        else
+            spriteRenderers[i].color = realAssignedColors[i];
         }
 
         // Cambio velocità
