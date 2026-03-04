@@ -145,9 +145,9 @@ public class CloudsManager : MonoBehaviour
         // Cambio velocità
             if (isFantasy)
             {
-                moveSpeed = defaultMoveSpeed + 0.15f;
-                baseFloatSpeed = defaultBaseFloatSpeed + 0.15f;
-                baseFloatAmount = defaultBaseFloatAmount + 0.1f;
+                moveSpeed = defaultMoveSpeed + 0.7f;
+                baseFloatSpeed = defaultBaseFloatSpeed + 0.6f;
+                baseFloatAmount = defaultBaseFloatAmount + 0.3f;
             }
             else
             {
