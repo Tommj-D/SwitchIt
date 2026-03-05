@@ -184,7 +184,7 @@ MonoBehaviour:
   keySound: {fileID: 0}
   chestLockedSound: {fileID: 0}
   slimeDeathSound: {fileID: 8300000, guid: 80557ac7cfe00cc4b9db124ad2743bf5, type: 3}
-  shakeSound: {fileID: 0}
+  shakeSound: {fileID: 8300000, guid: bc8a90662983c954faf63e4e2b20e6dc, type: 3}
   maceCrashSound: {fileID: 8300000, guid: 01450bddc9094724599275fee2e2f74d, type: 3}
   spikeCrashSound: {fileID: 8300000, guid: 54c317e536eff2d4cae11b279ae61b16, type: 3}
   jumpSound: {fileID: 8300000, guid: 0164afc010f334a498ef1cbfb4f9f220, type: 3}
