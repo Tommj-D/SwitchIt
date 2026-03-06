@@ -13,15 +13,20 @@ public class RespawnManager : MonoBehaviour
     public Transform defaultRespawnPoint;
     private Transform currentRespawnPoint;
 
+    [Header("Camera Settings")]
+    public CameraConfinerManager cameraConfinerManager;
+    public Collider2D defaultConfiner; // Il confiner iniziale del livello
+    private Collider2D currentConfiner; // Il confiner associato al checkpoint salvato
+
     private void Awake()
     {
         Instance = this;
         currentRespawnPoint = defaultRespawnPoint;
+        currentConfiner = defaultConfiner; // All'inizio usa quello di default
     }
 
     private void Start()
     {
-        // Spawn normale player solo se non in test mode
         if (GameManager.Instance != null && GameManager.Instance.isTestMode)
         {
             return;
@@ -32,7 +37,7 @@ public class RespawnManager : MonoBehaviour
 
     private IEnumerator SpawnPlayerDelayed()
     {
-        yield return null; // piccolo delay per sicurezza
+        yield return null; 
 
         PlayerRespawn player = Object.FindFirstObjectByType<PlayerRespawn>();
         
@@ -44,8 +49,6 @@ public class RespawnManager : MonoBehaviour
         }
 
         player.ForceSpawn(spawn);
-
-        // Avvia animazione di spawn
         player.TriggerSpawnAnimation();
     }
 
@@ -62,7 +65,6 @@ public class RespawnManager : MonoBehaviour
         if (allRespawnables.Contains(r)) allRespawnables.Remove(r);
     }
 
-    // Resetta tutti gli oggetti registrati
     public void ResetAll()
     {
         for (int i = 0; i < allRespawnables.Count; i++)
@@ -78,13 +80,26 @@ public class RespawnManager : MonoBehaviour
     // =========================
     // PLAYER RESPAWN
     // =========================
-    public void SetCheckpoint(Transform newPoint)
+    
+    // Modificato: Ora accetta anche il confiner del checkpoint!
+    public void SetCheckpoint(Transform newPoint, Collider2D newConfiner = null)
     {
         currentRespawnPoint = newPoint;
+        
+        if (newConfiner != null)
+        {
+            currentConfiner = newConfiner;
+        }
     }
 
     public Transform GetRespawnPoint()
     {
+        // Quando qualcuno chiede dove rinascere (alla morte), resettiamo la camera!
+        if (cameraConfinerManager != null && currentConfiner != null)
+        {
+            cameraConfinerManager.SetConfiner(currentConfiner);
+        }
+
         return currentRespawnPoint != null ? currentRespawnPoint : defaultRespawnPoint;
     }
 }

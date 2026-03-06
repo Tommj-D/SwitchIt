@@ -5,6 +5,11 @@ public class Checkpoint : MonoBehaviour
 {
     private bool activated = false;
     public bool makeSound = true;
+
+    [Header("Camera Settings")]
+    [Tooltip("Inserisci qui il Collider2D del recinto in cui si trova questo checkpoint")]
+    public Collider2D confinerDiQuestoCheckpoint;
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (activated) return;
@@ -15,6 +20,7 @@ public class Checkpoint : MonoBehaviour
 
         activated = true;
 
-        RespawnManager.Instance.SetCheckpoint(transform);
+        // Ora passiamo al RespawnManager sia la posizione che il recinto della telecamera!
+        RespawnManager.Instance.SetCheckpoint(transform, confinerDiQuestoCheckpoint);
     }
 }
