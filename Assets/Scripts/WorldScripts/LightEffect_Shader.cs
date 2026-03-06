@@ -22,7 +22,8 @@ public class LightEffect_Shader : MonoBehaviour
 
         for (int i = 0; i < _materials.Length; i++)
         {
-            _materials[i] = _spriteRenderers[i].material;
+            _materials[i] = new Material(_spriteRenderers[i].material);
+            _spriteRenderers[i].material = _materials[i];
         }
     }
 
