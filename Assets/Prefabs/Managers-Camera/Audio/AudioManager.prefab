@@ -195,6 +195,7 @@ MonoBehaviour:
   respawnSound: {fileID: 8300000, guid: 9d4fb855d7948604ab102a4baaa93d20, type: 3}
   switchLevelSound: {fileID: 8300000, guid: 91dbe1fa30d8d9340beb4b717f0b42bb, type: 3}
   secretEntranceSound: {fileID: 8300000, guid: 1ee053960432f50469e8fc4c385d40b8, type: 3}
+  hintSound: {fileID: 8300000, guid: 2b2a2eb4dee6c4a4c9f8d5ecbe70dc17, type: 3}
   musicDefaultGroup: {fileID: -1793385470781041295, guid: bd895b5153b2e204ca4b0ca8a56c023b, type: 2}
   musicTransitionGroup: {fileID: -1707065884832712539, guid: bd895b5153b2e204ca4b0ca8a56c023b, type: 2}
   sfxDefaultGroup: {fileID: -8022069700662271292, guid: bd895b5153b2e204ca4b0ca8a56c023b, type: 2}

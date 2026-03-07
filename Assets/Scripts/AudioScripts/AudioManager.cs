@@ -35,6 +35,7 @@ public class AudioManager : MonoBehaviour
     public AudioClip respawnSound;
     public AudioClip switchLevelSound;
     public AudioClip secretEntranceSound;
+    public AudioClip hintSound;
     
     [Header("Mixer Groups")]
     public AudioMixerGroup musicDefaultGroup;

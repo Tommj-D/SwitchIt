@@ -325,6 +325,8 @@ AudioMixerController:
     name: SFXVol
   - guid: a2e145d5cf1b85343b367681575f9f9b
     name: SFXMasterVol
+  - guid: df01e8f6da6373f4fb6ffcab821bdd0a
+    name: SFXFantasyLowpass
   - guid: 11ef50e8e1b64364cb5b9447c7c6ac58
     name: SFXTransitionLowpass
   m_AudioMixerGroupViews:

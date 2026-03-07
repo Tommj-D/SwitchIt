@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -12,17 +13,28 @@ public class HintArrowGlow_Tilemap : MonoBehaviour
     public Color glowColor = Color.yellow;
 
     [Header("Floating")]
-    public float floatAmplitude = 0.05f; // quanto si muove su/giù
-    public float floatSpeed = 2f;        // velocità oscillazione
+    public float floatAmplitude = 0.05f; // quanto si muove su/giu
+    public float floatSpeed = 2f;        // velocita oscillazione
 
     int hitAmount = Shader.PropertyToID("_HitEffectAmount");
     int hitColor = Shader.PropertyToID("_HitEffectColor");
 
     Material mat;
     Vector3 startPos;
+    private bool actived = false; // variabile per tracciare se il suono Ã¨ giÃ  stato riprodotto
+    private void OnEnable()
+    {   
+        //Faccio partire il suono solo la prima volta che appare, non ad ogni frame in cui Ã¨ visibile
+        if(!actived)
+        {   
+            VolumeController.Instance.FadeMixerParam(VolumeController.Instance.masterMixer, "SFXFantasyLowpass", 22000f, 0f); // rimuove lowpass fantasy se presente
+            actived = true;
+            if (AudioManager.Instance != null)
+                AudioManager.Instance.PlaySFX(AudioManager.Instance.hintSound);
 
-    void OnEnable()
-    {
+            VolumeController.Instance.resetMixerParam(VolumeController.Instance.masterMixer, "SFXFantasyLowpass", 1f, 2f);
+        }
+
         TilemapRenderer tr = GetComponent<TilemapRenderer>();
         if (tr == null) return;
 
@@ -34,8 +46,8 @@ public class HintArrowGlow_Tilemap : MonoBehaviour
 
         startPos = transform.localPosition; // salva posizione iniziale
     }
-
-    void Update()
+    
+    private void Update()
     {
         if (mat == null) return;
 

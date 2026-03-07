@@ -28,6 +28,8 @@ public class VolumeController : MonoBehaviour
     private const string MUSIC_TRANSITION_HP = "MusicTransitionHightPass";
     private const string SFX_TRANSITION_LP = "SFXTransitionLowpass";
 
+    private const string SFX_FANTASY_LP = "SFXFantasyLowpass";
+
     // Tiene traccia delle coroutine attive per ogni parametro
     // Serve per evitare che più fade scrivano contemporaneamente sullo stesso parametro
     private Dictionary<string, Coroutine> activeFades = new Dictionary<string, Coroutine>();
@@ -77,6 +79,7 @@ public class VolumeController : MonoBehaviour
         SaveDefaultParam(MUSIC_TRANSITION_LP);
         SaveDefaultParam(MUSIC_TRANSITION_HP);
         SaveDefaultParam(SFX_TRANSITION_LP);
+        SaveDefaultParam(SFX_FANTASY_LP);
     }
 
     // Salva il valore iniziale di un parametro del mixer
@@ -309,5 +312,46 @@ public class VolumeController : MonoBehaviour
         {
             FadeMixerParam(masterMixer, param.Key, param.Value, fadeTime);
         }
+    }
+
+    public void resetMixerParam(AudioMixer mixer, string paramName, float duration, float delay = 0f)
+    {
+        if (mixer == null) return;
+
+        if (activeFades.TryGetValue(paramName, out Coroutine routine))
+        {
+            if (routine != null)
+                StopCoroutine(routine);
+
+            activeFades.Remove(paramName);
+        }
+
+        Coroutine c = StartCoroutine(ResetMixerParamRoutine(mixer, paramName, duration, delay));
+        activeFades.Add(paramName, c);
+    }
+
+    private IEnumerator ResetMixerParamRoutine(AudioMixer mixer, string paramName, float duration, float delay)
+    {
+        if (mixer == null) yield break;
+
+        yield return new WaitForSecondsRealtime(delay);
+
+        if (!defaultParams.ContainsKey(paramName))
+            yield break;
+
+        float targetValue = defaultParams[paramName];
+
+        mixer.GetFloat(paramName, out float startValue);
+
+        float t = 0f;
+        while (t < duration)
+        {
+            t += Time.unscaledDeltaTime;
+            float value = Mathf.Lerp(startValue, targetValue, t / duration);
+            mixer.SetFloat(paramName, value);
+            yield return null;
+        }
+
+        mixer.SetFloat(paramName, targetValue);
     }
 }
