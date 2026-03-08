@@ -14898,14 +14898,16 @@ MonoBehaviour:
   moveSpeed: 6.5
   jumpPower: 10.5
   maxJumps: 2
+  fantasyJumpMultiplier: 0.75
   groundCheckPos: {fileID: 2937229356370115362}
   groundCheckSize: {x: 0.75, y: 0.05}
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
   baseGravity: 1.5
-  maxFallSpeed: 18
-  fallSpeedMultiplier: 2
+  maxFallSpeed: 20
+  fallSpeedMultiplier: 2.5
+  fantasyGravityMultiplier: 0.65
   flipDuration: 0.25
   vcam: {fileID: 0}
   cameraOffsetX: 4.5
@@ -14970,7 +14972,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.0038552284, y: -0.7114439}
+  m_Offset: {x: -0.006893158, y: -0.7002051}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -14980,7 +14982,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.6997452, y: 0.037112236}
+  m_Size: {x: 0.76470566, y: 0.059589863}
   m_EdgeRadius: 0
 --- !u!95 &4128549818310500637
 Animator:

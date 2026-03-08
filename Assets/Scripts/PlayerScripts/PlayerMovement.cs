@@ -36,6 +36,9 @@ public class PlayerMovement : MonoBehaviour
     private int jumpsRemaining;
     private bool isGrounded;
     private bool isJumping = false;
+    [Header("Fantasy Jump")]
+    [Range(0.5f, 1f)]
+    public float fantasyJumpMultiplier = 0.85f;
 
 
     [Header("GroundCheck")]
@@ -48,6 +51,9 @@ public class PlayerMovement : MonoBehaviour
     public float maxFallSpeed = 18f;
     public float fallSpeedMultiplier = 2f;
     private int gravityDirection = 1; // 1 per normale, -1 per invertita
+    [Header("Fantasy Gravity")]
+    [Range(0.1f, 1f)]
+    public float fantasyGravityMultiplier = 0.7f; // gravità ridotta nel mondo fantasy
 
     [Header("Gravity Flip")]
     public float flipDuration = 0.25f;
@@ -110,14 +116,21 @@ public class PlayerMovement : MonoBehaviour
 
     private void Gravity()
     {
+        float gravityMultiplier = 1f;
+
+        if (WorldSwitch.Instance != null && WorldSwitch.Instance.isFantasyWorldActive)
+            gravityMultiplier = fantasyGravityMultiplier;
+
+        float finalGravity = baseGravity * gravityMultiplier;
+
         if (rb.linearVelocity.y * gravityDirection < 0)
         {
-            rb.gravityScale = baseGravity * fallSpeedMultiplier * gravityDirection; // Aumenta la gravita' durante la caduta
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, Mathf.Clamp(rb.linearVelocity.y, -maxFallSpeed, maxFallSpeed)); // Limita la velocita' di caduta
+            rb.gravityScale = finalGravity * fallSpeedMultiplier * gravityDirection;
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, Mathf.Clamp(rb.linearVelocity.y, -maxFallSpeed, maxFallSpeed));
         }
         else
         {
-            rb.gravityScale = baseGravity * gravityDirection; // Gravita' normale
+            rb.gravityScale = finalGravity * gravityDirection;
         }
     }
 
@@ -164,7 +177,12 @@ public class PlayerMovement : MonoBehaviour
 
                         jumpFX.Play();
                     }
-                    rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpPower * gravityDirection);
+                    float jumpMultiplier = 1f;
+
+                    if (WorldSwitch.Instance != null && WorldSwitch.Instance.isFantasyWorldActive)
+                        jumpMultiplier = fantasyJumpMultiplier;
+
+                    rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpPower * jumpMultiplier * gravityDirection);
                     jumpsRemaining--;
                 }
                 else if (context.canceled)
