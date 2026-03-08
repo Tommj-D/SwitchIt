@@ -1,18 +1,25 @@
 using System.Collections;
 using UnityEngine;
-using TMPro; // FONDAMENTALE: dice a Unity che stiamo usando TextMeshPro
+using TMPro;
+using UnityEngine.InputSystem;
 
 public class TutorialTextFade : MonoBehaviour
 {
     [Header("Impostazioni Testo")]
-    public TextMeshPro testoTutorial; // Inseriremo la scritta qui
-    public float durataFade = 1f;     // Quanto ci mette ad apparire (in secondi)
-
+    public TextMeshPro testoTutorial;
+    public float durataFade = 1f;
+    public Key tastoCambioMondo = Key.E; 
+    public static bool tutorialCompletato = false; 
     private Coroutine fadeCoroutine;
 
     private void Start()
     {
-        // All'inizio del gioco, rendiamo il testo subito invisibile (Alpha = 0)
+        if (tutorialCompletato)
+        {
+            gameObject.SetActive(false);
+            return;
+        }
+
         if (testoTutorial != null)
         {
             Color c = testoTutorial.color;
@@ -21,27 +28,38 @@ public class TutorialTextFade : MonoBehaviour
         }
     }
 
-    // Quando il Player ENTRA nella zona verde (Box Collider)
+    private void Update()
+    {
+        if (tutorialCompletato) return;
+        if (Keyboard.current != null && Keyboard.current[tastoCambioMondo].wasPressedThisFrame)
+        {
+            tutorialCompletato = true;
+            gameObject.SetActive(false); 
+        }
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (tutorialCompletato) return;
+
         if (collision.CompareTag("Player"))
         {
             if (fadeCoroutine != null) StopCoroutine(fadeCoroutine);
-            fadeCoroutine = StartCoroutine(EseguiFade(1f)); // 1 = Completamente visibile
+            fadeCoroutine = StartCoroutine(EseguiFade(1f));
         }
     }
 
-    // Quando il Player ESCE dalla zona verde
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player"))
+        if (tutorialCompletato) return;
+
+        if (collision.CompareTag("Player") && gameObject.activeInHierarchy)
         {
             if (fadeCoroutine != null) StopCoroutine(fadeCoroutine);
-            fadeCoroutine = StartCoroutine(EseguiFade(0f)); // 0 = Torna invisibile
+            fadeCoroutine = StartCoroutine(EseguiFade(0f));
         }
     }
 
-    // La "Magia" che sfuma il colore gradualmente nel tempo
     private IEnumerator EseguiFade(float targetAlpha)
     {
         if (testoTutorial == null) yield break;
@@ -53,16 +71,11 @@ public class TutorialTextFade : MonoBehaviour
         while (timer < durataFade)
         {
             timer += Time.deltaTime;
-            float avanzamento = timer / durataFade;
-            
-            // Lerp mescola dolcemente il valore di partenza con quello di arrivo
-            coloreAttuale.a = Mathf.Lerp(startAlpha, targetAlpha, avanzamento);
+            coloreAttuale.a = Mathf.Lerp(startAlpha, targetAlpha, timer / durataFade);
             testoTutorial.color = coloreAttuale;
-            
             yield return null;
         }
 
-        // Assicuriamoci che alla fine sia esattamente al valore desiderato
         coloreAttuale.a = targetAlpha;
         testoTutorial.color = coloreAttuale;
     }
