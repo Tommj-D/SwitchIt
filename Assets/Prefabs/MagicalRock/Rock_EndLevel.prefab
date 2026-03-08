@@ -117,7 +117,7 @@ Animator:
   m_GameObject: {fileID: 1025980173665243663}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 45873b6c8a3383d498303ae2c3fd1c01, type: 2}
+  m_Controller: {fileID: 9100000, guid: fb35e44d8ac37ef4592f9abd36eb1266, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -950,6 +950,9 @@ MonoBehaviour:
   runeColor_Then: {r: 0, g: 0, b: 0, a: 0}
   particlesColor_Then: {r: 0, g: 0, b: 0, a: 0}
   rockLightColor: {r: 0, g: 0, b: 0, a: 0}
+  lightPulseSpeed: 3
+  lightPulseAmount: 0.3
+  activationFlash: 1.5
 --- !u!114 &5990127503115311141
 MonoBehaviour:
   m_ObjectHideFlags: 0
