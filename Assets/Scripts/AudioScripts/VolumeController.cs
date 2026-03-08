@@ -209,8 +209,13 @@ public class VolumeController : MonoBehaviour
     // DUCKING
     // ==========================================================
 
-    // Riduce temporaneamente un parametro (es: volume)
-    // amount = quanto abbassare
+    /// <summary>
+    /// Riduce temporaneamente un parametro (es: volume)
+    /// </summary>
+    /// <param name="mixer"></param>
+    /// <param name="paramName"></param>
+    /// <param name="amount"></param>
+    /// <param name="fadeTime"></param>
     public void DuckMixer(AudioMixer mixer, string paramName, float amount, float fadeTime)
     {
         StartCoroutine(DuckMixerRoutine(mixer, paramName, amount, fadeTime));
