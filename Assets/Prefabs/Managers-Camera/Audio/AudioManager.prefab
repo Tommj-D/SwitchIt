@@ -181,8 +181,8 @@ MonoBehaviour:
   backgroundMusic: {fileID: 8300000, guid: b4cdc4c9f9e1f8b4ca9e742e68378d32, type: 3}
   coinSound: {fileID: 8300000, guid: d43d1167debac304fbbe6f1101e8e183, type: 3}
   chestSound: {fileID: 8300000, guid: 2a8dbe0ab1a10cb4eb9c348b5af74942, type: 3}
-  keySound: {fileID: 0}
-  chestLockedSound: {fileID: 0}
+  keySound: {fileID: 8300000, guid: 06409ddeb49fb7d49951f77b5ed6a06e, type: 3}
+  chestLockedSound: {fileID: 8300000, guid: c21f4584d22d83e48901a887606ec7e1, type: 3}
   slimeDeathSound: {fileID: 8300000, guid: 80557ac7cfe00cc4b9db124ad2743bf5, type: 3}
   shakeSound: {fileID: 8300000, guid: bc8a90662983c954faf63e4e2b20e6dc, type: 3}
   maceCrashSound: {fileID: 8300000, guid: 01450bddc9094724599275fee2e2f74d, type: 3}
@@ -195,6 +195,7 @@ MonoBehaviour:
   respawnSound: {fileID: 8300000, guid: 9d4fb855d7948604ab102a4baaa93d20, type: 3}
   switchLevelSound: {fileID: 8300000, guid: 91dbe1fa30d8d9340beb4b717f0b42bb, type: 3}
   secretEntranceSound: {fileID: 8300000, guid: 1ee053960432f50469e8fc4c385d40b8, type: 3}
+  hintSound: {fileID: 8300000, guid: 514c9fc34773ad54a99e2bcad328013b, type: 3}
   musicDefaultGroup: {fileID: -1793385470781041295, guid: bd895b5153b2e204ca4b0ca8a56c023b, type: 2}
   musicTransitionGroup: {fileID: -1707065884832712539, guid: bd895b5153b2e204ca4b0ca8a56c023b, type: 2}
   sfxDefaultGroup: {fileID: -8022069700662271292, guid: bd895b5153b2e204ca4b0ca8a56c023b, type: 2}

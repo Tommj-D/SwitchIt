@@ -90,4 +90,13 @@ public class Spike_Fall : MonoBehaviour
             gameObject.SetActive(false);
         }
     }
+
+    private void OnDisable()
+    {
+        // Se la spina è già partita in caduta o shaking, distruggila
+        if (activated || isFalling || isShaking)
+        {
+            Destroy(gameObject);
+        }
+    }
 }
