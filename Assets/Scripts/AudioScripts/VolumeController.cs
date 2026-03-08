@@ -28,6 +28,7 @@ public class VolumeController : MonoBehaviour
     private const string MUSIC_TRANSITION_HP = "MusicTransitionHightPass";
     private const string SFX_TRANSITION_LP = "SFXTransitionLowpass";
 
+    private const string MUSIC_FANTASY_VOL = "MusicFantasyVol";
     private const string SFX_FANTASY_LP = "SFXFantasyLowpass";
 
     // Tiene traccia delle coroutine attive per ogni parametro
@@ -80,6 +81,7 @@ public class VolumeController : MonoBehaviour
         SaveDefaultParam(MUSIC_TRANSITION_HP);
         SaveDefaultParam(SFX_TRANSITION_LP);
         SaveDefaultParam(SFX_FANTASY_LP);
+        SaveCustomDefaultParam(MUSIC_FANTASY_VOL, 0f);
     }
 
     // Salva il valore iniziale di un parametro del mixer
@@ -88,6 +90,11 @@ public class VolumeController : MonoBehaviour
     {
         if (masterMixer.GetFloat(param, out float value))
             defaultParams[param] = value;
+    }
+
+    public void SaveCustomDefaultParam(string param, float value)
+    {
+        defaultParams[param] = value;
     }
 
     void Update()
@@ -319,7 +326,7 @@ public class VolumeController : MonoBehaviour
         }
     }
 
-    public void resetMixerParam(AudioMixer mixer, string paramName, float duration, float delay = 0f)
+    public void ResetMixerParam(AudioMixer mixer, string paramName, float duration, float delay = 0f)
     {
         if (mixer == null) return;
 

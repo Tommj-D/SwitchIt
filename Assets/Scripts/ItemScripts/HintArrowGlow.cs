@@ -28,11 +28,13 @@ public class HintArrowGlow_Tilemap : MonoBehaviour
         if(!actived)
         {   
             VolumeController.Instance.FadeMixerParam(VolumeController.Instance.masterMixer, "SFXFantasyLowpass", 22000f, 0f); // rimuove lowpass fantasy se presente
+            VolumeController.Instance.DuckMixer(VolumeController.Instance.masterMixer, "MusicFantasyVol", 3f, 0.1f);
             actived = true;
             if (AudioManager.Instance != null)
                 AudioManager.Instance.PlaySFX(AudioManager.Instance.hintSound);
 
-            VolumeController.Instance.resetMixerParam(VolumeController.Instance.masterMixer, "SFXFantasyLowpass", 1f, 2f);
+            VolumeController.Instance.ResetMixerParam(VolumeController.Instance.masterMixer, "SFXFantasyLowpass", 1f, 2f);
+            VolumeController.Instance.ResetMixerParam(VolumeController.Instance.masterMixer, "MusicFantasyVol", 1f, 2f);
         }
 
         TilemapRenderer tr = GetComponent<TilemapRenderer>();
