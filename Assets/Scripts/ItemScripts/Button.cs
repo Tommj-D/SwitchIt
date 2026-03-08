@@ -3,14 +3,21 @@ using UnityEngine;
 public class Button : MonoBehaviour
 {
     private bool activated = false;
+    private Animator animator;
+
     [Header("Oggetti da NASCONDERE")]
     public GameObject[] oggettiDaNascondere;
 
     [Header("Oggetti da MOSTRARE")]
     public GameObject[] oggettiDaMostrare;
 
+    public bool isAnimated = true;
+
     private void Start()
     {
+        if (isAnimated)
+            animator = GetComponentInChildren<Animator>();
+
         // All'inizio disattiva tutti gli oggetti da mostrare
         foreach (GameObject obj in oggettiDaMostrare)
         {
@@ -24,6 +31,12 @@ public class Button : MonoBehaviour
         if (!other.CompareTag("Player")) return;
 
         activated = true;
+
+        if(animator != null && isAnimated)
+        {
+            animator.SetTrigger("Press");
+            AudioManager.Instance.sfxSource.PlayOneShot(AudioManager.Instance.buttonSound);
+        }
 
         // Spegne tutti gli oggetti nella lista "Nascondere"
         foreach (GameObject obj in oggettiDaNascondere)

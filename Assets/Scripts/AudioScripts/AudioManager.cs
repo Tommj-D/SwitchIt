@@ -12,11 +12,13 @@ public class AudioManager : MonoBehaviour
 
     [Header("Clip Audio")]
     public AudioClip backgroundMusic;
+
     [Header("Item")]
     public AudioClip coinSound;
     public AudioClip chestSound;
     public AudioClip keySound;
     public AudioClip chestLockedSound;
+    public AudioClip buttonSound;
 
     [Header("Enemies")]
     public AudioClip slimeDeathSound; 
