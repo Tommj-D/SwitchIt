@@ -1,5 +1,6 @@
-using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
 public class Chest : MonoBehaviour
 {
@@ -25,7 +26,7 @@ public class Chest : MonoBehaviour
     public float visibleDuration = 1.5f; // tempo prima che scompaia 
     public float finalFadeDuration = 0.5f; // quanto dura il fade-out
 
-    
+    private List<GameObject> spawnedDrops = new List<GameObject>();
 
     void Start()
     {
@@ -42,11 +43,13 @@ public class Chest : MonoBehaviour
             {
                 if (inv != null && inv.HasKey())
                 {
+                    AudioManager.Instance.PlaySFX(AudioManager.Instance.keySound);
                     OpenChest(inv);
                     inv.UseKey();
                 }
                 else
-                {
+                {   
+                    AudioManager.Instance.PlaySFX(AudioManager.Instance.chestLockedSound);
                     StartCoroutine(ShakeChest());
                 }
             }
@@ -77,6 +80,7 @@ public class Chest : MonoBehaviour
         {
             // crea l’oggetto
             GameObject drop = Instantiate(dropPrefab, transform.position, Quaternion.identity);
+            spawnedDrops.Add(drop);
 
             Vector3 start = transform.position;
             Vector3 end = start + Vector3.up * finalPosition;
@@ -149,6 +153,7 @@ public class Chest : MonoBehaviour
                 }
             }
 
+            spawnedDrops.Remove(drop);
             Destroy(drop);
 
             // Effetto visivo nella posizione finale della moneta
@@ -172,8 +177,6 @@ public class Chest : MonoBehaviour
     }
     
 
-
-
     private IEnumerator ShakeChest(float duration = 0.15f, float magnitude = 0.05f)
     {
         Vector3 originalPos = transform.localPosition;
@@ -191,5 +194,18 @@ public class Chest : MonoBehaviour
         }
 
         transform.localPosition = originalPos;
+    }
+
+    private void OnDisable()
+    {
+        StopAllCoroutines();
+
+        foreach (GameObject drop in spawnedDrops)
+        {
+            if (drop != null)
+                Destroy(drop);
+        }
+
+        spawnedDrops.Clear();
     }
 }
