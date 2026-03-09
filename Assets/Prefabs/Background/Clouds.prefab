@@ -1688,10 +1688,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5dfeac3e0ab52ba4ea162817f63c1347, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CloudsManager
-  moveSpeed: 1.6
-  baseFloatAmount: 0.7
-  floatAmountVariation: 0.4
-  baseFloatSpeed: 1.3
+  moveSpeed: 1.3
+  baseFloatAmount: 0.6
+  floatAmountVariation: 0.3
+  baseFloatSpeed: 1.2
   floatSpeedVariation: 0.3
   minSpacing: 76
   maxSpacing: 84
@@ -4518,7 +4518,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5dfeac3e0ab52ba4ea162817f63c1347, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CloudsManager
-  moveSpeed: 1.5
+  moveSpeed: 1.2
   baseFloatAmount: 0.6
   floatAmountVariation: 0.3
   baseFloatSpeed: 1.2
@@ -5932,10 +5932,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5dfeac3e0ab52ba4ea162817f63c1347, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CloudsManager
-  moveSpeed: 2
+  moveSpeed: 1.4
   baseFloatAmount: 0.7
   floatAmountVariation: 0.4
-  baseFloatSpeed: 1.5
+  baseFloatSpeed: 1.3
   floatSpeedVariation: 0.3
   minSpacing: 10
   maxSpacing: 20
