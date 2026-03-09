@@ -18,13 +18,13 @@ public class Button : MonoBehaviour
         if (isAnimated)
             animator = GetComponentInChildren<Animator>();
 
-        // All'inizio disattiva tutti gli oggetti da mostrare
         foreach (GameObject obj in oggettiDaMostrare)
         {
             if (obj != null)
                 obj.SetActive(false);
         }
     }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (activated) return;
@@ -32,19 +32,25 @@ public class Button : MonoBehaviour
 
         activated = true;
 
-        if(animator != null && isAnimated)
+        if (animator != null && isAnimated)
         {
             animator.SetTrigger("Press");
             AudioManager.Instance.sfxSource.PlayOneShot(AudioManager.Instance.buttonSound);
         }
+        else
+        {
+            AttivaOggetti();
+        }
+    }
 
-        // Spegne tutti gli oggetti nella lista "Nascondere"
+    // Questa funzione verrà chiamata dall'animazione
+    public void AttivaOggetti()
+    {
         foreach (GameObject obj in oggettiDaNascondere)
         {
             if (obj != null) obj.SetActive(false);
         }
 
-        // Accende tutti gli oggetti nella lista "Mostrare"
         foreach (GameObject obj in oggettiDaMostrare)
         {
             if (obj != null) obj.SetActive(true);
