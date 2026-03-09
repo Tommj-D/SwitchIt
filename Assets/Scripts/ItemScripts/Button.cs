@@ -8,8 +8,7 @@ public class Button : MonoBehaviour
     private Animator animator;
 
     [Header("Effetti")]
-    public ParticleSystem particellePolvere; // <-- NUOVO: Qui ci metterai la tua polvere
-
+    public ParticleSystem particellePolvere; 
     [Header("Impostazioni Dissolvenza")]
     public float durataDissolvenza = 1.0f;
 
@@ -23,7 +22,7 @@ public class Button : MonoBehaviour
 
     private void Start()
     {
-        if (isAnimated)
+        if (isAnimated) 
             animator = GetComponentInChildren<Animator>();
 
         foreach (GameObject obj in oggettiDaMostrare)
@@ -40,8 +39,6 @@ public class Button : MonoBehaviour
 
         activated = true;
 
-        // --- ATTIVA LA POLVERE QUI ---
-        // Se hai inserito il particle system nell'Inspector, fallo partire!
         if (particellePolvere != null)
         {
             particellePolvere.Play();
