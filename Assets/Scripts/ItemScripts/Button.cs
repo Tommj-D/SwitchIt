@@ -1,9 +1,17 @@
+using System.Collections;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class Button : MonoBehaviour
 {
     private bool activated = false;
     private Animator animator;
+
+    [Header("Effetti")]
+    public ParticleSystem particellePolvere; // <-- NUOVO: Qui ci metterai la tua polvere
+
+    [Header("Impostazioni Dissolvenza")]
+    public float durataDissolvenza = 1.0f;
 
     [Header("Oggetti da NASCONDERE")]
     public GameObject[] oggettiDaNascondere;
@@ -32,10 +40,19 @@ public class Button : MonoBehaviour
 
         activated = true;
 
+        // --- ATTIVA LA POLVERE QUI ---
+        // Se hai inserito il particle system nell'Inspector, fallo partire!
+        if (particellePolvere != null)
+        {
+            particellePolvere.Play();
+        }
+
         if (animator != null && isAnimated)
         {
             animator.SetTrigger("Press");
-            AudioManager.Instance.sfxSource.PlayOneShot(AudioManager.Instance.buttonSound);
+            
+            if (AudioManager.Instance != null && AudioManager.Instance.sfxSource != null)
+                AudioManager.Instance.sfxSource.PlayOneShot(AudioManager.Instance.buttonSound);
         }
         else
         {
@@ -43,17 +60,70 @@ public class Button : MonoBehaviour
         }
     }
 
-    // Questa funzione verrà chiamata dall'animazione
     public void AttivaOggetti()
     {
         foreach (GameObject obj in oggettiDaNascondere)
         {
-            if (obj != null) obj.SetActive(false);
+            if (obj != null) 
+            {
+                StartCoroutine(DissolviENascondi(obj));
+            }
         }
 
         foreach (GameObject obj in oggettiDaMostrare)
         {
             if (obj != null) obj.SetActive(true);
         }
+    }
+
+    private IEnumerator DissolviENascondi(GameObject obj)
+    {
+        Collider2D[] colliders = obj.GetComponentsInChildren<Collider2D>();
+        foreach (Collider2D col in colliders)
+        {
+            col.enabled = false;
+        }
+
+        Tilemap tilemap = obj.GetComponent<Tilemap>();
+        SpriteRenderer spriteRenderer = obj.GetComponent<SpriteRenderer>();
+
+        float timer = 0f;
+
+        if (tilemap != null)
+        {
+            Color colore = tilemap.color;
+            float alphaIniziale = colore.a;
+
+            while (timer < durataDissolvenza)
+            {
+                timer += Time.deltaTime;
+                colore.a = Mathf.Lerp(alphaIniziale, 0f, timer / durataDissolvenza);
+                tilemap.color = colore;
+                yield return null;
+            }
+            colore.a = 0f;
+            tilemap.color = colore;
+        }
+        else if (spriteRenderer != null)
+        {
+            Color colore = spriteRenderer.color;
+            float alphaIniziale = colore.a;
+
+            while (timer < durataDissolvenza)
+            {
+                timer += Time.deltaTime;
+                colore.a = Mathf.Lerp(alphaIniziale, 0f, timer / durataDissolvenza);
+                spriteRenderer.color = colore;
+                yield return null;
+            }
+            colore.a = 0f;
+            spriteRenderer.color = colore;
+        }
+        else
+        {
+            yield return new WaitForSeconds(durataDissolvenza);
+        }
+
+        obj.SetActive(false);
     }
 }
