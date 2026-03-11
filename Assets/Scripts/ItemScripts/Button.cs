@@ -4,6 +4,8 @@ using UnityEngine.Tilemaps;
 
 public class Button : MonoBehaviour
 {
+    public ButtonPuzzleController puzzleController;
+
     private bool activated = false;
     private Animator animator;
 
@@ -38,6 +40,11 @@ public class Button : MonoBehaviour
         if (!other.CompareTag("Player")) return;
 
         activated = true;
+
+        if (puzzleController != null)
+        {
+            puzzleController.ButtonPressed(transform);
+        }
 
         if (particellePolvere != null)
         {
