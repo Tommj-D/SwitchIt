@@ -8,7 +8,7 @@ public class ButtonPuzzleController : MonoBehaviour
     [Header("Cerchi da illuminare")]
     public SpriteRenderer[] circles;
 
-    [Header("Muro da dissolvere")]
+    [Header("Oggetto da dissolvere")]
     public GameObject wall;
 
     [Header("Particelle")]
@@ -22,27 +22,23 @@ public class ButtonPuzzleController : MonoBehaviour
 
         Transform target = circles[currentPressed].transform;
 
-        SpawnParticles(buttonPos, target);
-
-        IlluminateCircle(currentPressed);
+        SpawnParticles(buttonPos, target, currentPressed);
 
         currentPressed++;
+    }
 
-        if (currentPressed >= circles.Length)
+    public void IlluminateCircle(int index)
+    {
+        if (circles[index] != null)
+            circles[index].color = Color.white;
+
+        if (index == circles.Length - 1)
         {
             StartCoroutine(DissolveWall());
         }
     }
 
-    void IlluminateCircle(int index)
-    {
-        if (circles[index] != null)
-        {
-            circles[index].color = Color.white;
-        }
-    }
-
-    IEnumerator DissolveWall()
+    private IEnumerator DissolveWall()
     {
         SpriteRenderer sr = wall.GetComponent<SpriteRenderer>();
 
@@ -61,12 +57,14 @@ public class ButtonPuzzleController : MonoBehaviour
         wall.SetActive(false);
     }
 
-    void SpawnParticles(Transform start, Transform target)
+    private void SpawnParticles(Transform start, Transform target, int index)
     {
         ParticleSystem ps = Instantiate(particlePrefab, start.position, Quaternion.identity);
 
         ParticlesToTarget mover = ps.GetComponent<ParticlesToTarget>();
         mover.target = target;
+        mover.controller = this;
+        mover.circleIndex = index;
 
         ps.Play();
     }
