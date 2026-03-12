@@ -9,6 +9,11 @@ public class ParticlesToTarget : MonoBehaviour
     public ButtonPuzzleController controller;
     public int circleIndex;
 
+    [Header("Colore Target")]
+    public Color targetColor = Color.yellow;
+
+    private SpriteRenderer targetSprite;
+
     private ParticleSystem ps;
     private ParticleSystem.Particle[] particles;
 
@@ -17,6 +22,9 @@ public class ParticlesToTarget : MonoBehaviour
     void Start()
     {
         ps = GetComponent<ParticleSystem>();
+
+        if (target != null)
+            targetSprite = target.GetComponentInChildren<SpriteRenderer>();
     }
 
     void LateUpdate()
@@ -36,6 +44,10 @@ public class ParticlesToTarget : MonoBehaviour
                 if (!activated)
                 {
                     activated = true;
+
+                    if (targetSprite != null)
+                        targetSprite.color = targetColor;
+
                     controller.IlluminateCircle(circleIndex);
                 }
             }
