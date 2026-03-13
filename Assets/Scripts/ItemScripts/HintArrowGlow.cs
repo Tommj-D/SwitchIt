@@ -16,12 +16,13 @@ public class HintArrowGlow_Tilemap : MonoBehaviour
     public float floatAmplitude = 0.05f; // quanto si muove su/giu
     public float floatSpeed = 2f;        // velocita oscillazione
 
-    int hitAmount = Shader.PropertyToID("_HitEffectAmount");
-    int hitColor = Shader.PropertyToID("_HitEffectColor");
+    private int hitAmount = Shader.PropertyToID("_HitEffectAmount");
+    private int hitColor = Shader.PropertyToID("_HitEffectColor");
 
-    Material mat;
-    Vector3 startPos;
+    private Material mat;
+    private Vector3 startPos;
     private bool actived = false; // variabile per tracciare se il suono è già stato riprodotto
+
     private void OnEnable()
     {   
         //Faccio partire il suono solo la prima volta che appare, non ad ogni frame in cui è visibile

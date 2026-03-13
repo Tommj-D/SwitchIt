@@ -16,8 +16,13 @@ public class ButtonPuzzleController : MonoBehaviour
 
     [Header("Colori")]
     public Color glowColor = Color.yellow;
+    [ColorUsage(true, true)]
+    public Color circleColor = Color.yellow;
 
     public float dissolveDuration = 1f;
+
+    private Material mat;
+    int hitColor = Shader.PropertyToID("_HitEffectColor");
 
     public void ButtonPressed(Transform buttonPos)
     {
@@ -34,10 +39,19 @@ public class ButtonPuzzleController : MonoBehaviour
     {
         if (circles[index] != null)
         {
-            //circles[index].color = Color.white;
-
             SpriteRenderer glow = circles[index].transform.GetChild(0).GetComponent<SpriteRenderer>();
             glow.color = glowColor;
+
+            mat = new Material(circles[index].material);
+            circles[index].material = mat;
+            mat.SetColor(hitColor, circleColor);
+
+            
+            Animator anim = circles[index].GetComponent<Animator>();
+            if (anim != null)
+            {
+                anim.SetTrigger("Active");
+            }
         }
 
         if (index == circles.Length - 1)
