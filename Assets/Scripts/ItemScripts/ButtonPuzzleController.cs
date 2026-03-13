@@ -14,6 +14,9 @@ public class ButtonPuzzleController : MonoBehaviour
     [Header("Particelle")]
     public ParticleSystem particlePrefab;
 
+    [Header("Colori")]
+    public Color glowColor = Color.yellow;
+
     public float dissolveDuration = 1f;
 
     public void ButtonPressed(Transform buttonPos)
@@ -30,7 +33,12 @@ public class ButtonPuzzleController : MonoBehaviour
     public void IlluminateCircle(int index)
     {
         if (circles[index] != null)
-            circles[index].color = Color.white;
+        {
+            //circles[index].color = Color.white;
+
+            SpriteRenderer glow = circles[index].transform.GetChild(0).GetComponent<SpriteRenderer>();
+            glow.color = glowColor;
+        }
 
         if (index == circles.Length - 1)
         {
