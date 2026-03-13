@@ -9,6 +9,12 @@ public class Dissolve : MonoBehaviour
     [SerializeField] private bool useVertical = true;
     [SerializeField] private bool destroyAfterDissolve = false;
 
+    [Header("Shader Settings")]
+    [SerializeField] private float outlineThickness = 0.1f;
+    [SerializeField] private float dissolveScale = 30f;
+    [ColorUsage(true, true)] [SerializeField] private Color outlineColor = Color.white;
+    [SerializeField] private float spiralStrength = 5f;
+    
     private SpriteRenderer[] spriteRenderers;
     private TilemapRenderer tilemapRenderer;
 
@@ -16,6 +22,11 @@ public class Dissolve : MonoBehaviour
 
     private int dissolveAmount = Shader.PropertyToID("_DissolveAmount");
     private int verticalDissolve = Shader.PropertyToID("_VerticalDissolve");
+
+    private int outlineThicknessID = Shader.PropertyToID("_OutlineThickness");
+    private int outlineColorID = Shader.PropertyToID("_OutlineColor");
+    private int spiralStrengthID = Shader.PropertyToID("_SpiralStrength");
+    private int dissolveScaleID = Shader.PropertyToID("_DissolveScale");
 
     private void Awake()
     {
@@ -42,7 +53,19 @@ public class Dissolve : MonoBehaviour
             tilemapRenderer.material = materials[index];
         }
 
+        ApplyShaderSettings();
         SetDissolve(0f);
+    }
+
+    private void ApplyShaderSettings()
+    {
+        foreach (Material mat in materials)
+        {
+            mat.SetFloat(outlineThicknessID, outlineThickness);
+            mat.SetColor(outlineColorID, outlineColor);
+            mat.SetFloat(spiralStrengthID, spiralStrength);
+            mat.SetFloat(dissolveScaleID, dissolveScale);
+        }
     }
 
     public void DissolveObject()
