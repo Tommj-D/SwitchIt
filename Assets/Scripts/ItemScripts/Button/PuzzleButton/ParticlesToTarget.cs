@@ -5,12 +5,11 @@ public class ParticlesToTarget : MonoBehaviour
     private Transform target;
     private ButtonPuzzleController controller;
     private int circleIndex;
+
     private float speed;
-    private float arriveDistance = 0.2f;
+    private float arriveDistance;
 
     private ParticleSystem ps;
-    private ParticleSystem.Particle[] particles;
-
     private bool activated = false;
 
     // Inizializzazione dal controller
@@ -30,22 +29,31 @@ public class ParticlesToTarget : MonoBehaviour
 
     void LateUpdate()
     {
-        if (ps == null || ps.particleCount == 0 || target == null) return;
+        if (ps == null || target == null)
+            return;
 
-        if (particles == null || particles.Length < ps.particleCount)
-            particles = new ParticleSystem.Particle[ps.particleCount];
+        int count = ps.particleCount;
+        if (count == 0)
+            return;
 
-        int count = ps.GetParticles(particles);
+        ParticleSystem.Particle[] particles = new ParticleSystem.Particle[count];
+        ps.GetParticles(particles);
 
         for (int i = 0; i < count; i++)
         {
             Vector3 dir = target.position - particles[i].position;
+
+            // muove la particella verso il target
             particles[i].velocity = dir.normalized * speed;
 
-            if (dir.magnitude < arriveDistance && !activated)
+            // se una particella arriva al target attiva il cerchio
+            if (!activated && dir.magnitude < arriveDistance)
             {
                 activated = true;
                 controller?.ActivateCircle(circleIndex);
+
+                // distrugge il particle system poco dopo
+                Destroy(gameObject, 0.2f);
             }
         }
 

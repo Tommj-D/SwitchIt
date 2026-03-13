@@ -23,13 +23,16 @@ public class ButtonPuzzleController : MonoBehaviour
     public Color ext_glowColor = Color.yellow;
 
     private bool[] circleActivated;
+    private bool[] circleReserved;
     private bool hasCircles;
 
     private void Start()
     {
         hasCircles = circles != null && circles.Length > 0;
-        if (hasCircles)
+        if (hasCircles) {
             circleActivated = new bool[circles.Length];
+            circleReserved = new bool[circles.Length];
+        }
 
         // Assicurati che gli oggetti da mostrare siano inizialmente invisibili
         foreach (GameObject obj in objectsToShow)
@@ -44,8 +47,9 @@ public class ButtonPuzzleController : MonoBehaviour
             // Solo il primo cerchio non attivo riceve particelle
             for (int i = 0; i < circles.Length; i++)
             {
-                if (!circleActivated[i])
+                if (!circleActivated[i] && !circleReserved[i])
                 {
+                    circleReserved[i] = true; // prenota il cerchio subito
                     SpawnParticles(buttonPos, circles[i].transform, i);
                     break;
                 }
@@ -88,6 +92,7 @@ public class ButtonPuzzleController : MonoBehaviour
         if (!hasCircles || circleActivated[index]) return;
 
         circleActivated[index] = true;
+        circleReserved[index] = false;
 
         // Illumina il glow interno (figlio)
         SpriteRenderer glow = circles[index].transform.GetChild(0).GetComponent<SpriteRenderer>();
