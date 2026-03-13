@@ -4908,7 +4908,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ParticlesToTarget
   target: {fileID: 0}
-  speed: 5
+  speed: 109.32
   arriveDistance: 0.2
   controller: {fileID: 0}
   circleIndex: 0

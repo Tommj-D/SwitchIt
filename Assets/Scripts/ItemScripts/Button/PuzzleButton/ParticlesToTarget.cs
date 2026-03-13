@@ -2,17 +2,26 @@ using UnityEngine;
 
 public class ParticlesToTarget : MonoBehaviour
 {
-    public Transform target;
-    public float speed = 5f;
-    public float arriveDistance = 0.2f;
-
-    public ButtonPuzzleController controller;
-    public int circleIndex;
+    private Transform target;
+    private ButtonPuzzleController controller;
+    private int circleIndex;
+    private float speed;
+    private float arriveDistance = 0.2f;
 
     private ParticleSystem ps;
     private ParticleSystem.Particle[] particles;
 
     private bool activated = false;
+
+    // Inizializzazione dal controller
+    public void Init(Transform target, ButtonPuzzleController controller, int circleIndex, float speed, float arriveDistance = 0.2f)
+    {
+        this.target = target;
+        this.controller = controller;
+        this.circleIndex = circleIndex;
+        this.speed = speed;
+        this.arriveDistance = arriveDistance;
+    }
 
     void Start()
     {
@@ -21,9 +30,11 @@ public class ParticlesToTarget : MonoBehaviour
 
     void LateUpdate()
     {
-        if (ps == null || ps.particleCount == 0) return;
+        if (ps == null || ps.particleCount == 0 || target == null) return;
 
-        particles = new ParticleSystem.Particle[ps.particleCount];
+        if (particles == null || particles.Length < ps.particleCount)
+            particles = new ParticleSystem.Particle[ps.particleCount];
+
         int count = ps.GetParticles(particles);
 
         for (int i = 0; i < count; i++)
@@ -31,17 +42,10 @@ public class ParticlesToTarget : MonoBehaviour
             Vector3 dir = target.position - particles[i].position;
             particles[i].velocity = dir.normalized * speed;
 
-            // Se la particella è arrivata
-            if (dir.magnitude < arriveDistance)
+            if (dir.magnitude < arriveDistance && !activated)
             {
-                particles[i].remainingLifetime = 0f;
-
-                // Notifica il controller **una sola volta**
-                if (!activated)
-                {
-                    activated = true;
-                    controller?.ActivateCircle(circleIndex); // usa il nuovo metodo
-                }
+                activated = true;
+                controller?.ActivateCircle(circleIndex);
             }
         }
 

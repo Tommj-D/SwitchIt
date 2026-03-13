@@ -13,8 +13,9 @@ public class ButtonPuzzleController : MonoBehaviour
     [Header("Oggetti da mostrare")]
     public GameObject[] objectsToShow;
 
-    [Header("Prefab particelle")]
+    [Header("Particelle")]
     public ParticleSystem particlePrefab;
+    public float particleSpeed = 5f;
 
     [Header("Colori")]
     public Color glowColor = Color.yellow;
@@ -136,14 +137,16 @@ public class ButtonPuzzleController : MonoBehaviour
     {
         if (!hasCircles) return;
 
+        // Istanzia prefab particelle
         ParticleSystem ps = Instantiate(particlePrefab, start.position, Quaternion.identity);
+
+        // Inizializza il prefab con tutti i dati necessari
         ParticlesToTarget mover = ps.GetComponent<ParticlesToTarget>();
         if (mover != null)
         {
-            mover.target = target;
-            mover.controller = this;
-            mover.circleIndex = circleIndex;
+            mover.Init(target, this, circleIndex, particleSpeed); // particleSpeed è ora un campo del controller
         }
+
         ps.Play();
     }
 }
