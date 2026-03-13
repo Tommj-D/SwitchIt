@@ -5033,6 +5033,7 @@ Transform:
   m_Children:
   - {fileID: 4442118811313435152}
   - {fileID: 7154555438962183758}
+  - {fileID: 4913156190528081754}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &1017916690352116400
@@ -5093,11 +5094,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3285379c633a4bc499e5edafea2e4e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Button
+  puzzleController: {fileID: 0}
   particellePolvere: {fileID: 4276158590037913709}
-  durataDissolvenza: 1
-  oggettiDaNascondere:
-  - {fileID: 0}
-  oggettiDaMostrare: []
   isAnimated: 1
 --- !u!1 &2621601246348145383
 GameObject:
@@ -5233,7 +5231,6 @@ GameObject:
   - component: {fileID: 3944209329497880493}
   - component: {fileID: 6290224041488704937}
   - component: {fileID: 2146737360859451274}
-  - component: {fileID: 1094142017966427606}
   m_Layer: 0
   m_Name: Magical_Rock
   m_TagString: Untagged
@@ -5348,18 +5345,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &1094142017966427606
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5445586337798888188}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2144b7eb96d5c4714ae583dff87c94cc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ButtonAnimationRelay
 --- !u!1 &6005101406084915117
 GameObject:
   m_ObjectHideFlags: 0
@@ -10517,4 +10502,66 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 435974981080816606, guid: a485be827e5808a4a844f8c2c3793f24, type: 3}
   m_PrefabInstance: {fileID: 3918166465157469945}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &3927761663821397926
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 8358197486107445474}
+    m_Modifications:
+    - target: {fileID: 6894045136040199870, guid: d9bf9d42e4fae4bb587df18b17e1b70c, type: 3}
+      propertyPath: m_Name
+      value: MagicButtonParticles (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8263331167563460860, guid: d9bf9d42e4fae4bb587df18b17e1b70c, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8263331167563460860, guid: d9bf9d42e4fae4bb587df18b17e1b70c, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8263331167563460860, guid: d9bf9d42e4fae4bb587df18b17e1b70c, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8263331167563460860, guid: d9bf9d42e4fae4bb587df18b17e1b70c, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8263331167563460860, guid: d9bf9d42e4fae4bb587df18b17e1b70c, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8263331167563460860, guid: d9bf9d42e4fae4bb587df18b17e1b70c, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8263331167563460860, guid: d9bf9d42e4fae4bb587df18b17e1b70c, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8263331167563460860, guid: d9bf9d42e4fae4bb587df18b17e1b70c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8263331167563460860, guid: d9bf9d42e4fae4bb587df18b17e1b70c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8263331167563460860, guid: d9bf9d42e4fae4bb587df18b17e1b70c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d9bf9d42e4fae4bb587df18b17e1b70c, type: 3}
+--- !u!4 &4913156190528081754 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8263331167563460860, guid: d9bf9d42e4fae4bb587df18b17e1b70c, type: 3}
+  m_PrefabInstance: {fileID: 3927761663821397926}
   m_PrefabAsset: {fileID: 0}

@@ -1,109 +1,132 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+
 public class ButtonPuzzleController : MonoBehaviour
 {
-    private int currentPressed = 0;
-
     [Header("Cerchi da illuminare")]
     public SpriteRenderer[] circles;
 
-    [Header("Oggetto da dissolvere")]
-    public GameObject wall;
+    [Header("Oggetti da nascondere")]
+    public GameObject[] objectsToHide;
 
-    [Header("Particelle")]
+    [Header("Oggetti da mostrare")]
+    public GameObject[] objectsToShow;
+
+    [Header("Prefab particelle")]
     public ParticleSystem particlePrefab;
 
     [Header("Colori")]
     public Color glowColor = Color.yellow;
-    [ColorUsage(true, true)]
-    public Color circleColor = Color.yellow;
 
-    public float dissolveDuration = 1f;
+    private bool[] circleActivated;
 
-    private Material mat;
-    int hitColor = Shader.PropertyToID("_HitEffectColor");
+    private void Start()
+    {
+        circleActivated = new bool[circles.Length];
 
+        // Assicurati che gli oggetti da mostrare siano inizialmente invisibili
+        foreach (GameObject obj in objectsToShow)
+            if (obj != null) obj.SetActive(false);
+    }
+
+    // Questo viene chiamato dal pulsante
     public void ButtonPressed(Transform buttonPos)
     {
-        if (currentPressed >= circles.Length) return;
-
-        Transform target = circles[currentPressed].transform;
-
-        SpawnParticles(buttonPos, target, currentPressed);
-
-        currentPressed++;
+        for (int i = 0; i < circles.Length; i++)
+        {
+            if (!circleActivated[i])
+            {
+                // Non attivare subito il cerchio, solo spawn particelle
+                SpawnParticles(buttonPos, circles[i].transform, i);
+                break;
+            }
+        }
     }
 
-    public void IlluminateCircle(int index)
+    // Questo viene chiamato da ParticlesToTarget quando le particelle arrivano
+    public void ActivateCircle(int index)
     {
-        if (circles[index] != null)
-        {
-            SpriteRenderer glow = circles[index].transform.GetChild(0).GetComponent<SpriteRenderer>();
+        if (circleActivated[index]) return;
+
+        circleActivated[index] = true;
+
+        // Illumina il glow del cerchio
+        SpriteRenderer glow = circles[index].transform.GetChild(0).GetComponent<SpriteRenderer>();
+        if (glow != null)
             glow.color = glowColor;
 
-            mat = new Material(circles[index].material);
-            circles[index].material = mat;
-            mat.SetColor(hitColor, circleColor);
+        // Se ha Animator, attiva trigger
+        Animator anim = circles[index].GetComponent<Animator>();
+        if (anim != null)
+            anim.SetTrigger("Active");
 
-            
-            Animator anim = circles[index].GetComponent<Animator>();
-            if (anim != null)
-            {
-                anim.SetTrigger("Active");
-            }
-        }
-
-        if (index == circles.Length - 1)
+        // Se tutti i cerchi sono attivi, attiva/disattiva oggetti
+        if (AllCirclesActive())
         {
-            StartCoroutine(DissolveWall());
+            StartCoroutine(HideAndShowObjects());
         }
     }
 
-    private IEnumerator DissolveWall()
+    private bool AllCirclesActive()
     {
-        SpriteRenderer sr = wall.GetComponent<SpriteRenderer>();
-        Tilemap tilemap = wall.GetComponent<Tilemap>();
+        foreach (bool b in circleActivated)
+            if (!b) return false;
+        return true;
+    }
 
+    private IEnumerator HideAndShowObjects()
+    {
+        float duration = 1f;
         float timer = 0f;
 
-        if (sr != null)
-        {
-            Color c = sr.color;
+        SpriteRenderer[] srs = new SpriteRenderer[objectsToHide.Length];
+        Tilemap[] tms = new Tilemap[objectsToHide.Length];
 
-            while (timer < dissolveDuration)
-            {
-                timer += Time.deltaTime;
-                c.a = Mathf.Lerp(1f, 0f, timer / dissolveDuration);
-                sr.color = c;
-                yield return null;
-            }
-        }
-        else if (tilemap != null)
+        for (int i = 0; i < objectsToHide.Length; i++)
         {
-            Color c = tilemap.color;
-
-            while (timer < dissolveDuration)
+            if (objectsToHide[i] != null)
             {
-                timer += Time.deltaTime;
-                c.a = Mathf.Lerp(1f, 0f, timer / dissolveDuration);
-                tilemap.color = c;
-                yield return null;
+                srs[i] = objectsToHide[i].GetComponent<SpriteRenderer>();
+                tms[i] = objectsToHide[i].GetComponent<Tilemap>();
             }
         }
 
-        wall.SetActive(false);
+        while (timer < duration)
+        {
+            timer += Time.deltaTime;
+            float alpha = Mathf.Lerp(1f, 0f, timer / duration);
+
+            for (int i = 0; i < objectsToHide.Length; i++)
+            {
+                if (srs[i] != null)
+                {
+                    Color c = srs[i].color;
+                    c.a = alpha;
+                    srs[i].color = c;
+                }
+            }
+
+            yield return null;
+        }
+
+        foreach (GameObject obj in objectsToHide)
+            if (obj != null) obj.SetActive(false);
+
+        foreach (GameObject obj in objectsToShow)
+            if (obj != null) obj.SetActive(true);
     }
 
-    private void SpawnParticles(Transform start, Transform target, int index)
+    private void SpawnParticles(Transform start, Transform target, int circleIndex)
     {
         ParticleSystem ps = Instantiate(particlePrefab, start.position, Quaternion.identity);
-
         ParticlesToTarget mover = ps.GetComponent<ParticlesToTarget>();
-        mover.target = target;
-        mover.controller = this;
-        mover.circleIndex = index;
-
+        if (mover != null)
+        {
+            mover.target = target;
+            mover.controller = this;
+            mover.circleIndex = circleIndex;
+        }
         ps.Play();
     }
 }

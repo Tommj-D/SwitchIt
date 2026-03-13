@@ -21,23 +21,26 @@ public class ParticlesToTarget : MonoBehaviour
 
     void LateUpdate()
     {
-        int count = ps.GetParticles(particles = new ParticleSystem.Particle[ps.particleCount]);
+        if (ps == null || ps.particleCount == 0) return;
+
+        particles = new ParticleSystem.Particle[ps.particleCount];
+        int count = ps.GetParticles(particles);
 
         for (int i = 0; i < count; i++)
         {
             Vector3 dir = target.position - particles[i].position;
-
             particles[i].velocity = dir.normalized * speed;
 
+            // Se la particella è arrivata
             if (dir.magnitude < arriveDistance)
             {
                 particles[i].remainingLifetime = 0f;
 
+                // Notifica il controller **una sola volta**
                 if (!activated)
                 {
                     activated = true;
-
-                    controller.IlluminateCircle(circleIndex);
+                    controller?.ActivateCircle(circleIndex); // usa il nuovo metodo
                 }
             }
         }
