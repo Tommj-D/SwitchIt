@@ -18,7 +18,9 @@ public class ButtonPuzzleController : MonoBehaviour
     public float particleSpeed = 5f;
 
     [Header("Colori")]
-    public Color glowColor = Color.yellow;
+    public Color int_glowColor = Color.yellow;
+    [ColorUsage(true, true)]
+    public Color ext_glowColor = Color.yellow;
 
     private bool[] circleActivated;
     private bool hasCircles;
@@ -67,10 +69,22 @@ public class ButtonPuzzleController : MonoBehaviour
 
         circleActivated[index] = true;
 
-        // Illumina il glow del cerchio
+        // Illumina il glow interno (figlio)
         SpriteRenderer glow = circles[index].transform.GetChild(0).GetComponent<SpriteRenderer>();
         if (glow != null)
-            glow.color = glowColor;
+        {
+            glow.color = int_glowColor;
+        }
+
+        // Illumina lo shader esterno (materiale)
+        Renderer circleRenderer = circles[index].GetComponent<Renderer>();
+        if (circleRenderer != null)
+        {
+            // crea una copia del materiale per non modificare il materiale condiviso
+            Material mat = new Material(circleRenderer.material);
+            mat.SetColor("_HitEffectColor", ext_glowColor);
+            circleRenderer.material = mat;
+        }
 
         // Se ha Animator, attiva trigger
         Animator anim = circles[index].GetComponent<Animator>();
