@@ -1,95 +1,89 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class Dissolve : MonoBehaviour
 {
-    [Header("Settings")]
+    [Header("Dissolve Settings")]
     [SerializeField] private float dissolveTime = 0.75f;
+    [SerializeField] private bool useVertical = true;
     [SerializeField] private bool destroyAfterDissolve = false;
 
     private SpriteRenderer[] spriteRenderers;
+    private TilemapRenderer tilemapRenderer;
+
     private Material[] materials;
 
     private int dissolveAmount = Shader.PropertyToID("_DissolveAmount");
     private int verticalDissolve = Shader.PropertyToID("_VerticalDissolve");
 
-    private Coroutine currentRoutine;
-
-    void Awake()
+    private void Awake()
     {
         spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
+        tilemapRenderer = GetComponent<TilemapRenderer>();
 
-        materials = new Material[spriteRenderers.Length];
+        int total = spriteRenderers.Length + (tilemapRenderer != null ? 1 : 0);
+        materials = new Material[total];
 
+        int index = 0;
+
+        // SpriteRenderer
         for (int i = 0; i < spriteRenderers.Length; i++)
         {
-            materials[i] = spriteRenderers[i].material;
+            materials[index] = new Material(spriteRenderers[i].material);
+            spriteRenderers[i].material = materials[index];
+            index++;
         }
+
+        // TilemapRenderer
+        if (tilemapRenderer != null)
+        {
+            materials[index] = new Material(tilemapRenderer.material);
+            tilemapRenderer.material = materials[index];
+        }
+
+        SetDissolve(0f);
     }
 
-    // -------- PUBLIC FUNCTIONS --------
-
-    public void DissolveObject(bool useVertical = false)
+    public void DissolveObject()
     {
-        StartEffect(0f, 1f, useVertical);
+        StartCoroutine(DissolveRoutine(0f, 1f));
     }
 
-    public void AppearObject(bool useVertical = false)
+    public void AppearObject()
     {
-        StartEffect(1f, 0f, useVertical);
+        SetDissolve(1f);
+        StartCoroutine(DissolveRoutine(1f, 0f));
     }
 
-    public void ToggleObject(bool useVertical = false)
-    {
-        float current = materials[0].GetFloat(dissolveAmount);
-
-        if (current < 0.5f)
-            DissolveObject(useVertical);
-        else
-            AppearObject(useVertical);
-    }
-
-    // -------- CORE --------
-
-    private void StartEffect(float start, float end, bool useVertical)
-    {
-        if (currentRoutine != null)
-            StopCoroutine(currentRoutine);
-
-        currentRoutine = StartCoroutine(DissolveRoutine(start, end, useVertical));
-    }
-
-    private IEnumerator DissolveRoutine(float startValue, float endValue, bool useVertical)
+    private IEnumerator DissolveRoutine(float start, float end)
     {
         float elapsed = 0f;
 
         while (elapsed < dissolveTime)
         {
             elapsed += Time.deltaTime;
+            float value = Mathf.Lerp(start, end, elapsed / dissolveTime);
 
-            float t = elapsed / dissolveTime;
-            float value = Mathf.Lerp(startValue, endValue, t);
-
-            for (int i = 0; i < materials.Length; i++)
-            {
-                materials[i].SetFloat(dissolveAmount, value);
-
-                if (useVertical)
-                    materials[i].SetFloat(verticalDissolve, value);
-            }
+            SetDissolve(value);
 
             yield return null;
         }
 
-        for (int i = 0; i < materials.Length; i++)
+        SetDissolve(end);
+
+        if (end == 1f && destroyAfterDissolve)
+            Destroy(gameObject);
+    }
+
+    private void SetDissolve(float value)
+    {
+        foreach (Material mat in materials)
         {
-            materials[i].SetFloat(dissolveAmount, endValue);
+            mat.SetFloat(dissolveAmount, value);
 
             if (useVertical)
-                materials[i].SetFloat(verticalDissolve, endValue);
+                mat.SetFloat(verticalDissolve, value);
         }
-
-        if (endValue == 1f && destroyAfterDissolve)
-            Destroy(gameObject);
     }
 }
