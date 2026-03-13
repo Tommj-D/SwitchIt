@@ -20,9 +20,13 @@ public class ButtonPuzzleController : MonoBehaviour
     public float particleSpeed = 5f;
 
     [Header("Colori")]
-    public Color int_glowColor = Color.yellow;
+    public Color int_glowColor_Real = Color.yellow;
+    public Color int_glowColor_Fantasy = Color.cyan;
     [ColorUsage(true, true)]
-    public Color ext_glowColor = Color.yellow;
+    public Color ext_glowColor_Real = Color.yellow;
+    [ColorUsage(true, true)]
+    public Color ext_glowColor_Fantasy = Color.cyan;
+
 
     public ChangeCircleMaterial circleMaterialChanger;
 
@@ -117,7 +121,7 @@ public class ButtonPuzzleController : MonoBehaviour
         SpriteRenderer glow = circles[index].transform.GetChild(0).GetComponent<SpriteRenderer>();
         if (glow != null)
         {
-            glow.color = int_glowColor;
+            glow.color = WorldSwitch.Instance.isFantasyWorldActive ? int_glowColor_Fantasy : int_glowColor_Real;
         }
 
         // Illumina lo shader esterno (materiale)
@@ -126,7 +130,7 @@ public class ButtonPuzzleController : MonoBehaviour
         {
             // crea una copia del materiale per non modificare il materiale condiviso
             Material mat = new Material(circleRenderer.material);
-            mat.SetColor("_HitEffectColor", ext_glowColor);
+            mat.SetColor("_HitEffectColor", WorldSwitch.Instance.isFantasyWorldActive ? ext_glowColor_Fantasy : ext_glowColor_Real);
             circleRenderer.material = mat;
         }
 
@@ -218,5 +222,30 @@ public class ButtonPuzzleController : MonoBehaviour
         }
 
         ps.Play();
+    }
+
+    public void UpdateCircleColors()
+    {
+        bool fantasy = WorldSwitch.Instance.isFantasyWorldActive;
+
+        Color intColor = fantasy ? int_glowColor_Fantasy : int_glowColor_Real;
+        Color extColor = fantasy ? ext_glowColor_Fantasy : ext_glowColor_Real;
+
+        for (int i = 0; i < circles.Length; i++)
+        {
+            if (!circleActivated[i]) continue;
+
+            // glow interno
+            SpriteRenderer glow = circles[i].transform.GetChild(0).GetComponent<SpriteRenderer>();
+            if (glow != null)
+                glow.color = intColor;
+
+            // glow esterno shader
+            Renderer circleRenderer = circles[i].GetComponent<Renderer>();
+            if (circleRenderer != null)
+            {
+                circleRenderer.material.SetColor("_HitEffectColor", extColor);
+            }
+        }
     }
 }

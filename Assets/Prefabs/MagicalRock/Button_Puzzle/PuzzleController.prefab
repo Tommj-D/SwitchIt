@@ -53,13 +53,16 @@ MonoBehaviour:
   objectsToHide:
   - {fileID: 0}
   - {fileID: 9026060145363024945}
+  - {fileID: 0}
   objectsToShow: []
   particle_Real: {fileID: 4869304731774896736, guid: d9bf9d42e4fae4bb587df18b17e1b70c, type: 3}
   particle_Fantasy: {fileID: 4869304731774896736, guid: 0aebbbba93d89bf4184bafd8a821c584, type: 3}
   circleBurst: {fileID: 1511771302771841768, guid: 95a48ccbf04b67845b9c525bd7a851f7, type: 3}
   particleSpeed: 6
-  int_glowColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  ext_glowColor: {r: 5.9921565, g: 5.052211, b: 0, a: 1}
+  int_glowColor_Real: {r: 1, g: 1, b: 1, a: 1}
+  int_glowColor_Fantasy: {r: 0.5411765, g: 0.1686275, b: 0.8862746, a: 1}
+  ext_glowColor_Real: {r: 8.474191, g: 0, b: 0, a: 1}
+  ext_glowColor_Fantasy: {r: 0, g: 0, b: 8.031373, a: 1}
   circleMaterialChanger: {fileID: 657779148302350522}
 --- !u!1 &9026060145363024945
 GameObject:

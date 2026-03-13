@@ -12,7 +12,8 @@ public class Dissolve : MonoBehaviour
     [Header("Shader Settings")]
     [SerializeField] private float outlineThickness = 0.1f;
     [SerializeField] private float dissolveScale = 30f;
-    [ColorUsage(true, true)] [SerializeField] private Color outlineColor = Color.white;
+    [ColorUsage(true, true)][SerializeField] private Color outlineColor_Real = Color.white;
+    [ColorUsage(true, true)][SerializeField] private Color outlineColor_Fantasy = Color.cyan;
     [SerializeField] private float spiralStrength = 5f;
 
     private Material[] materials;
@@ -63,7 +64,11 @@ public class Dissolve : MonoBehaviour
         foreach (Material mat in materials)
         {
             if (mat.HasProperty(outlineThicknessID)) mat.SetFloat(outlineThicknessID, outlineThickness);
-            if (mat.HasProperty(outlineColorID)) mat.SetColor(outlineColorID, outlineColor);
+            if (mat.HasProperty(outlineColorID))
+            {
+                bool fantasy = WorldSwitch.Instance != null && WorldSwitch.Instance.isFantasyWorldActive;
+                mat.SetColor(outlineColorID, fantasy ? outlineColor_Fantasy : outlineColor_Real);
+            }
             if (mat.HasProperty(spiralStrengthID)) mat.SetFloat(spiralStrengthID, spiralStrength);
             if (mat.HasProperty(dissolveScaleID)) mat.SetFloat(dissolveScaleID, dissolveScale);
         }
@@ -105,5 +110,10 @@ public class Dissolve : MonoBehaviour
             if (mat.HasProperty(dissolveAmount)) mat.SetFloat(dissolveAmount, value);
             if (useVertical && mat.HasProperty(verticalDissolve)) mat.SetFloat(verticalDissolve, value);
         }
+    }
+
+    public void UpdateDissolveColor()
+    {
+        ApplyShaderSettings(); 
     }
 }

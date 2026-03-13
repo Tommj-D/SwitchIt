@@ -117,6 +117,19 @@ public class WorldSwitch : MonoBehaviour
             else
                 AudioManager.Instance.SetAudioState(AudioManager.AudioState.Normal);
         }
+
+        // aggiorna colori dei cerchi del ButtonPuzzleController
+        ButtonPuzzleController puzzle = Object.FindFirstObjectByType<ButtonPuzzleController>();
+        if (puzzle != null)
+        {
+            puzzle.UpdateCircleColors();
+        }
+
+        // aggiorna colori dissolvenza
+        foreach (Dissolve d in Object.FindObjectsByType<Dissolve>(FindObjectsSortMode.None))
+        {
+            d.UpdateDissolveColor();
+        }
     }
     public void SwitchWorldWithoutAnimation()
     {
