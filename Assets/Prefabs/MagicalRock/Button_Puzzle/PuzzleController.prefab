@@ -52,9 +52,14 @@ MonoBehaviour:
   - {fileID: 9200430220443268977}
   objectsToHide:
   - {fileID: 0}
+  - {fileID: 9026060145363024945}
   objectsToShow: []
   particlePrefab: {fileID: 4869304731774896736, guid: d9bf9d42e4fae4bb587df18b17e1b70c, type: 3}
-  glowColor: {r: 1, g: 1, b: 1, a: 1}
+  circleBurst: {fileID: 1511771302771841768, guid: 95a48ccbf04b67845b9c525bd7a851f7, type: 3}
+  particleSpeed: 6
+  int_glowColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  ext_glowColor: {r: 5.9921565, g: 5.052211, b: 0, a: 1}
+  circleMaterialChanger: {fileID: 657779148302350522}
 --- !u!1 &9026060145363024945
 GameObject:
   m_ObjectHideFlags: 0
@@ -64,6 +69,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5264382845216218858}
+  - component: {fileID: 7810655939781701786}
+  - component: {fileID: 657779148302350522}
   m_Layer: 0
   m_Name: Circles
   m_TagString: Untagged
@@ -88,6 +95,38 @@ Transform:
   - {fileID: 7748046367898663664}
   m_Father: {fileID: 4597986149014149383}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7810655939781701786
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9026060145363024945}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e85f3f9b9cc9c415b9cff6b9f1a74a68, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Dissolve
+  dissolveTime: 2
+  useVertical: 1
+  destroyAfterDissolve: 1
+  outlineThickness: 0.06
+  dissolveScale: 1
+  outlineColor: {r: 6.9140263, g: 0, b: 11.984313, a: 1}
+  spiralStrength: 4
+--- !u!114 &657779148302350522
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9026060145363024945}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b593fd5cc2894ee09b5547a3f2563e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ChangeCircleMaterial
+  dissolveMaterial: {fileID: 2100000, guid: c1b9db59b924f4080aab14708cb06b6e, type: 2}
 --- !u!1001 &2279633467949300096
 PrefabInstance:
   m_ObjectHideFlags: 0

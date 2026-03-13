@@ -15,6 +15,7 @@ public class ButtonPuzzleController : MonoBehaviour
 
     [Header("Particelle")]
     public ParticleSystem particlePrefab;
+    public ParticleSystem circleBurst;
     public float particleSpeed = 5f;
 
     [Header("Colori")]
@@ -95,6 +96,17 @@ public class ButtonPuzzleController : MonoBehaviour
 
         circleActivated[index] = true;
         circleReserved[index] = false;
+
+        if (circleBurst != null)
+        {
+            Vector3 pos = circles[index].transform.position;
+            pos += Random.insideUnitSphere * 0.05f;
+
+            ParticleSystem burst = Instantiate(circleBurst, pos, Quaternion.identity);
+
+            burst.Play();
+            Destroy(burst.gameObject, 2f); // distrugge dopo che ha finito
+        }
 
         // Illumina il glow interno (figlio)
         SpriteRenderer glow = circles[index].transform.GetChild(0).GetComponent<SpriteRenderer>();
