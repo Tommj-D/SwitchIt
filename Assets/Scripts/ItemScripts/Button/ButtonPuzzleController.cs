@@ -22,6 +22,8 @@ public class ButtonPuzzleController : MonoBehaviour
     [ColorUsage(true, true)]
     public Color ext_glowColor = Color.yellow;
 
+    public ChangeCircleMaterial circleMaterialChanger;
+
     private bool[] circleActivated;
     private bool[] circleReserved;
     private bool hasCircles;
@@ -88,7 +90,7 @@ public class ButtonPuzzleController : MonoBehaviour
 
     // Chiamato da ParticlesToTarget quando le particelle arrivano
     public void ActivateCircle(int index)
-    {
+    {   
         if (!hasCircles || circleActivated[index]) return;
 
         circleActivated[index] = true;
@@ -118,7 +120,12 @@ public class ButtonPuzzleController : MonoBehaviour
 
         // Se tutti i cerchi sono attivi, parte la routine di nascondere/mostrare
         if (AllCirclesActive())
+        {
+            if (circleMaterialChanger != null)
+                circleMaterialChanger.SwitchMaterial(circles);
+
             StartCoroutine(HideAndShowObjects());
+        }
     }
 
     private bool AllCirclesActive()
@@ -138,8 +145,11 @@ public class ButtonPuzzleController : MonoBehaviour
             {
                 Dissolve d = obj.GetComponent<Dissolve>();
 
-                if (d != null)
+                if (d != null) 
+                {
+                    d.RefreshRenderers();
                     d.DissolveObject();
+                }
                 else
                     obj.SetActive(false);
             }

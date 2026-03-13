@@ -6,23 +6,18 @@ public class Dissolve : MonoBehaviour
 {
     [Header("Dissolve Settings")]
     [SerializeField] private float dissolveTime = 0.75f;
-    [SerializeField] private bool useVertical = true;
-    [SerializeField] private bool destroyAfterDissolve = false;
+    [SerializeField] private bool useVertical = false;
+    [SerializeField] private bool destroyAfterDissolve = true;
 
     [Header("Shader Settings")]
     [SerializeField] private float outlineThickness = 0.1f;
     [SerializeField] private float dissolveScale = 30f;
     [ColorUsage(true, true)] [SerializeField] private Color outlineColor = Color.white;
     [SerializeField] private float spiralStrength = 5f;
-    
-    private SpriteRenderer[] spriteRenderers;
-    private TilemapRenderer tilemapRenderer;
 
     private Material[] materials;
-
     private int dissolveAmount = Shader.PropertyToID("_DissolveAmount");
     private int verticalDissolve = Shader.PropertyToID("_VerticalDissolve");
-
     private int outlineThicknessID = Shader.PropertyToID("_OutlineThickness");
     private int outlineColorID = Shader.PropertyToID("_OutlineColor");
     private int spiralStrengthID = Shader.PropertyToID("_SpiralStrength");
@@ -30,23 +25,30 @@ public class Dissolve : MonoBehaviour
 
     private void Awake()
     {
-        spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
-        tilemapRenderer = GetComponent<TilemapRenderer>();
+        RefreshRenderers();
+        SetDissolve(0f);
+    }
+
+    // Questa funzione prende TUTTI i renderer sotto questo oggetto e figli
+    public void RefreshRenderers()
+    {
+        // SpriteRenderer
+        SpriteRenderer[] spriteRenderers = GetComponentsInChildren<SpriteRenderer>(true);
+        // TilemapRenderer
+        TilemapRenderer tilemapRenderer = GetComponentInChildren<TilemapRenderer>(true);
 
         int total = spriteRenderers.Length + (tilemapRenderer != null ? 1 : 0);
         materials = new Material[total];
-
         int index = 0;
 
-        // SpriteRenderer
-        for (int i = 0; i < spriteRenderers.Length; i++)
+        foreach (SpriteRenderer sr in spriteRenderers)
         {
-            materials[index] = new Material(spriteRenderers[i].material);
-            spriteRenderers[i].material = materials[index];
+            // Crea una copia del materiale per sicurezza
+            materials[index] = new Material(sr.material);
+            sr.material = materials[index];
             index++;
         }
 
-        // TilemapRenderer
         if (tilemapRenderer != null)
         {
             materials[index] = new Material(tilemapRenderer.material);
@@ -54,27 +56,28 @@ public class Dissolve : MonoBehaviour
         }
 
         ApplyShaderSettings();
-        SetDissolve(0f);
     }
 
     private void ApplyShaderSettings()
     {
         foreach (Material mat in materials)
         {
-            mat.SetFloat(outlineThicknessID, outlineThickness);
-            mat.SetColor(outlineColorID, outlineColor);
-            mat.SetFloat(spiralStrengthID, spiralStrength);
-            mat.SetFloat(dissolveScaleID, dissolveScale);
+            if (mat.HasProperty(outlineThicknessID)) mat.SetFloat(outlineThicknessID, outlineThickness);
+            if (mat.HasProperty(outlineColorID)) mat.SetColor(outlineColorID, outlineColor);
+            if (mat.HasProperty(spiralStrengthID)) mat.SetFloat(spiralStrengthID, spiralStrength);
+            if (mat.HasProperty(dissolveScaleID)) mat.SetFloat(dissolveScaleID, dissolveScale);
         }
     }
 
     public void DissolveObject()
     {
+        RefreshRenderers(); // Aggiorna renderer appena prima della dissolvenza
         StartCoroutine(DissolveRoutine(0f, 1f));
     }
 
     public void AppearObject()
     {
+        RefreshRenderers();
         SetDissolve(1f);
         StartCoroutine(DissolveRoutine(1f, 0f));
     }
@@ -82,17 +85,13 @@ public class Dissolve : MonoBehaviour
     private IEnumerator DissolveRoutine(float start, float end)
     {
         float elapsed = 0f;
-
         while (elapsed < dissolveTime)
         {
             elapsed += Time.deltaTime;
             float value = Mathf.Lerp(start, end, elapsed / dissolveTime);
-
             SetDissolve(value);
-
             yield return null;
         }
-
         SetDissolve(end);
 
         if (end == 1f && destroyAfterDissolve)
@@ -103,10 +102,8 @@ public class Dissolve : MonoBehaviour
     {
         foreach (Material mat in materials)
         {
-            mat.SetFloat(dissolveAmount, value);
-
-            if (useVertical)
-                mat.SetFloat(verticalDissolve, value);
+            if (mat.HasProperty(dissolveAmount)) mat.SetFloat(dissolveAmount, value);
+            if (useVertical && mat.HasProperty(verticalDissolve)) mat.SetFloat(verticalDissolve, value);
         }
     }
 }
