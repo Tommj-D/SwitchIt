@@ -14,7 +14,8 @@ public class ButtonPuzzleController : MonoBehaviour
     public GameObject[] objectsToShow;
 
     [Header("Particelle")]
-    public ParticleSystem particlePrefab;
+    public ParticleSystem particle_Real;
+    public ParticleSystem particle_Fantasy;
     public ParticleSystem circleBurst;
     public float particleSpeed = 5f;
 
@@ -28,6 +29,8 @@ public class ButtonPuzzleController : MonoBehaviour
     private bool[] circleActivated;
     private bool[] circleReserved;
     private bool hasCircles;
+
+    private bool puzzleSolved = false;
 
     private void Start()
     {
@@ -45,6 +48,8 @@ public class ButtonPuzzleController : MonoBehaviour
     // Chiamato dal pulsante
     public void ButtonPressed(Transform buttonPos)
     {
+        if (puzzleSolved) return;
+
         if (hasCircles)
         {
             // Solo il primo cerchio non attivo riceve particelle
@@ -133,6 +138,8 @@ public class ButtonPuzzleController : MonoBehaviour
         // Se tutti i cerchi sono attivi, parte la routine di nascondere/mostrare
         if (AllCirclesActive())
         {
+            puzzleSolved = true;
+
             if (circleMaterialChanger != null)
                 circleMaterialChanger.SwitchMaterial(circles);
 
@@ -155,15 +162,23 @@ public class ButtonPuzzleController : MonoBehaviour
         {
             if (obj != null)
             {
-                Dissolve d = obj.GetComponent<Dissolve>();
-
-                if (d != null) 
+                if (obj.activeInHierarchy)
                 {
-                    d.RefreshRenderers();
-                    d.DissolveObject();
+                    Dissolve d = obj.GetComponent<Dissolve>();
+
+                    if (d != null)
+                    {
+                        d.RefreshRenderers();
+                        d.DissolveObject();
+                    }
+                    else
+                        obj.SetActive(false);
                 }
                 else
+                {
+                    // se è nel mondo inattivo lo disattiviamo comunque
                     obj.SetActive(false);
+                }
             }
         }
 
@@ -188,7 +203,12 @@ public class ButtonPuzzleController : MonoBehaviour
         if (!hasCircles) return;
 
         // Istanzia prefab particelle
-        ParticleSystem ps = Instantiate(particlePrefab, start.position, Quaternion.identity);
+        ParticleSystem ps;
+
+        if (WorldSwitch.Instance.isFantasyWorldActive)
+            ps = Instantiate(particle_Fantasy, start.position, Quaternion.identity);
+        else
+            ps = Instantiate(particle_Real, start.position, Quaternion.identity);
 
         // Inizializza il prefab con tutti i dati necessari
         ParticlesToTarget mover = ps.GetComponent<ParticlesToTarget>();

@@ -54,7 +54,8 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 9026060145363024945}
   objectsToShow: []
-  particlePrefab: {fileID: 4869304731774896736, guid: d9bf9d42e4fae4bb587df18b17e1b70c, type: 3}
+  particle_Real: {fileID: 4869304731774896736, guid: d9bf9d42e4fae4bb587df18b17e1b70c, type: 3}
+  particle_Fantasy: {fileID: 4869304731774896736, guid: 0aebbbba93d89bf4184bafd8a821c584, type: 3}
   circleBurst: {fileID: 1511771302771841768, guid: 95a48ccbf04b67845b9c525bd7a851f7, type: 3}
   particleSpeed: 6
   int_glowColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
