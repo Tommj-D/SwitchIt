@@ -1,6 +1,6 @@
 using System.Collections;
 using UnityEngine;
-
+using UnityEngine.Tilemaps;
 public class ButtonPuzzleController : MonoBehaviour
 {
     private int currentPressed = 0;
@@ -63,17 +63,33 @@ public class ButtonPuzzleController : MonoBehaviour
     private IEnumerator DissolveWall()
     {
         SpriteRenderer sr = wall.GetComponent<SpriteRenderer>();
+        Tilemap tilemap = wall.GetComponent<Tilemap>();
 
         float timer = 0f;
-        Color c = sr.color;
 
-        while (timer < dissolveDuration)
+        if (sr != null)
         {
-            timer += Time.deltaTime;
-            c.a = Mathf.Lerp(1f, 0f, timer / dissolveDuration);
-            sr.color = c;
+            Color c = sr.color;
 
-            yield return null;
+            while (timer < dissolveDuration)
+            {
+                timer += Time.deltaTime;
+                c.a = Mathf.Lerp(1f, 0f, timer / dissolveDuration);
+                sr.color = c;
+                yield return null;
+            }
+        }
+        else if (tilemap != null)
+        {
+            Color c = tilemap.color;
+
+            while (timer < dissolveDuration)
+            {
+                timer += Time.deltaTime;
+                c.a = Mathf.Lerp(1f, 0f, timer / dissolveDuration);
+                tilemap.color = c;
+                yield return null;
+            }
         }
 
         wall.SetActive(false);
