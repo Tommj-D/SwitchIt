@@ -20,34 +20,49 @@ public class ButtonPuzzleController : MonoBehaviour
     public Color glowColor = Color.yellow;
 
     private bool[] circleActivated;
+    private bool hasCircles;
 
     private void Start()
     {
-        circleActivated = new bool[circles.Length];
+        hasCircles = circles != null && circles.Length > 0;
+        if (hasCircles)
+            circleActivated = new bool[circles.Length];
 
         // Assicurati che gli oggetti da mostrare siano inizialmente invisibili
         foreach (GameObject obj in objectsToShow)
             if (obj != null) obj.SetActive(false);
     }
 
-    // Questo viene chiamato dal pulsante
+    // Chiamato dal pulsante
     public void ButtonPressed(Transform buttonPos)
     {
-        for (int i = 0; i < circles.Length; i++)
+        if (hasCircles)
         {
-            if (!circleActivated[i])
+            // Solo il primo cerchio non attivo riceve particelle
+            for (int i = 0; i < circles.Length; i++)
             {
-                // Non attivare subito il cerchio, solo spawn particelle
-                SpawnParticles(buttonPos, circles[i].transform, i);
-                break;
+                if (!circleActivated[i])
+                {
+                    SpawnParticles(buttonPos, circles[i].transform, i);
+                    break;
+                }
             }
+        }
+        else
+        {
+            // Nessun cerchio: attiva/disattiva subito oggetti
+            foreach (GameObject obj in objectsToHide)
+                if (obj != null) obj.SetActive(false);
+
+            foreach (GameObject obj in objectsToShow)
+                if (obj != null) obj.SetActive(true);
         }
     }
 
-    // Questo viene chiamato da ParticlesToTarget quando le particelle arrivano
+    // Chiamato da ParticlesToTarget quando le particelle arrivano
     public void ActivateCircle(int index)
     {
-        if (circleActivated[index]) return;
+        if (!hasCircles || circleActivated[index]) return;
 
         circleActivated[index] = true;
 
@@ -61,15 +76,15 @@ public class ButtonPuzzleController : MonoBehaviour
         if (anim != null)
             anim.SetTrigger("Active");
 
-        // Se tutti i cerchi sono attivi, attiva/disattiva oggetti
+        // Se tutti i cerchi sono attivi, parte la routine di nascondere/mostrare
         if (AllCirclesActive())
-        {
             StartCoroutine(HideAndShowObjects());
-        }
     }
 
     private bool AllCirclesActive()
     {
+        if (!hasCircles) return true;
+
         foreach (bool b in circleActivated)
             if (!b) return false;
         return true;
@@ -77,39 +92,39 @@ public class ButtonPuzzleController : MonoBehaviour
 
     private IEnumerator HideAndShowObjects()
     {
-        float duration = 1f;
-        float timer = 0f;
-
-        SpriteRenderer[] srs = new SpriteRenderer[objectsToHide.Length];
-        Tilemap[] tms = new Tilemap[objectsToHide.Length];
-
-        for (int i = 0; i < objectsToHide.Length; i++)
+        if (hasCircles)
         {
-            if (objectsToHide[i] != null)
-            {
-                srs[i] = objectsToHide[i].GetComponent<SpriteRenderer>();
-                tms[i] = objectsToHide[i].GetComponent<Tilemap>();
-            }
-        }
+            float duration = 1f;
+            float timer = 0f;
 
-        while (timer < duration)
-        {
-            timer += Time.deltaTime;
-            float alpha = Mathf.Lerp(1f, 0f, timer / duration);
+            SpriteRenderer[] srs = new SpriteRenderer[objectsToHide.Length];
 
             for (int i = 0; i < objectsToHide.Length; i++)
             {
-                if (srs[i] != null)
-                {
-                    Color c = srs[i].color;
-                    c.a = alpha;
-                    srs[i].color = c;
-                }
+                if (objectsToHide[i] != null)
+                    srs[i] = objectsToHide[i].GetComponent<SpriteRenderer>();
             }
 
-            yield return null;
+            while (timer < duration)
+            {
+                timer += Time.deltaTime;
+                float alpha = Mathf.Lerp(1f, 0f, timer / duration);
+
+                for (int i = 0; i < objectsToHide.Length; i++)
+                {
+                    if (srs[i] != null)
+                    {
+                        Color c = srs[i].color;
+                        c.a = alpha;
+                        srs[i].color = c;
+                    }
+                }
+
+                yield return null;
+            }
         }
 
+        // Alla fine, nascondi/mostra oggetti
         foreach (GameObject obj in objectsToHide)
             if (obj != null) obj.SetActive(false);
 
@@ -119,6 +134,8 @@ public class ButtonPuzzleController : MonoBehaviour
 
     private void SpawnParticles(Transform start, Transform target, int circleIndex)
     {
+        if (!hasCircles) return;
+
         ParticleSystem ps = Instantiate(particlePrefab, start.position, Quaternion.identity);
         ParticlesToTarget mover = ps.GetComponent<ParticlesToTarget>();
         if (mover != null)
