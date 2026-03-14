@@ -40033,18 +40033,6 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4989737110888232115, guid: 81647c3d2cb74754a9335e4814fe7ef2, type: 3}
-      propertyPath: dissolve_pitch
-      value: 0.88
-      objectReference: {fileID: 0}
-    - target: {fileID: 4989737110888232115, guid: 81647c3d2cb74754a9335e4814fe7ef2, type: 3}
-      propertyPath: dissolve_volume
-      value: 0.75
-      objectReference: {fileID: 0}
-    - target: {fileID: 4989737110888232115, guid: 81647c3d2cb74754a9335e4814fe7ef2, type: 3}
-      propertyPath: delayBeforeDissolve
-      value: 1.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 4989737110888232115, guid: 81647c3d2cb74754a9335e4814fe7ef2, type: 3}
       propertyPath: 'objectsToHide.Array.data[0]'
       value: 
       objectReference: {fileID: 824493825}
