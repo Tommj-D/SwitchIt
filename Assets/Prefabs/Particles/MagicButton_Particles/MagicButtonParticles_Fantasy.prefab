@@ -4860,9 +4860,9 @@ ParticleSystemRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: -496185305
-  m_SortingLayer: 2
-  m_SortingOrder: 11
+  m_SortingLayerID: 438903465
+  m_SortingLayer: 4
+  m_SortingOrder: 50
   m_MaskInteraction: 0
   m_RenderMode: 0
   m_MeshDistribution: 0

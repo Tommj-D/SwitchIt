@@ -189,6 +189,8 @@ public class ButtonPuzzleController : MonoBehaviour
         // Cambia materiale dei cerchi per permettere la dissolvenza
         if (circleMaterialChanger != null)
             circleMaterialChanger.SwitchMaterial(circles);
+        else
+            Debug.LogWarning("CircleMaterialChanger non assegnato!");
 
         // Dissolvi oggetti da nascondere
         foreach (GameObject obj in objectsToHide)
