@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 public class ButtonPuzzleController : MonoBehaviour
 {
@@ -18,8 +17,10 @@ public class ButtonPuzzleController : MonoBehaviour
     [Header("Particelle")]
     public ParticleSystem particle_Real; // Particelle mondo reale
     public ParticleSystem particle_Fantasy; // Particelle mondo fantasy
-    public ParticleSystem circleBurst; // Particelle di esplosione quando un cerchio si attiva
     public float particleSpeed = 5f; // Velocità delle particelle verso il cerchio
+    [Header("Particelle Burst Cerchi")]
+    public ParticleSystem circleBurst_Real;
+    public ParticleSystem circleBurst_Fantasy;
 
     // ======== COLORI CERCHI ========
     [Header("Colori Cerchi")]
@@ -126,12 +127,18 @@ public class ButtonPuzzleController : MonoBehaviour
         circleReserved[index] = false; // Libera il cerchio prenotato
 
         // Particelle burst quando si attiva
-        if (circleBurst != null)
-        {
+        if (circleBurst_Real == null || circleBurst_Fantasy==null)
+            Debug.LogWarning("Burst prefab non assegnati! Assegna i prefab di burst per il mondo reale e fantasy.");
+        else 
+        { 
             AudioManager.Instance.PlaySFX(AudioManager.Instance.glowingSound);
 
             Vector3 pos = circles[index].transform.position + Random.insideUnitSphere * 0.05f;
-            ParticleSystem burst = Instantiate(circleBurst, pos, Quaternion.identity);
+
+            // Scegli il burst corretto a seconda del mondo
+            ParticleSystem burstPrefab = WorldSwitch.Instance.isFantasyWorldActive ? circleBurst_Fantasy : circleBurst_Real;
+
+            ParticleSystem burst = Instantiate(burstPrefab, pos, Quaternion.identity);
             burst.Play();
             Destroy(burst.gameObject, 2f); // Distrugge dopo l'animazione
         }

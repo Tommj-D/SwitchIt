@@ -59,8 +59,9 @@ MonoBehaviour:
   objectsToShow: []
   particle_Real: {fileID: 4869304731774896736, guid: d9bf9d42e4fae4bb587df18b17e1b70c, type: 3}
   particle_Fantasy: {fileID: 4869304731774896736, guid: 0aebbbba93d89bf4184bafd8a821c584, type: 3}
-  circleBurst: {fileID: 1511771302771841768, guid: 95a48ccbf04b67845b9c525bd7a851f7, type: 3}
   particleSpeed: 6
+  circleBurst_Real: {fileID: 1511771302771841768, guid: f797be725a857c344933d08d0a0824a7, type: 3}
+  circleBurst_Fantasy: {fileID: 1511771302771841768, guid: 67315f75eed2df04a847b63c3e1110c0, type: 3}
   int_idleColor_Real: {r: 0.6, g: 0.6, b: 0.6, a: 1}
   int_idleColor_Fantasy: {r: 0.7191582, g: 0.26981127, b: 1, a: 1}
   int_glowColor_Real: {r: 1, g: 1, b: 1, a: 1}
