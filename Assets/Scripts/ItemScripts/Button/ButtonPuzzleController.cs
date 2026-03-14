@@ -108,6 +108,9 @@ public class ButtonPuzzleController : MonoBehaviour
 
         if (circleBurst != null)
         {
+            //Faccio partire audio glowing
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.glowingSound);
+
             Vector3 pos = circles[index].transform.position;
             pos += Random.insideUnitSphere * 0.05f;
 
@@ -168,6 +171,9 @@ public class ButtonPuzzleController : MonoBehaviour
             {
                 if (obj.activeInHierarchy)
                 {
+                    //Faccio partire audio wall disappearing
+                    AudioManager.Instance.PlaySFX(AudioManager.Instance.wallDisappearingSound, 0.5f);
+
                     Dissolve d = obj.GetComponent<Dissolve>();
 
                     if (d != null)

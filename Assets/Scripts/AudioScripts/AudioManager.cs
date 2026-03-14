@@ -38,6 +38,8 @@ public class AudioManager : MonoBehaviour
     public AudioClip switchLevelSound;
     public AudioClip secretEntranceSound;
     public AudioClip hintSound;
+    public AudioClip glowingSound;
+    public AudioClip wallDisappearingSound;
     
     [Header("Mixer Groups")]
     public AudioMixerGroup musicDefaultGroup;
@@ -88,6 +90,26 @@ public class AudioManager : MonoBehaviour
         if (clip == null || sfxSource == null) return;
 
         sfxSource.PlayOneShot(clip);
+    }
+
+    // Overload per riprodurre un effetto sonoro con un pitch specifico
+    public void PlaySFX(AudioClip clip, float pitch)
+    {
+        if (clip == null || sfxSource == null) return;
+
+        StartCoroutine(PlaySFXWithPitch(clip, pitch));
+    }
+
+    private IEnumerator PlaySFXWithPitch(AudioClip clip, float pitch)
+    {
+        float originalPitch = sfxSource.pitch;
+
+        sfxSource.pitch = pitch;
+        sfxSource.PlayOneShot(clip);
+
+        yield return null; // aspetta un frame
+
+        sfxSource.pitch = originalPitch;
     }
 
     public void SetAudioState(AudioState newState)

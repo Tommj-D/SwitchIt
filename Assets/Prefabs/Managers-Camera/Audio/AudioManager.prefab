@@ -197,6 +197,8 @@ MonoBehaviour:
   switchLevelSound: {fileID: 8300000, guid: 91dbe1fa30d8d9340beb4b717f0b42bb, type: 3}
   secretEntranceSound: {fileID: 8300000, guid: 1ee053960432f50469e8fc4c385d40b8, type: 3}
   hintSound: {fileID: 8300000, guid: 514c9fc34773ad54a99e2bcad328013b, type: 3}
+  glowingSound: {fileID: 8300000, guid: bd069b9237e5e459380f96f8362de242, type: 3}
+  wallDisappearingSound: {fileID: 8300000, guid: 115b24de905ef497d9ddeecffa99472a, type: 3}
   musicDefaultGroup: {fileID: -1793385470781041295, guid: bd895b5153b2e204ca4b0ca8a56c023b, type: 2}
   musicTransitionGroup: {fileID: -1707065884832712539, guid: bd895b5153b2e204ca4b0ca8a56c023b, type: 2}
   sfxDefaultGroup: {fileID: -8022069700662271292, guid: bd895b5153b2e204ca4b0ca8a56c023b, type: 2}
