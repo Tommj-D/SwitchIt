@@ -117,6 +117,7 @@ public class ButtonPuzzleController : MonoBehaviour
         }
     }
 
+    // ======== CERCHIO ATTIVATO ========
     public void ActivateCircle(int index)
     {
         if (!hasCircles || circleActivated[index]) return;
@@ -127,7 +128,6 @@ public class ButtonPuzzleController : MonoBehaviour
         // Particelle burst quando si attiva
         if (circleBurst != null)
         {
-            //Faccio partire audio glowing
             AudioManager.Instance.PlaySFX(AudioManager.Instance.glowingSound);
 
             Vector3 pos = circles[index].transform.position + Random.insideUnitSphere * 0.05f;
@@ -141,12 +141,11 @@ public class ButtonPuzzleController : MonoBehaviour
         if (glow != null)
             glow.color = WorldSwitch.Instance.isFantasyWorldActive ? int_glowColor_Fantasy : int_glowColor_Real;
 
-        // Illumina lo shader esterno (materiale)
         // Glow esterno (shader/materiale)
         Renderer circleRenderer = circles[index].GetComponent<Renderer>();
         if (circleRenderer != null)
         {
-            // crea una copia del materiale per non modificare il materiale condiviso
+            Material mat = new Material(circleRenderer.material); // Copia materiale
             mat.SetColor("_HitEffectColor", WorldSwitch.Instance.isFantasyWorldActive ? ext_glowColor_Fantasy : ext_glowColor_Real);
             circleRenderer.material = mat;
         }
@@ -193,7 +192,6 @@ public class ButtonPuzzleController : MonoBehaviour
                 Dissolve d = obj.GetComponent<Dissolve>();
                 if (d != null)
                 {
-                    //Faccio partire audio wall disappearing
                     d.RefreshRenderers();
                     d.DissolveObject();
                 }
