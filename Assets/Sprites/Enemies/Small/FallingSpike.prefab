@@ -82,9 +82,9 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: -20
+  m_SortingLayerID: -496185305
+  m_SortingLayer: 2
+  m_SortingOrder: 20
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 006840a3143209e49978b3ace77c06ce, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -108,7 +108,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f752a78f4a5820948b9ee4626bb4004b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Spike_Fall
-  fallSpeed: 8.5
+  fallSpeed: 10
   shakeDuration: 0.4
   shakeAmount: 0.1
   impactParticles: {fileID: 327209828427378427, guid: d407f4ad6c344dc4dbf433eb80a12578, type: 3}
@@ -234,6 +234,7 @@ GameObject:
   - component: {fileID: 5462641372155127546}
   - component: {fileID: 6632858501853846610}
   - component: {fileID: 7914873331200813751}
+  - component: {fileID: 8539920029203787340}
   m_Layer: 10
   m_Name: Punta
   m_TagString: Untagged
@@ -305,3 +306,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Spike_Head
   impactParticles: {fileID: 327209828427378427, guid: d407f4ad6c344dc4dbf433eb80a12578, type: 3}
+--- !u!50 &8539920029203787340
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5458672480643527587}
+  m_BodyType: 2
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
