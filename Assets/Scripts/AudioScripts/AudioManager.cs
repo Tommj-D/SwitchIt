@@ -93,21 +93,21 @@ public class AudioManager : MonoBehaviour
     }
 
     // Overload per riprodurre un effetto sonoro con un pitch specifico
-    public void PlaySFX(AudioClip clip, float pitch)
+    public void PlaySFX(AudioClip clip, float volume = 1f, float pitch = 1f)
     {
         if (clip == null || sfxSource == null) return;
 
-        StartCoroutine(PlaySFXWithPitch(clip, pitch));
+        StartCoroutine(PlaySFXRoutine(clip, volume, pitch));
     }
 
-    private IEnumerator PlaySFXWithPitch(AudioClip clip, float pitch)
+    private IEnumerator PlaySFXRoutine(AudioClip clip, float volume, float pitch)
     {
         float originalPitch = sfxSource.pitch;
 
         sfxSource.pitch = pitch;
-        sfxSource.PlayOneShot(clip);
+        sfxSource.PlayOneShot(clip, volume);
 
-        yield return null; // aspetta un frame
+        yield return null;
 
         sfxSource.pitch = originalPitch;
     }

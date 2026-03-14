@@ -27,6 +27,13 @@ public class ButtonPuzzleController : MonoBehaviour
     [ColorUsage(true, true)]
     public Color ext_glowColor_Fantasy = Color.cyan;
 
+    [Header("Volumi Dissolvenza/Comparsa")]
+    [Range(0f, 1f)] public float dissolve_volume = 1f;
+    [Range(0f, 1f)] public float dissolve_pitch = 1f;
+
+    [Header("Puzzle Timing")]
+    [Header("Puzzle Timing")]
+    [Range(0f, 5f)] public float delayBeforeDissolve = 0.2f;
 
     public ChangeCircleMaterial circleMaterialChanger;
 
@@ -147,9 +154,6 @@ public class ButtonPuzzleController : MonoBehaviour
         {
             puzzleSolved = true;
 
-            if (circleMaterialChanger != null)
-                circleMaterialChanger.SwitchMaterial(circles);
-
             StartCoroutine(HideAndShowObjects());
         }
     }
@@ -165,6 +169,13 @@ public class ButtonPuzzleController : MonoBehaviour
 
     private IEnumerator HideAndShowObjects()
     {
+        // Aspetta prima di far partire la dissolvenza
+        yield return new WaitForSeconds(delayBeforeDissolve);
+
+        //Cambio materiale in modo che possa dissolversi correttamente
+        if (circleMaterialChanger != null)
+            circleMaterialChanger.SwitchMaterial(circles);
+
         foreach (GameObject obj in objectsToHide)
         {
             if (obj != null)
@@ -172,7 +183,7 @@ public class ButtonPuzzleController : MonoBehaviour
                 if (obj.activeInHierarchy)
                 {
                     //Faccio partire audio wall disappearing
-                    AudioManager.Instance.PlaySFX(AudioManager.Instance.wallDisappearingSound, 0.5f);
+                    AudioManager.Instance.PlaySFX(AudioManager.Instance.wallDisappearingSound, dissolve_volume, dissolve_pitch);
 
                     Dissolve d = obj.GetComponent<Dissolve>();
 
@@ -224,7 +235,7 @@ public class ButtonPuzzleController : MonoBehaviour
         ParticlesToTarget mover = ps.GetComponent<ParticlesToTarget>();
         if (mover != null)
         {
-            mover.Init(target, this, circleIndex, particleSpeed); // particleSpeed � ora un campo del controller
+            mover.Init(target, this, circleIndex, particleSpeed); // particleSpeed è ora un campo del controller
         }
 
         ps.Play();
