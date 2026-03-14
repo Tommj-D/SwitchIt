@@ -19,7 +19,11 @@ public class ButtonPuzzleController : MonoBehaviour
     public ParticleSystem circleBurst;
     public float particleSpeed = 5f;
 
-    [Header("Colori")]
+    [Header("Colori Cerchi")]
+    [Header("Disattivati")]
+    public Color int_idleColor_Real = Color.gray;
+    public Color int_idleColor_Fantasy = Color.cyan;
+    [Header("Attivati")]
     public Color int_glowColor_Real = Color.yellow;
     public Color int_glowColor_Fantasy = Color.cyan;
     [ColorUsage(true, true)]
@@ -50,6 +54,8 @@ public class ButtonPuzzleController : MonoBehaviour
             circleActivated = new bool[circles.Length];
             circleReserved = new bool[circles.Length];
         }
+
+        UpdateCircleColors();
 
         // Assicurati che gli oggetti da mostrare siano inizialmente invisibili
         foreach (GameObject obj in objectsToShow)
@@ -245,19 +251,30 @@ public class ButtonPuzzleController : MonoBehaviour
     {
         bool fantasy = WorldSwitch.Instance.isFantasyWorldActive;
 
-        Color intColor = fantasy ? int_glowColor_Fantasy : int_glowColor_Real;
-        Color extColor = fantasy ? ext_glowColor_Fantasy : ext_glowColor_Real;
-
         for (int i = 0; i < circles.Length; i++)
         {
-            if (!circleActivated[i]) continue;
+            bool active = circleActivated[i];
+
+            Color intColor;
+            Color extColor;
+
+            if (active)
+            {
+                intColor = fantasy ? int_glowColor_Fantasy : int_glowColor_Real;
+                extColor = fantasy ? ext_glowColor_Fantasy : ext_glowColor_Real;
+            }
+            else
+            {
+                intColor = fantasy ? int_idleColor_Fantasy : int_idleColor_Real;
+                extColor = Color.black; // oppure nessun glow
+            }
 
             // glow interno
             SpriteRenderer glow = circles[i].transform.GetChild(0).GetComponent<SpriteRenderer>();
             if (glow != null)
                 glow.color = intColor;
 
-            // glow esterno shader
+            // glow shader esterno
             Renderer circleRenderer = circles[i].GetComponent<Renderer>();
             if (circleRenderer != null)
             {
