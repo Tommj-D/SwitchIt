@@ -226,6 +226,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Slime_Green
   patrolSpeed: 2
   isKillable: 1
+  wallCheckDistance: 0.2
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 8
 --- !u!60 &501101685884834853
 PolygonCollider2D:
   m_ObjectHideFlags: 0

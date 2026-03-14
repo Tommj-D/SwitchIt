@@ -13,6 +13,7 @@ public abstract class Enemy : MonoBehaviour
 
     protected int direction = 1; // 1 = destra, -1 = sinistra
 
+
     protected virtual void Start()
     {
         animator = GetComponent<Animator>();
@@ -43,7 +44,15 @@ public abstract class Enemy : MonoBehaviour
                 respawn.Die();
         }
 
-        Flip();
+        foreach (ContactPoint2D contact in collision.contacts)
+        {
+            // se la collisione è laterale
+            if (Mathf.Abs(contact.normal.x) > 0.5f)
+            {
+                Flip();
+                break;
+            }
+        }
     }
 
     protected virtual void OnTriggerEnter2D(Collider2D collision)

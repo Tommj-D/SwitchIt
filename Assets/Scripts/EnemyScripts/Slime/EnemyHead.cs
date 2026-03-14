@@ -12,8 +12,14 @@ public class EnemyHead : MonoBehaviour
     {
         if (hasBeenStomped) return;
 
+        Rigidbody2D rb = collision.GetComponent<Rigidbody2D>();
+
+        // Deve avere rigidbody ed essere in caduta
+        if (rb == null)
+            return;
+
         PlayerRespawn playerRespawn = collision.GetComponent<PlayerRespawn>();
-        if (playerRespawn == null || playerRespawn.IsDying())
+        if (playerRespawn != null && playerRespawn.IsDying())
             return;
 
         hasBeenStomped = true;
@@ -22,7 +28,6 @@ public class EnemyHead : MonoBehaviour
         enemy.OnStomped();
 
         // Rimbalzo player
-        Rigidbody2D rb = collision.GetComponent<Rigidbody2D>();
         if (rb != null)
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpingForce);
 
