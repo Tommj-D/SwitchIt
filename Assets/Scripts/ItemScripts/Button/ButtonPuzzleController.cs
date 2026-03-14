@@ -4,91 +4,99 @@ using UnityEngine.Tilemaps;
 
 public class ButtonPuzzleController : MonoBehaviour
 {
+    // ======== RIFERIMENTI A OGGETTI NELLA SCENA ========
     [Header("Cerchi da illuminare")]
-    public SpriteRenderer[] circles;
+    public SpriteRenderer[] circles; // Array dei cerchi da illuminare
 
     [Header("Oggetti da nascondere")]
-    public GameObject[] objectsToHide;
+    public GameObject[] objectsToHide; // Oggetti che spariranno quando il puzzle è risolto
 
     [Header("Oggetti da mostrare")]
-    public GameObject[] objectsToShow;
+    public GameObject[] objectsToShow; // Oggetti che appariranno quando il puzzle è risolto
 
+    // ======== PARTICELLE ========
     [Header("Particelle")]
-    public ParticleSystem particle_Real;
-    public ParticleSystem particle_Fantasy;
-    public ParticleSystem circleBurst;
-    public float particleSpeed = 5f;
+    public ParticleSystem particle_Real; // Particelle mondo reale
+    public ParticleSystem particle_Fantasy; // Particelle mondo fantasy
+    public ParticleSystem circleBurst; // Particelle di esplosione quando un cerchio si attiva
+    public float particleSpeed = 5f; // Velocità delle particelle verso il cerchio
 
+    // ======== COLORI CERCHI ========
     [Header("Colori Cerchi")]
     [Header("Disattivati")]
-    public Color int_idleColor_Real = Color.gray;
-    public Color int_idleColor_Fantasy = Color.cyan;
+    public Color int_idleColor_Real = Color.gray; // Glow interno cerchio spento, mondo reale
+    public Color int_idleColor_Fantasy = Color.cyan; // Glow interno cerchio spento, mondo fantasy
     [Header("Attivati")]
-    public Color int_glowColor_Real = Color.yellow;
-    public Color int_glowColor_Fantasy = Color.cyan;
+    public Color int_glowColor_Real = Color.yellow; // Glow interno cerchio attivo, mondo reale
+    public Color int_glowColor_Fantasy = Color.cyan; // Glow interno cerchio attivo, mondo fantasy
     [ColorUsage(true, true)]
-    public Color ext_glowColor_Real = Color.yellow;
+    public Color ext_glowColor_Real = Color.yellow; // Glow esterno cerchio attivo, mondo reale
     [ColorUsage(true, true)]
-    public Color ext_glowColor_Fantasy = Color.cyan;
+    public Color ext_glowColor_Fantasy = Color.cyan; // Glow esterno cerchio attivo, mondo fantasy
 
+    // ======== PARAMETRI AUDIO / DISSOLVENZA ========
     [Header("Volumi Dissolvenza/Comparsa")]
     [Range(0f, 1f)] public float dissolve_volume = 1f;
     [Range(0f, 1f)] public float dissolve_pitch = 1f;
 
+    // ======== TIMING PUZZLE ========
     [Header("Puzzle Timing")]
-    [Header("Puzzle Timing")]
-    [Range(0f, 5f)] public float delayBeforeDissolve = 0.2f;
+    [Range(0f, 5f)] public float delayBeforeDissolve = 0.2f; // Ritardo prima che parta la dissolvenza
 
-    public ChangeCircleMaterial circleMaterialChanger;
+    // ======== ALTRO ========
+    public ChangeCircleMaterial circleMaterialChanger; // Script che cambia i materiali dei cerchi
 
-    private bool[] circleActivated;
-    private bool[] circleReserved;
-    private bool hasCircles;
+    // ======== VARIABILI INTERNE ========
+    private bool[] circleActivated; // Tiene traccia dei cerchi attivi
+    private bool[] circleReserved; // Evita che più particelle vadano sullo stesso cerchio nello stesso momento
+    private bool hasCircles; // True se ci sono cerchi
+    private bool puzzleSolved = false; // True se tutti i cerchi sono stati attivati
 
-    private bool puzzleSolved = false;
-
+    // ======== INIZIALIZZAZIONE ========
     private void Start()
     {
         hasCircles = circles != null && circles.Length > 0;
-        if (hasCircles) {
+        if (hasCircles)
+        {
+            // Crea array dello stesso size dei cerchi per tenere traccia dello stato
             circleActivated = new bool[circles.Length];
             circleReserved = new bool[circles.Length];
         }
 
+        // Aggiorna subito i colori dei cerchi secondo il mondo attuale
         UpdateCircleColors();
 
-        // Assicurati che gli oggetti da mostrare siano inizialmente invisibili
+        // Nasconde gli oggetti da mostrare all'inizio
         foreach (GameObject obj in objectsToShow)
             if (obj != null) obj.SetActive(false);
     }
 
-    // Chiamato dal pulsante
+    // ======== PULSANTE PREMUTO ========
     public void ButtonPressed(Transform buttonPos)
     {
-        if (puzzleSolved) return;
+        if (puzzleSolved) return; // Se il puzzle è già risolto, non fare nulla
 
         if (hasCircles)
         {
-            // Solo il primo cerchio non attivo riceve particelle
+            // Trova il primo cerchio non attivo e lancia particelle verso di esso
             for (int i = 0; i < circles.Length; i++)
             {
                 if (!circleActivated[i] && !circleReserved[i])
                 {
-                    circleReserved[i] = true; // prenota il cerchio subito
+                    circleReserved[i] = true; // Prenota il cerchio per evitare conflitti
                     SpawnParticles(buttonPos, circles[i].transform, i);
-                    break;
+                    break; // Solo un cerchio alla volta
                 }
             }
         }
         else
         {
-            // Nessun cerchio: attiva/disattiva subito oggetti
+            // Non ci sono cerchi: attiva/disattiva subito gli oggetti
             foreach (GameObject obj in objectsToHide)
             {
                 if (obj != null)
                 {
                     Dissolve d = obj.GetComponent<Dissolve>();
-
                     if (d != null)
                         d.DissolveObject();
                     else
@@ -101,9 +109,7 @@ public class ButtonPuzzleController : MonoBehaviour
                 if (obj != null)
                 {
                     obj.SetActive(true);
-
                     Dissolve d = obj.GetComponent<Dissolve>();
-
                     if (d != null)
                         d.AppearObject();
                 }
@@ -111,142 +117,123 @@ public class ButtonPuzzleController : MonoBehaviour
         }
     }
 
-    // Chiamato da ParticlesToTarget quando le particelle arrivano
     public void ActivateCircle(int index)
-    {   
+    {
         if (!hasCircles || circleActivated[index]) return;
 
-        circleActivated[index] = true;
-        circleReserved[index] = false;
+        circleActivated[index] = true; // Segna il cerchio come attivo
+        circleReserved[index] = false; // Libera il cerchio prenotato
 
+        // Particelle burst quando si attiva
         if (circleBurst != null)
         {
             //Faccio partire audio glowing
             AudioManager.Instance.PlaySFX(AudioManager.Instance.glowingSound);
 
-            Vector3 pos = circles[index].transform.position;
-            pos += Random.insideUnitSphere * 0.05f;
-
+            Vector3 pos = circles[index].transform.position + Random.insideUnitSphere * 0.05f;
             ParticleSystem burst = Instantiate(circleBurst, pos, Quaternion.identity);
-
             burst.Play();
-            Destroy(burst.gameObject, 2f); // distrugge dopo che ha finito
+            Destroy(burst.gameObject, 2f); // Distrugge dopo l'animazione
         }
 
-        // Illumina il glow interno (figlio)
+        // Glow interno
         SpriteRenderer glow = circles[index].transform.GetChild(0).GetComponent<SpriteRenderer>();
         if (glow != null)
-        {
             glow.color = WorldSwitch.Instance.isFantasyWorldActive ? int_glowColor_Fantasy : int_glowColor_Real;
-        }
 
         // Illumina lo shader esterno (materiale)
+        // Glow esterno (shader/materiale)
         Renderer circleRenderer = circles[index].GetComponent<Renderer>();
         if (circleRenderer != null)
         {
             // crea una copia del materiale per non modificare il materiale condiviso
-            Material mat = new Material(circleRenderer.material);
             mat.SetColor("_HitEffectColor", WorldSwitch.Instance.isFantasyWorldActive ? ext_glowColor_Fantasy : ext_glowColor_Real);
             circleRenderer.material = mat;
         }
 
-        // Se ha Animator, attiva trigger
+        // Attiva animazioni se esiste Animator
         Animator anim = circles[index].GetComponent<Animator>();
         if (anim != null)
             anim.SetTrigger("Active");
 
-        // Se tutti i cerchi sono attivi, parte la routine di nascondere/mostrare
+        // Se tutti i cerchi sono attivi, parte la dissolvenza
         if (AllCirclesActive())
         {
             puzzleSolved = true;
-
             StartCoroutine(HideAndShowObjects());
         }
     }
 
+    // ======== CONTROLLA SE TUTTI I CERCHI SONO ATTIVI ========
     private bool AllCirclesActive()
     {
         if (!hasCircles) return true;
 
         foreach (bool b in circleActivated)
             if (!b) return false;
+
         return true;
     }
 
+    // ======== NASCONDI/SHOW OGGETTI CON DISSOLVENZA ========
     private IEnumerator HideAndShowObjects()
     {
-        // Aspetta prima di far partire la dissolvenza
-        yield return new WaitForSeconds(delayBeforeDissolve);
+        yield return new WaitForSeconds(delayBeforeDissolve); // Attendi un po' prima di far partire la dissolvenza
 
-        //Cambio materiale in modo che possa dissolversi correttamente
+        // Cambia materiale dei cerchi per permettere la dissolvenza
         if (circleMaterialChanger != null)
             circleMaterialChanger.SwitchMaterial(circles);
 
+        // Dissolvi oggetti da nascondere
         foreach (GameObject obj in objectsToHide)
         {
-            if (obj != null)
+            if (obj != null && obj.activeInHierarchy)
             {
-                if (obj.activeInHierarchy)
+                AudioManager.Instance.PlaySFX(AudioManager.Instance.wallDisappearingSound, dissolve_volume, dissolve_pitch);
+                Dissolve d = obj.GetComponent<Dissolve>();
+                if (d != null)
                 {
                     //Faccio partire audio wall disappearing
-                    AudioManager.Instance.PlaySFX(AudioManager.Instance.wallDisappearingSound, dissolve_volume, dissolve_pitch);
-
-                    Dissolve d = obj.GetComponent<Dissolve>();
-
-                    if (d != null)
-                    {
-                        d.RefreshRenderers();
-                        d.DissolveObject();
-                    }
-                    else
-                        obj.SetActive(false);
+                    d.RefreshRenderers();
+                    d.DissolveObject();
                 }
                 else
-                {
-                    // se è nel mondo inattivo lo disattiviamo comunque
                     obj.SetActive(false);
-                }
             }
         }
 
-        yield return new WaitForSeconds(0.8f);
+        yield return new WaitForSeconds(0.8f); // Attendi che la dissolvenza finisca
 
+        // Mostra oggetti
         foreach (GameObject obj in objectsToShow)
         {
             if (obj != null)
             {
                 obj.SetActive(true);
-
                 Dissolve d = obj.GetComponent<Dissolve>();
-
                 if (d != null)
                     d.AppearObject();
             }
         }
     }
 
+    // ======== LANCIA PARTICELLE VERSO UN CERCHIO ========
     private void SpawnParticles(Transform start, Transform target, int circleIndex)
     {
         if (!hasCircles) return;
 
-        // Istanzia prefab particelle
-        ParticleSystem ps;
+        ParticleSystem ps = WorldSwitch.Instance.isFantasyWorldActive
+            ? Instantiate(particle_Fantasy, start.position, Quaternion.identity)
+            : Instantiate(particle_Real, start.position, Quaternion.identity);
 
-        if (WorldSwitch.Instance.isFantasyWorldActive)
-            ps = Instantiate(particle_Fantasy, start.position, Quaternion.identity);
-        else
-            ps = Instantiate(particle_Real, start.position, Quaternion.identity);
-
-        // Inizializza il prefab con tutti i dati necessari
         ParticlesToTarget mover = ps.GetComponent<ParticlesToTarget>();
         if (mover != null)
-        {
-            mover.Init(target, this, circleIndex, particleSpeed); // particleSpeed è ora un campo del controller
-        }
+            mover.Init(target, this, circleIndex, particleSpeed);
 
         ps.Play();
     }
 
+    // ======== AGGIORNA COLORI DEI CERCHI ========
     public void UpdateCircleColors()
     {
         bool fantasy = WorldSwitch.Instance.isFantasyWorldActive;
@@ -266,20 +253,18 @@ public class ButtonPuzzleController : MonoBehaviour
             else
             {
                 intColor = fantasy ? int_idleColor_Fantasy : int_idleColor_Real;
-                extColor = Color.black; // oppure nessun glow
+                extColor = Color.black; // Nessun glow esterno per i cerchi spenti
             }
 
-            // glow interno
+            // Glow interno
             SpriteRenderer glow = circles[i].transform.GetChild(0).GetComponent<SpriteRenderer>();
             if (glow != null)
                 glow.color = intColor;
 
-            // glow shader esterno
+            // Glow esterno shader/materiale
             Renderer circleRenderer = circles[i].GetComponent<Renderer>();
             if (circleRenderer != null)
-            {
                 circleRenderer.material.SetColor("_HitEffectColor", extColor);
-            }
         }
     }
 }
