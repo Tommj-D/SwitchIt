@@ -37,6 +37,7 @@ public class ButtonPuzzleController : MonoBehaviour
 
     // ======== PARAMETRI AUDIO / DISSOLVENZA ========
     [Header("Volumi Dissolvenza/Comparsa")]
+    public bool playSFX = true; // Se true, riproduce suoni durante la dissolvenza
     [Range(0f, 1f)] public float dissolve_volume = 1f;
     [Range(0f, 1f)] public float dissolve_pitch = 1f;
 
@@ -181,24 +182,27 @@ public class ButtonPuzzleController : MonoBehaviour
         {
             if (obj == null) continue;
 
-            // se l'oggetto è attivo lo dissolvo
-            if (obj.activeInHierarchy)
+            // Se è inattivo o nell'altra dimensione, non fare nulla
+            if (!obj.activeInHierarchy)
             {
-                AudioManager.Instance.PlaySFX(AudioManager.Instance.wallDisappearingSound, dissolve_volume, dissolve_pitch);
+                obj.SetActive(false);
+                continue;
+            }
 
-                Dissolve d = obj.GetComponent<Dissolve>();
-                if (d != null)
-                {
-                    d.RefreshRenderers();
-                    d.DissolveObject();
-                    longestDissolve = Mathf.Max(longestDissolve, d.GetDissolveTime());  // Prende il tempo di dissolvenza più lungo
-                }
-                else
-                    obj.SetActive(false);
+            Dissolve d = obj.GetComponent<Dissolve>();
+
+            if (d != null)
+            {
+                d.RefreshRenderers();
+                d.DissolveObject();
+
+                if (playSFX)
+                    AudioManager.Instance.PlaySFX(AudioManager.Instance.wallDisappearingSound, dissolve_volume, dissolve_pitch);
+
+                longestDissolve = Mathf.Max(longestDissolve, d.GetDissolveTime());
             }
             else
             {
-                // se è nell'altra dimensione lo disattivo direttamente
                 obj.SetActive(false);
             }
         }
