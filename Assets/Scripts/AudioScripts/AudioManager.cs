@@ -95,9 +95,20 @@ public class AudioManager : MonoBehaviour
     // Overload per riprodurre un effetto sonoro con un pitch specifico
     public void PlaySFX(AudioClip clip, float volume = 1f, float pitch = 1f)
     {
-        if (clip == null || sfxSource == null) return;
+        if (clip == null) return;
 
-        StartCoroutine(PlaySFXRoutine(clip, volume, pitch));
+        // Crea un GameObject temporaneo
+        GameObject tempGO = new GameObject("SFX_" + clip.name);
+        AudioSource tempSource = tempGO.AddComponent<AudioSource>();
+
+        tempSource.clip = clip;
+        tempSource.volume = volume;
+        tempSource.pitch = pitch;
+        tempSource.outputAudioMixerGroup = sfxSource.outputAudioMixerGroup; // Mantieni eventuali effetti globali
+        tempSource.Play();
+
+        // Distruggi l'oggetto dopo la durata del clip
+        Destroy(tempGO, clip.length / pitch); // Considera pitch nella durata
     }
 
     private IEnumerator PlaySFXRoutine(AudioClip clip, float volume, float pitch)
