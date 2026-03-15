@@ -184,6 +184,8 @@ public class ButtonPuzzleController : MonoBehaviour
     // ======== NASCONDI/SHOW OGGETTI CON DISSOLVENZA ========
     private IEnumerator HideAndShowObjects()
     {
+        WorldSwitch.Instance.canSwitchWorld = false; // BLOCCA SWITCH
+
         yield return new WaitForSeconds(delayBeforeDissolve); // Attendi un po' prima di far partire la dissolvenza
 
         // Cambia materiale dei cerchi per permettere la dissolvenza
@@ -192,24 +194,34 @@ public class ButtonPuzzleController : MonoBehaviour
         else
             Debug.LogWarning("CircleMaterialChanger non assegnato!");
 
+        float longestDissolve = 0f;  //mi prendo il tempo di dissolvenza più lungo per sapere per quanto sbloccare lo switch
+
         // Dissolvi oggetti da nascondere
         foreach (GameObject obj in objectsToHide)
         {
-            if (obj != null && obj.activeInHierarchy)
+            if (obj == null) continue;
+
+            // se l'oggetto è attivo lo dissolvo
+            if (obj.activeInHierarchy)
             {
                 AudioManager.Instance.PlaySFX(AudioManager.Instance.wallDisappearingSound, dissolve_volume, dissolve_pitch);
+
                 Dissolve d = obj.GetComponent<Dissolve>();
                 if (d != null)
                 {
                     d.RefreshRenderers();
                     d.DissolveObject();
+                    longestDissolve = Mathf.Max(longestDissolve, d.GetDissolveTime());  // Prende il tempo di dissolvenza più lungo
                 }
                 else
                     obj.SetActive(false);
             }
+            else
+            {
+                // se è nell'altra dimensione lo disattivo direttamente
+                obj.SetActive(false);
+            }
         }
-
-        yield return new WaitForSeconds(0.8f); // Attendi che la dissolvenza finisca
 
         // Mostra oggetti
         foreach (GameObject obj in objectsToShow)
@@ -222,6 +234,10 @@ public class ButtonPuzzleController : MonoBehaviour
                     d.AppearObject();
             }
         }
+
+        yield return new WaitForSeconds(longestDissolve+0.1f); // Attendi che la dissolvenza finisca
+
+        WorldSwitch.Instance.canSwitchWorld = true; // SBLOCCA SWITCH
     }
 
     // ======== LANCIA PARTICELLE VERSO UN CERCHIO ========
@@ -247,6 +263,8 @@ public class ButtonPuzzleController : MonoBehaviour
 
         for (int i = 0; i < circles.Length; i++)
         {
+            if (circles[i] == null) continue;
+
             bool active = circleActivated[i];
 
             Color intColor;

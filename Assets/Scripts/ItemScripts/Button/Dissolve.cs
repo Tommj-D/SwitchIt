@@ -77,14 +77,14 @@ public class Dissolve : MonoBehaviour
     public void DissolveObject()
     {
         RefreshRenderers(); // Aggiorna renderer appena prima della dissolvenza
-        StartCoroutine(DissolveRoutine(0f, 1f));
+        StartCoroutine(DissolveRoutine(0f, 1.1f));
     }
 
     public void AppearObject()
     {
         RefreshRenderers();
         SetDissolve(1f);
-        StartCoroutine(DissolveRoutine(1f, 0f));
+        StartCoroutine(DissolveRoutine(1.1f, 0f));
     }
 
     private IEnumerator DissolveRoutine(float start, float end)
@@ -105,6 +105,8 @@ public class Dissolve : MonoBehaviour
 
     private void SetDissolve(float value)
     {
+        if (materials == null) return;
+
         foreach (Material mat in materials)
         {
             if (mat.HasProperty(dissolveAmount)) mat.SetFloat(dissolveAmount, value);
@@ -115,5 +117,11 @@ public class Dissolve : MonoBehaviour
     public void UpdateDissolveColor()
     {
         ApplyShaderSettings(); 
+    }
+
+    // Metdodo chimaato da PuzzleController per aspettare il tepo giusto durante la dissolvenza
+    public float GetDissolveTime()
+    {
+        return dissolveTime;
     }
 }
