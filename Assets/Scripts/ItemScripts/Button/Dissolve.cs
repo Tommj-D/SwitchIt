@@ -99,8 +99,13 @@ public class Dissolve : MonoBehaviour
         }
         SetDissolve(end);
 
-        if (end == 1f && destroyAfterDissolve)
+        if (end == 1.1f && destroyAfterDissolve)
             Destroy(gameObject);
+
+        else
+        {
+            gameObject.SetActive(false);
+        }
     }
 
     private void SetDissolve(float value)
