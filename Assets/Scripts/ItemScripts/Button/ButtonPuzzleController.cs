@@ -93,28 +93,8 @@ public class ButtonPuzzleController : MonoBehaviour
         else
         {
             // Non ci sono cerchi: attiva/disattiva subito gli oggetti
-            foreach (GameObject obj in objectsToHide)
-            {
-                if (obj != null)
-                {
-                    Dissolve d = obj.GetComponent<Dissolve>();
-                    if (d != null)
-                        d.DissolveObject();
-                    else
-                        obj.SetActive(false);
-                }
-            }
-
-            foreach (GameObject obj in objectsToShow)
-            {
-                if (obj != null)
-                {
-                    obj.SetActive(true);
-                    Dissolve d = obj.GetComponent<Dissolve>();
-                    if (d != null)
-                        d.AppearObject();
-                }
-            }
+            puzzleSolved = true;
+            StartCoroutine(HideAndShowObjects());
         }
     }
 
@@ -226,12 +206,26 @@ public class ButtonPuzzleController : MonoBehaviour
         // Mostra oggetti
         foreach (GameObject obj in objectsToShow)
         {
-            if (obj != null)
+            if (obj == null) continue;
+
+            obj.SetActive(true);
+
+            Dissolve d = obj.GetComponent<Dissolve>();
+
+            if (d != null)
             {
-                obj.SetActive(true);
-                Dissolve d = obj.GetComponent<Dissolve>();
-                if (d != null)
-                    d.AppearObject();
+                d.AppearObject();
+                longestDissolve = Mathf.Max(longestDissolve, d.GetDissolveTime());
+            }
+            else
+            {
+                SimpleFadeIn fade = obj.GetComponent<SimpleFadeIn>();
+
+                if (fade != null && obj.activeInHierarchy)
+                {
+                    fade.Appear();
+                    longestDissolve = Mathf.Max(longestDissolve, fade.GetFadeTime());
+                }
             }
         }
 
