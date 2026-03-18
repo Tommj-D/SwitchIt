@@ -12,6 +12,9 @@ public class ParticlesToTarget : MonoBehaviour
     private ParticleSystem ps;
     private bool activated = false;
 
+    [Range(0f, 1f)]
+    public float completionThreshold = 0.9f; // soglia 90%
+
     // Inizializzazione dal controller
     public void Init(Transform target, ButtonPuzzleController controller, int circleIndex, float speed, float arriveDistance = 0.2f)
     {
@@ -29,7 +32,7 @@ public class ParticlesToTarget : MonoBehaviour
 
     void LateUpdate()
     {
-        if (ps == null || target == null)
+        if (ps == null || target == null || activated)
             return;
 
         int count = ps.particleCount;
@@ -39,22 +42,39 @@ public class ParticlesToTarget : MonoBehaviour
         ParticleSystem.Particle[] particles = new ParticleSystem.Particle[count];
         ps.GetParticles(particles);
 
+        int arrivedCount = 0;
+
         for (int i = 0; i < count; i++)
         {
             Vector3 dir = target.position - particles[i].position;
+            float distance = dir.magnitude;
 
-            // muove la particella verso il target
+            // base velocity verso target
             particles[i].velocity = dir.normalized * speed;
 
-            // se una particella arriva al target attiva il cerchio
-            if (!activated && dir.magnitude < arriveDistance)
+            // attrazione morbida quando vicini al centro
+            if (distance < arriveDistance * 5f)
             {
-                activated = true;
-                controller?.ActivateCircle(circleIndex);
-
-                // distrugge il particle system poco dopo
-                Destroy(gameObject, 0.2f);
+                // aggiunge un piccolo “pull” verso il centro
+                particles[i].velocity += dir.normalized * (speed * 0.5f * (1f - distance / (arriveDistance * 5f)));
             }
+
+            // check arrivo
+            if (distance <= arriveDistance)
+                arrivedCount++;
+        }
+
+        // calcola la percentuale di completamento
+        float completion = (float)arrivedCount / count;
+
+        if (!activated && completion >= completionThreshold)
+        {
+            activated = true;
+            controller?.ActivateCircle(circleIndex);
+
+            // stoppa emissione e distrugge dopo breve
+            ps.Stop();
+            Destroy(gameObject, 0.2f);
         }
 
         ps.SetParticles(particles, count);
