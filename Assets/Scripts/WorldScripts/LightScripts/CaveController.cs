@@ -26,7 +26,6 @@ public class CaveController : MonoBehaviour
     private Vector3 originalMaskPosition;
     private Vector3 targetMaskPosition;
 
-
     private void Start()
     {
         if (spriteMask != null)
@@ -39,7 +38,6 @@ public class CaveController : MonoBehaviour
         targetMaskPosition = originalMaskPosition;
 
         currentMaskOffset = spriteMaskPosition;
-
     }
 
 
@@ -53,25 +51,31 @@ public class CaveController : MonoBehaviour
             ? spriteMaskPosition
             : new Vector3(-spriteMaskPosition.x, spriteMaskPosition.y, spriteMaskPosition.z);
 
-        // Smooth per il flip della posizione
-        currentMaskOffset = Vector3.Lerp(
+        // Flip indipendente
+        currentMaskOffset = Vector3.MoveTowards(
             currentMaskOffset,
             desiredOffset,
             maskFlipSpeed * Time.deltaTime
         );
 
-        // Smooth della scala
+        // Scala
         spriteMask.transform.localScale = Vector3.Lerp(
             spriteMask.transform.localScale,
             targetMaskScale,
             maskScaleSpeed * Time.deltaTime
         );
 
-        targetMaskPosition = originalMaskPosition + currentMaskOffset;
+        // Posizione
+        // Offset target (dipende dal player)
+        Vector3 targetOffset = currentMaskOffset;
 
+        // Posizione target finale
+        Vector3 finalTargetPosition = originalMaskPosition + targetOffset;
+
+        // Movimento verso la posizione finale
         spriteMask.transform.localPosition = Vector3.Lerp(
             spriteMask.transform.localPosition,
-            targetMaskPosition,
+            finalTargetPosition,
             maskPositionSpeed * Time.deltaTime
         );
     }
@@ -116,6 +120,11 @@ public class CaveController : MonoBehaviour
             // Torna alla scala originale
             targetMaskScale = originalMaskScale;
             targetMaskPosition = originalMaskPosition;
+
+            currentMaskOffset = spriteMaskPosition; 
+
+            spriteMask.transform.localScale = originalMaskScale;
+            spriteMask.transform.localPosition = originalMaskPosition;
         }
     }
 
