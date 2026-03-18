@@ -50,6 +50,9 @@ public class Coin : MonoBehaviour
         if (GameManager.Instance != null)
             GameManager.Instance.AddCoin(value);
 
+        if (ScoreManager.instance != null)
+            ScoreManager.instance.SegnalaMonetaRaccolta();
+
         // EFFETTO VISIVO
         if (collectEffect != null)
             Instantiate(collectEffect, transform.position, Quaternion.identity);

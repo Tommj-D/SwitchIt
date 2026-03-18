@@ -30,6 +30,10 @@ public class SwitchLevel : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             activated = true;
+            if (ScoreManager.instance != null)
+            {
+                ScoreManager.instance.CalcolaEInviaPunteggio();
+            }
             StartCoroutine(LevelCompleteSequence(other.gameObject));
         }
     }

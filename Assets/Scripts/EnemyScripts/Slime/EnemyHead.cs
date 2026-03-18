@@ -27,6 +27,9 @@ public class EnemyHead : MonoBehaviour
         // Uccido il nemico
         enemy.OnStomped();
 
+        if (ScoreManager.instance != null)
+            ScoreManager.instance.SegnalaNemicoSconfitto();
+
         // Rimbalzo player
         if (rb != null)
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpingForce);
