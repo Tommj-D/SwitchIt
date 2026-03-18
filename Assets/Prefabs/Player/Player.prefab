@@ -14898,7 +14898,7 @@ MonoBehaviour:
   moveSpeed: 6.5
   jumpPower: 10.5
   maxJumps: 2
-  fantasyJumpMultiplier: 0.75
+  fantasyJumpMultiplier: 0.76
   groundCheckPos: {fileID: 2937229356370115362}
   groundCheckSize: {x: 0.75, y: 0.05}
   groundLayer:

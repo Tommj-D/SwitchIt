@@ -74,22 +74,31 @@ public class ButtonPuzzleController : MonoBehaviour
     }
 
     // ======== PULSANTE PREMUTO ========
-    public void ButtonPressed(Transform buttonPos)
+    public void ButtonPressed(Transform buttonPos, int circleIndex)
     {
         if (puzzleSolved) return; // Se il puzzle è già risolto, non fare nulla
 
         if (hasCircles)
         {
-            // Trova il primo cerchio non attivo e lancia particelle verso di esso
-            for (int i = 0; i < circles.Length; i++)
+            // Controllo sicurezza
+            if (circleIndex < 0 || circleIndex >= circles.Length)
             {
-                if (!circleActivated[i] && !circleReserved[i])
-                {
-                    circleReserved[i] = true; // Prenota il cerchio per evitare conflitti
-                    SpawnParticles(buttonPos, circles[i].transform, i);
-                    break; // Solo un cerchio alla volta
-                }
+                Debug.LogWarning("Indice cerchio non valido!");
+                return;
             }
+            if (circles[circleIndex] == null)
+            {
+                Debug.LogWarning("Cerchio non assegnato!");
+                return;
+            }
+
+            // Se già attivo o occupato, non fare nulla
+            if (circleActivated[circleIndex] || circleReserved[circleIndex])
+                return;
+
+            // Prenota e lancia particelle
+            circleReserved[circleIndex] = true;
+            SpawnParticles(buttonPos, circles[circleIndex].transform, circleIndex);
         }
         else
         {

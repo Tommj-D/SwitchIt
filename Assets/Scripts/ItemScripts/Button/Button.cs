@@ -10,6 +10,9 @@ public class Button : MonoBehaviour
     [Header("Effetti")]
     public ParticleSystem particellePolvere;
 
+    [Header("Target")]
+    public int targetCircleIndex;
+
     public bool isAnimated = true;
     private void Start()
     {
@@ -29,7 +32,7 @@ public class Button : MonoBehaviour
 
         activated = true;
 
-        puzzleController.ButtonPressed(transform);
+        puzzleController.ButtonPressed(transform, targetCircleIndex);
 
         if (animator != null && isAnimated)
         {
