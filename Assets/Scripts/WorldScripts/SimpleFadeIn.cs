@@ -16,13 +16,28 @@ public class SimpleFadeIn : MonoBehaviour
     }
 
     public void Appear()
+{
+    // Reset alpha a 0 PRIMA del fade
+    if (sr != null)
     {
-        StartCoroutine(FadeRoutine());
+        Color c = sr.color;
+        c.a = 0f;
+        sr.color = c;
     }
+
+    if (tm != null)
+    {
+        Color c = tm.color;
+        c.a = 0f;
+        tm.color = c;
+    }
+
+    StartCoroutine(FadeRoutine());
+}
 
     IEnumerator FadeRoutine()
     {
-        yield return null; // aspetta che l'oggetto sia attivo
+        yield return new WaitForEndOfFrame(); // aspetta che l'oggetto sia attivo
 
         float t = 0f;
 
@@ -52,5 +67,22 @@ public class SimpleFadeIn : MonoBehaviour
     public float GetFadeTime()
     {
         return fadeTime;
+    }
+
+    public void SetAlphaInstant(float a)
+    {
+        if (sr != null)
+        {
+            Color c = sr.color;
+            c.a = a;
+            sr.color = c;
+        }
+
+        if (tm != null)
+        {
+            Color c = tm.color;
+            c.a = a;
+            tm.color = c;
+        }
     }
 }

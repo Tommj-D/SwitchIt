@@ -236,8 +236,16 @@ public class ButtonPuzzleController : MonoBehaviour
 
                 if (fade != null && obj.activeInHierarchy)
                 {
-                    fade.Appear();
-                    longestDissolve = Mathf.Max(longestDissolve, fade.GetFadeTime());
+                    // Se NON sono nel mondo giusto → niente fade, metti alpha subito a 1
+                    if (!WorldSwitch.Instance.isFantasyWorldActive)
+                    {
+                        fade.SetAlphaInstant(1f);
+                    }
+                    else
+                    {
+                        fade.Appear();
+                        longestDissolve = Mathf.Max(longestDissolve, fade.GetFadeTime());
+                    }
                 }
             }
         }
