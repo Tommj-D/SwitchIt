@@ -6,21 +6,20 @@ public class Slime_Green : Enemy
     [SerializeField] private int initialDirection = 1;
 
     protected override void Start()
-{
-    base.Start();
-    direction = initialDirection;
-}
+    {
+        base.Start();
+        direction = initialDirection;
+    }
     protected override void Move()
     {
-        transform.Translate(Vector2.right * direction * patrolSpeed * Time.deltaTime);
+        if (rb == null) return;
+
+        rb.linearVelocity = new Vector2(direction * patrolSpeed, rb.linearVelocity.y);
     }
 
     protected override void Sound()
     {
-        if (AudioManager.Instance != null)
-        {
-            AudioManager.Instance.PlaySFX(AudioManager.Instance.slimeDeathSound);
-        }
+        AudioManager.Instance?.PlaySFX(AudioManager.Instance.slimeDeathSound);
     }
 }
 

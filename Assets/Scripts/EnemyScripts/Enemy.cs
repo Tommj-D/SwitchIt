@@ -3,22 +3,28 @@ using UnityEngine;
 public abstract class Enemy : MonoBehaviour
 {
     protected Animator animator;
-
     public float patrolSpeed = 3.0f;
     public bool isKillable = true;
 
     protected bool isDead = false;
     protected bool isActive = false;
     protected bool isVisible = false; // se è entrato nella camera almeno una volta
-
     protected int direction = 1; // 1 = destra, -1 = sinistra
-
+    private float lastFlipTime;
+    [SerializeField] private float flipCooldown = 0.2f;
     protected SpriteRenderer sr;
+    protected Rigidbody2D rb;
+    protected Collider2D[] allColliders;
+    protected EnemyHead[] heads;
 
     protected virtual void Start()
     {
         animator = GetComponent<Animator>();
         sr = GetComponent<SpriteRenderer>();
+        rb = GetComponent<Rigidbody2D>();
+        allColliders = GetComponents<Collider2D>();
+        heads = GetComponentsInChildren<EnemyHead>();
+
     }
 
     protected virtual void Update()
@@ -76,35 +82,29 @@ public abstract class Enemy : MonoBehaviour
     {
         if (isDead) return;
 
-        Debug.Log("OnStomped: " + gameObject.name, gameObject);
-        
         isDead = true;
         isActive = false;
 
-        // Suono morte
         Sound();
 
-        // Disabilita tutti i collider del nemico (corpo + figli)
-        var allColliders = GetComponentsInChildren<Collider2D>();
         foreach (var col in allColliders)
             col.enabled = false;
 
-        // Imposta Rigidbody kinematic e zero velocity
-        var rb = GetComponent<Rigidbody2D>();
         if (rb != null)
         {
             rb.bodyType = RigidbodyType2D.Kinematic;
             rb.linearVelocity = Vector2.zero;
         }
 
-        // Animazione morte
-        if (animator != null)
-            animator.SetTrigger("Die");
+        animator?.SetTrigger("Die");
     }
 
     private void Flip()
     {
-        //if (WorldSwitch.Instance!=null && WorldSwitch.Instance.isSwitching) return;
+        if (Time.time - lastFlipTime < flipCooldown) return;
+
+        lastFlipTime = Time.time;
+
         direction *= -1;
 
         if (sr != null)
@@ -129,7 +129,6 @@ public abstract class Enemy : MonoBehaviour
         isVisible = false;
 
         // Riattiva Rigidbody
-        var rb = GetComponent<Rigidbody2D>();
         if (rb)
         {
             rb.bodyType = RigidbodyType2D.Dynamic;
@@ -139,12 +138,10 @@ public abstract class Enemy : MonoBehaviour
         }
 
         // Riattiva collider
-        var colliders = GetComponentsInChildren<Collider2D>();
-        foreach (var c in colliders)
+        foreach (var c in allColliders)
             c.enabled = true;
 
         // Reset delle EnemyHead
-        var heads = GetComponentsInChildren<EnemyHead>();
         foreach (var head in heads)
             head.ResetHead();
 

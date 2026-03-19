@@ -13,9 +13,13 @@ public class EnemyHead : MonoBehaviour
         if (hasBeenStomped) return;
 
         Rigidbody2D rb = collision.GetComponent<Rigidbody2D>();
+        if (rb == null) return;
 
-        // Deve avere rigidbody ed essere in caduta
-        if (rb == null)
+        if (collision.transform.position.y < transform.position.y)
+            return;
+            
+        // Controllo che il player stia cadendo
+        if (rb.linearVelocity.y >= 0)
             return;
 
         PlayerRespawn playerRespawn = collision.GetComponent<PlayerRespawn>();
@@ -24,33 +28,28 @@ public class EnemyHead : MonoBehaviour
 
         hasBeenStomped = true;
 
-        // Uccido il nemico
-        enemy.OnStomped();
-
-        if (ScoreManager.instance != null)
-            ScoreManager.instance.SegnalaNemicoSconfitto();
-
-        // Rimbalzo player
-        if (rb != null)
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpingForce);
+        // Rimbalzo 
+        rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpingForce);
 
         PlayerMovement playerMovement = collision.GetComponent<PlayerMovement>();
         if (playerMovement != null)
             playerMovement.ResetJumps();
 
-        // Disattivo i collider della testa
+        // Ora uccido il nemico
+        enemy.OnStomped();
+
+        // Score
+        ScoreManager.instance?.SegnalaNemicoSconfitto();
+
+        // Disattivo collider testa
         foreach (Collider2D col in GetComponents<Collider2D>())
-        {
             col.enabled = false;
-        }
     }
 
-    //Chiamata da enemy resetta la testa del nemico, in modo che possa essere nuovamente calpestata se il nemico respawna
     public void ResetHead()
     {
         hasBeenStomped = false;
 
-        // Riattiva i collider della testa
         foreach (Collider2D col in GetComponents<Collider2D>())
             col.enabled = true;
     }
