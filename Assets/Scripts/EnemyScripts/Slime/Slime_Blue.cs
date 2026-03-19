@@ -76,11 +76,13 @@ public class Slime_Blue : Enemy
 
         // Animazione preparazione (slime si abbassa)
         if (animator != null)
-            animator.SetTrigger("Jump");
+            animator.SetTrigger("PrepareJump");
 
         // Aspetta un attimo (tempo animazione compressione)
         yield return new WaitForSeconds(preJumpDelay);
 
+        animator?.SetTrigger("Jump");
+        
         // Salto
         if (rb != null)
         {
