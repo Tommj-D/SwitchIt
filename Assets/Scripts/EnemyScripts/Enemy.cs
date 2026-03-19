@@ -13,10 +13,12 @@ public abstract class Enemy : MonoBehaviour
 
     protected int direction = 1; // 1 = destra, -1 = sinistra
 
+    protected SpriteRenderer sr;
 
     protected virtual void Start()
     {
         animator = GetComponent<Animator>();
+        sr = GetComponent<SpriteRenderer>();
     }
 
     protected virtual void Update()
@@ -103,10 +105,10 @@ public abstract class Enemy : MonoBehaviour
     private void Flip()
     {
         //if (WorldSwitch.Instance!=null && WorldSwitch.Instance.isSwitching) return;
-        direction *= -1; 
-        Vector3 scale = transform.localScale;
-        scale.x *= -1;   
-        transform.localScale = scale;
+        direction *= -1;
+
+        if (sr != null)
+            sr.flipX = direction < 0;
     }
 
     private void OnBecameVisible()
