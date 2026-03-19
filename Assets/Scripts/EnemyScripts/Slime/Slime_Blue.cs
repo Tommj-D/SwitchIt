@@ -23,12 +23,10 @@ public class Slime_Blue : Enemy
     private bool wasGrounded = false;
     private bool hasJumped = false;
     private float nextJumpTime = 0f;
-    private Rigidbody2D rb;
 
     protected override void Start()
     {
         base.Start();
-        rb = GetComponent<Rigidbody2D>();
         direction = initialDirection;
         nextJumpTime = Random.Range(jumpIntervalMin, jumpIntervalMax);
     }
