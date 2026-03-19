@@ -74,6 +74,8 @@ public abstract class Enemy : MonoBehaviour
     {
         if (isDead) return;
 
+        Debug.Log("OnStomped: " + gameObject.name, gameObject);
+        
         isDead = true;
         isActive = false;
 
@@ -150,5 +152,10 @@ public abstract class Enemy : MonoBehaviour
             isActive = true;
             isVisible = true;
         }
+    }
+
+    public void DisableEnemy()
+    {
+        gameObject.SetActive(false);
     }
 }

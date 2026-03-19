@@ -2,10 +2,15 @@ using UnityEngine;
 
 public class Slime_Blue : Enemy
 {
+    [Header("Direction (1 = right, -1 = left)")]
+    [SerializeField] private int initialDirection = 1;
+
     [Header("Jump Settings")]
     [SerializeField] private float jumpForce = 6f;
-    [SerializeField] private float jumpInterval = 2f;
+    [SerializeField] private float jumpIntervalMin = 2f;
+    [SerializeField] private float jumpIntervalMax = 4f;
     [SerializeField] private float preJumpDelay = 0.3f;
+    [SerializeField] private float jumpHorizontalSpeed = 5f;
 
     [Header("Ground Check")]
     [SerializeField] private Transform groundCheck;
@@ -17,13 +22,15 @@ public class Slime_Blue : Enemy
     private bool isGrounded = false;
     private bool wasGrounded = false;
     private bool hasJumped = false;
-
+    private float nextJumpTime = 0f;
     private Rigidbody2D rb;
 
     protected override void Start()
     {
         base.Start();
         rb = GetComponent<Rigidbody2D>();
+        direction = initialDirection;
+        nextJumpTime = Random.Range(jumpIntervalMin, jumpIntervalMax);
     }
 
     protected override void Update()
@@ -42,10 +49,10 @@ public class Slime_Blue : Enemy
 
     protected override void Move()
     {
-        // NON si muove mentre salta o prepara il salto
         if (isJumping) return;
 
-        transform.Translate(Vector2.right * direction * patrolSpeed * Time.deltaTime);
+        // Movimento orizzontale puro
+        transform.Translate(Vector2.right * direction * patrolSpeed * Time.deltaTime, Space.World);
     }
 
     private void HandleJump()
@@ -54,10 +61,13 @@ public class Slime_Blue : Enemy
 
         jumpTimer += Time.deltaTime;
 
-        if (jumpTimer >= jumpInterval && isGrounded)
+        if (jumpTimer >= nextJumpTime && isGrounded)
         {
             jumpTimer = 0f;
             StartCoroutine(JumpRoutine());
+
+            // Imposta il prossimo salto casuale
+            nextJumpTime = Random.Range(jumpIntervalMin, jumpIntervalMax);
         }
     }
 
@@ -76,7 +86,7 @@ public class Slime_Blue : Enemy
         // Salto
         if (rb != null)
         {
-            rb.linearVelocity = new Vector2(direction * patrolSpeed, 0f);
+            rb.linearVelocity = new Vector2(direction * jumpHorizontalSpeed, 0f);
             rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         }
 
@@ -102,17 +112,15 @@ public class Slime_Blue : Enemy
     {
         if (rb == null) return;
 
-        // Inclina lo slime mentre è in aria
+        float zRotation = 0f;
+
         if (!isGrounded)
         {
-            float angle = Mathf.Clamp(rb.linearVelocity.y * -5f, -30f, 30f);
-            transform.rotation = Quaternion.Euler(0, 0, angle);
+            zRotation = Mathf.Clamp(rb.linearVelocity.y * -5f, -30f, 30f);
         }
-        else
-        {
-            // Reset rotazione a terra
-            transform.rotation = Quaternion.identity;
-        }
+
+        // Mantieni la rotazione Y (direzione), cambia solo Z
+        transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, zRotation);
     }
 
     protected override void Sound()
