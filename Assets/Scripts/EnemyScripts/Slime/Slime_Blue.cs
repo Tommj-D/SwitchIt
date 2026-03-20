@@ -29,6 +29,9 @@ public class Slime_Blue : Enemy
     {
         base.Start();
         direction = initialDirection;
+        if (sr != null)
+            sr.flipX = direction < 0;
+            
         nextJumpTime = Random.Range(jumpIntervalMin, jumpIntervalMax);
     }
 
@@ -68,7 +71,7 @@ public class Slime_Blue : Enemy
             hasPerformedJump = false; 
 
             StartCoroutine(JumpRoutine());
-            
+
             nextJumpTime = Random.Range(jumpIntervalMin, jumpIntervalMax);
         }
     }

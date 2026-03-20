@@ -9,6 +9,8 @@ public class Slime_Green : Enemy
     {
         base.Start();
         direction = initialDirection;
+        if (sr != null)
+            sr.flipX = direction < 0;
     }
     protected override void Move()
     {
