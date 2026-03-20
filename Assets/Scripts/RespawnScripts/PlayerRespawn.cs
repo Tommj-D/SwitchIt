@@ -176,7 +176,7 @@ public class PlayerRespawn : MonoBehaviour
     }
 
     public IEnumerator PrepareRespawn()
-    {
+    {   
         if (fullSpriteRenderer == null)
             yield break;
 
@@ -187,6 +187,7 @@ public class PlayerRespawn : MonoBehaviour
         if (respawnPoint == null)
             yield break;
 
+        WorldSwitch.Instance.canSwitchWorld = false;
         // Imposto posizione
         transform.position = respawnPoint.position;
 
@@ -213,7 +214,6 @@ public class PlayerRespawn : MonoBehaviour
         bool musicResetCalled = false;
         if (!isDying && !musicResetCalled)
         {
-            Debug.Log("Transizione");
             StartCoroutine(AudioManager.Instance.ResetAudioOnPlayerSpawn());
             musicResetCalled = true;
         }

@@ -133,7 +133,8 @@ public class WorldSwitch : MonoBehaviour
     }
     public void SwitchWorldWithoutAnimation()
     {
-        if (!canSwitchWorld || isSwitching) return;
+        //if(!canSwitchWorld) return;
+        if (isSwitching) return;
         ApplyWorldChange();
     }
 }

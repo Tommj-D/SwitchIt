@@ -14898,7 +14898,7 @@ MonoBehaviour:
   moveSpeed: 6.5
   jumpPower: 10.5
   maxJumps: 2
-  fantasyJumpMultiplier: 0.76
+  fantasyJumpMultiplier: 0.74
   groundCheckPos: {fileID: 2937229356370115362}
   groundCheckSize: {x: 0.75, y: 0.05}
   groundLayer:
@@ -14907,7 +14907,7 @@ MonoBehaviour:
   baseGravity: 1.5
   maxFallSpeed: 20
   fallSpeedMultiplier: 2.5
-  fantasyGravityMultiplier: 0.65
+  fantasyGravityMultiplier: 0.656
   flipDuration: 0.25
   vcam: {fileID: 0}
   cameraOffsetX: 4.5

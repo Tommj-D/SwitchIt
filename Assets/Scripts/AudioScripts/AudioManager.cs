@@ -164,9 +164,13 @@ public class AudioManager : MonoBehaviour
         // Trova un'istanza di PlayerRespawn nella scena
         PlayerRespawn playerRespawn = Object.FindFirstObjectByType<PlayerRespawn>();
 
+        //per evitare che uno cambi dimensione prima che la musica torni allo stato normale
+        WorldSwitch.Instance.canSwitchWorld = false; 
+
         //Se il giocatore sta morendo torno subito allo stato normale e solo la musica va resettata
         if (playerRespawn != null && playerRespawn.IsDying())
         {
+            WorldSwitch.Instance.canSwitchWorld = true; 
             // Torna allo stato normale
             SetAudioState(AudioState.Normal);
 
@@ -185,6 +189,7 @@ public class AudioManager : MonoBehaviour
 
             // Torna allo stato normale
             SetAudioState(AudioState.Normal);
+            WorldSwitch.Instance.canSwitchWorld = true;
         }
     }
 }

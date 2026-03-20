@@ -70,7 +70,7 @@ public class PlayFabManager : MonoBehaviour
         testoMessaggio.text = "Login effettuato con successo!";
         Debug.Log("Giocatore loggato! ID: " + result.PlayFabId);
         
-        SceneManager.LoadScene("Level_1");
+        SceneController.Instance.LoadScene("Level_1");
     }
 
        private void OnError(PlayFabError error)
