@@ -62,22 +62,27 @@ public class Slime_Blue : Enemy
         if (jumpTimer >= nextJumpTime && isGrounded)
         {
             jumpTimer = 0f;
+
+            isJumping = true; // 🔥 BLOCCA SUBITO IL MOVIMENTO
+
             StartCoroutine(JumpRoutine());
 
-            // Imposta il prossimo salto casuale
             nextJumpTime = Random.Range(jumpIntervalMin, jumpIntervalMax);
         }
     }
 
     private System.Collections.IEnumerator JumpRoutine()
     {
-        isJumping = true;
         hasJumped = true;
 
         // Animazione preparazione (slime si abbassa)
         if (animator != null)
             animator.SetTrigger("PrepareJump");
 
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector2.zero; //ferma lo slime
+        }
         // Aspetta un attimo (tempo animazione compressione)
         yield return new WaitForSeconds(preJumpDelay);
 
