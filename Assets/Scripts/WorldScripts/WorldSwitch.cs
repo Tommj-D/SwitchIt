@@ -119,8 +119,9 @@ public class WorldSwitch : MonoBehaviour
         }
 
         // aggiorna colori dei cerchi del ButtonPuzzleController
-        ButtonPuzzleController puzzle = Object.FindFirstObjectByType<ButtonPuzzleController>();
-        if (puzzle != null)
+        ButtonPuzzleController[] puzzles = Object.FindObjectsByType<ButtonPuzzleController>(FindObjectsSortMode.None);
+
+        foreach (var puzzle in puzzles)
         {
             puzzle.UpdateCircleColors();
         }
