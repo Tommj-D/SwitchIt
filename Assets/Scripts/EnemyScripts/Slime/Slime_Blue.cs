@@ -31,7 +31,7 @@ public class Slime_Blue : Enemy
         direction = initialDirection;
         if (sr != null)
             sr.flipX = direction < 0;
-            
+
         nextJumpTime = Random.Range(jumpIntervalMin, jumpIntervalMax);
     }
 
@@ -55,6 +55,28 @@ public class Slime_Blue : Enemy
 
         // Movimento orizzontale puro
         transform.Translate(Vector2.right * direction * patrolSpeed * Time.deltaTime, Space.World);
+    }
+
+    protected override void OnCollisionEnter2D(Collision2D collision)
+    {
+        base.OnCollisionEnter2D(collision);
+
+        if (isDead) return;
+
+        foreach (ContactPoint2D contact in collision.contacts)
+        {
+            // collisione laterale
+            if (Mathf.Abs(contact.normal.x) > 0.5f)
+            {
+                // se è in aria e colpisce un muro, rimbalza indietro
+                if (!isGrounded && rb != null)
+                {
+                    rb.linearVelocity = new Vector2(direction * jumpHorizontalSpeed, rb.linearVelocity.y);
+                }
+
+                break;
+            }
+        }
     }
 
     private void HandleJump()
