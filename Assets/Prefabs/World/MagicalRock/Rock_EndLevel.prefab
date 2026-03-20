@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 6514443634441177400}
   - component: {fileID: 2359026708450688708}
   - component: {fileID: 7280398434016796259}
+  - component: {fileID: 5958235404816218696}
   m_Layer: 0
   m_Name: Rock_EndLevel
   m_TagString: Untagged
@@ -803,6 +804,19 @@ ParticleSystemForceField:
         m_RotationOrder: 4
     m_MultiplyDragByParticleSize: 1
     m_MultiplyDragByParticleVelocity: 1
+--- !u!210 &5958235404816218696
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1025980173665243663}
+  m_Enabled: 1
+  m_SortingLayerID: -496185305
+  m_SortingLayer: 2
+  m_SortingOrder: 11
+  m_SortAtRoot: 0
+  m_Sort3DAs2D: 0
 --- !u!1 &1137358287071555883
 GameObject:
   m_ObjectHideFlags: 0
@@ -950,9 +964,6 @@ MonoBehaviour:
   runeColor_Then: {r: 0, g: 0, b: 0, a: 0}
   particlesColor_Then: {r: 0, g: 0, b: 0, a: 0}
   rockLightColor: {r: 0, g: 0, b: 0, a: 0}
-  lightPulseSpeed: 3
-  lightPulseAmount: 0.3
-  activationFlash: 1.5
 --- !u!114 &5990127503115311141
 MonoBehaviour:
   m_ObjectHideFlags: 0
