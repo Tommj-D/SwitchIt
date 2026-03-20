@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class Slime_Blue : Enemy
@@ -9,7 +10,6 @@ public class Slime_Blue : Enemy
     [SerializeField] private float jumpForce = 6f;
     [SerializeField] private float jumpIntervalMin = 2f;
     [SerializeField] private float jumpIntervalMax = 4f;
-    [SerializeField] private float preJumpDelay = 0.3f;
     [SerializeField] private float jumpHorizontalSpeed = 5f;
 
     [Header("Ground Check")]
@@ -23,6 +23,7 @@ public class Slime_Blue : Enemy
     private bool wasGrounded = false;
     private bool hasJumped = false;
     private float nextJumpTime = 0f;
+    private bool hasPerformedJump = false;
 
     protected override void Start()
     {
@@ -63,43 +64,44 @@ public class Slime_Blue : Enemy
         {
             jumpTimer = 0f;
 
-            isJumping = true; // 🔥 BLOCCA SUBITO IL MOVIMENTO
+            isJumping = true;
+            hasPerformedJump = false; 
 
             StartCoroutine(JumpRoutine());
-
+            
             nextJumpTime = Random.Range(jumpIntervalMin, jumpIntervalMax);
         }
     }
 
-    private System.Collections.IEnumerator JumpRoutine()
+    private IEnumerator JumpRoutine()
     {
         hasJumped = true;
 
-        // Animazione preparazione (slime si abbassa)
-        if (animator != null)
-            animator.SetTrigger("PrepareJump");
+        // Animazione preparazione
+        animator?.SetTrigger("PrepareJump");
 
         if (rb != null)
-        {
-            rb.linearVelocity = Vector2.zero; //ferma lo slime
-        }
-        // Aspetta un attimo (tempo animazione compressione)
-        yield return new WaitForSeconds(preJumpDelay);
+            rb.linearVelocity = Vector2.zero;
 
-        animator?.SetTrigger("Jump");
-        
-        // Salto
-        if (rb != null)
-        {
-            rb.linearVelocity = new Vector2(direction * jumpHorizontalSpeed, 0f);
-            rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
-        }
+        //aspetta che l'animation event faccia il salto
+        yield return new WaitUntil(() => hasPerformedJump);
 
-        //  Aspetta di tornare a terra
+        // Aspetta di tornare a terra
         yield return new WaitUntil(() => isGrounded);
 
-        // Fine salto
         isJumping = false;
+    }
+
+    public void PerformJump()
+    {
+        if (rb == null) return;
+
+        hasPerformedJump = true;
+
+        animator?.SetTrigger("Jump");
+
+        rb.linearVelocity = new Vector2(direction * jumpHorizontalSpeed, 0f);
+        rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
     }
 
     private void CheckGround()
