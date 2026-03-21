@@ -96,7 +96,7 @@ public class Spike_Fall : MonoBehaviour
         // Se la spina è già partita in caduta o shaking, distruggila
         if (activated || isFalling || isShaking)
         {
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
     }
 }

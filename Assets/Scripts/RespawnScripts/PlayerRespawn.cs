@@ -176,7 +176,7 @@ public class PlayerRespawn : MonoBehaviour
     }
 
     public IEnumerator PrepareRespawn()
-    {   
+    {
         if (fullSpriteRenderer == null)
             yield break;
 
