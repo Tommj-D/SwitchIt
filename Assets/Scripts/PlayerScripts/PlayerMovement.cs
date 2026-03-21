@@ -246,7 +246,7 @@ public class PlayerMovement : MonoBehaviour
     //----------- GRAVITY INVERSION -------//   
     public void InvertGravity(InputAction.CallbackContext context)
     {
-        if (WorldSwitch.Instance.isFantasyWorldActive && !isFlipping && WorldSwitch.Instance.canSwitchGravity)
+        if (WorldSwitch.Instance!= null && WorldSwitch.Instance.isFantasyWorldActive && !isFlipping && WorldSwitch.Instance.canSwitchGravity)
         {
             gravityDirection *= -1;
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0);

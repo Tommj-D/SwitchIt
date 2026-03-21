@@ -25,6 +25,8 @@ public class WorldVisibility : MonoBehaviour
 
     void UpdateVisibility()
     {
+        if (WorldSwitch.Instance == null) return;
+       
         bool shouldBeVisible =
             (isFantasyObject && WorldSwitch.Instance.isFantasyWorldActive) ||
             (!isFantasyObject && !WorldSwitch.Instance.isFantasyWorldActive);

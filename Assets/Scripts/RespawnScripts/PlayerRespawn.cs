@@ -187,7 +187,9 @@ public class PlayerRespawn : MonoBehaviour
         if (respawnPoint == null)
             yield break;
 
-        WorldSwitch.Instance.canSwitchWorld = false;
+        if(WorldSwitch.Instance!=null)
+            WorldSwitch.Instance.canSwitchWorld = false;
+
         // Imposto posizione
         transform.position = respawnPoint.position;
 
