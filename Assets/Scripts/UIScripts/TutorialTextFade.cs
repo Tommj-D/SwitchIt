@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using TMPro;
 using UnityEngine.InputSystem;
+using JetBrains.Annotations;
 
 public class TutorialTextFade : MonoBehaviour
 {
@@ -10,6 +11,13 @@ public class TutorialTextFade : MonoBehaviour
     public float durataFade = 1f;
     public Key tastoCambioMondo = Key.E; 
     public static bool tutorialCompletato = false; 
+
+    [Header("Floating Effect")]
+    public  float floatAmplitude = 0.2f;
+    public float floatAmplitudeX = 0.1f;
+    public  float floatSpeed = 2f;
+
+private Vector3 startPos;
     private Coroutine fadeCoroutine;
 
     private void Start()
@@ -19,6 +27,8 @@ public class TutorialTextFade : MonoBehaviour
             gameObject.SetActive(false);
             return;
         }
+
+        startPos = transform.position;
 
         if (testoTutorial != null)
         {
@@ -31,6 +41,13 @@ public class TutorialTextFade : MonoBehaviour
     private void Update()
     {
         if (tutorialCompletato) return;
+
+        // Movimento fluttuante
+        float offsetY = Mathf.Sin(Time.time * floatSpeed) * floatAmplitude;
+        float offsetX = Mathf.Cos(Time.time * floatSpeed * 0.8f) * floatAmplitudeX;
+
+        transform.position = startPos + new Vector3(offsetX, offsetY, 0f);
+
         if (Keyboard.current != null && Keyboard.current[tastoCambioMondo].wasPressedThisFrame)
         {
             tutorialCompletato = true;
