@@ -14,6 +14,8 @@ public class SwitchLevel : MonoBehaviour
 
     [Header("Effects")]
     public GameObject teleportEffect;
+    public GameObject BurstEffect;
+
     public Transform magicStonePoint;
     public CinemachineCamera vcam;
     [Header("ShockWave")]
@@ -57,16 +59,18 @@ public class SwitchLevel : MonoBehaviour
 
 
         // FX magico
-        GameObject fx = null;
+        GameObject fx1 = null; //Teleport effect
+        GameObject fx2 = null; //Burst effect
         if (teleportEffect != null)
         {
-            fx = Instantiate(teleportEffect, player.transform.position, Quaternion.identity);
+            fx1 = Instantiate(teleportEffect, player.transform.position, Quaternion.identity);
+            fx2 = Instantiate(BurstEffect, magicStonePoint.position, Quaternion.identity);
 
-            // 👉 FAI SEGUIRE IL PLAYER
-            fx.transform.SetParent(player.transform);
-            fx.transform.localPosition = Vector3.zero;
+            //Faccio diventare la particella figlio del player per farla muovere con lui
+            fx1.transform.SetParent(player.transform);
+            fx1.transform.localPosition = Vector3.zero;
 
-            ParticlesToTarget p = fx.GetComponent<ParticlesToTarget>();
+            ParticlesToTarget p = fx1.GetComponent<ParticlesToTarget>();
             if (p != null)
             {
                 p.Init(magicStonePoint, null, 0, 6f, 0.2f);
@@ -98,9 +102,9 @@ public class SwitchLevel : MonoBehaviour
         yield return StartCoroutine(AbsorbPlayer(player));
 
         //Elimino la particella figlio del player
-        if (fx != null)
+        if (fx1 != null)
         {
-            fx.transform.SetParent(null); 
+            fx1.transform.SetParent(null); 
         }
 
         if (GameManager.Instance != null)
