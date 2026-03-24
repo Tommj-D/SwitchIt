@@ -25,6 +25,13 @@ public class SwitchLevel : MonoBehaviour
 
     private bool activated = false;
 
+    Animator animator;
+
+    private void Start()
+    {
+        animator = GetComponent<Animator>();
+    }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (activated) return;
@@ -77,6 +84,10 @@ public class SwitchLevel : MonoBehaviour
             }
         }
 
+        if(animator!=null)
+        {
+            animator.SetTrigger("Press");
+        }
         // Transizione audio
         if (AudioManager.Instance != null)
         {
