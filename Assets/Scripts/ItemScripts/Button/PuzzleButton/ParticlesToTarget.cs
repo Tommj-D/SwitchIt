@@ -15,6 +15,10 @@ public class ParticlesToTarget : MonoBehaviour
     [Range(0f, 1f)]
     public float completionThreshold = 0.9f; // soglia 90%
 
+    public float ArriveDistanceMultiplier = 10f; // quando inizia il vortice
+    public float AttractionForceMultiplier = 0.5f; // forza attrazione finale
+    public float VortexForceMultiplier = 0.5f;     // forza vortice
+
     // Inizializzazione dal controller
     public void Init(Transform target, ButtonPuzzleController controller, int circleIndex, float speed, float arriveDistance = 0.2f)
     {
@@ -49,19 +53,26 @@ public class ParticlesToTarget : MonoBehaviour
             Vector3 dir = target.position - particles[i].position;
             float distance = dir.magnitude;
 
-            // base velocity verso target
+            // base velocity verso target (sempre)
             particles[i].velocity = dir.normalized * speed;
 
-            // attrazione morbida quando vicini al centro
-            if (distance < arriveDistance * 5f)
+            // quando sono abbastanza vicine, aggiungi vortice + attrazione finale
+            if (distance < arriveDistance * ArriveDistanceMultiplier)
             {
-                // aggiunge un piccolo “pull” verso il centro
-                particles[i].velocity += dir.normalized * (speed * 0.5f * (1f - distance / (arriveDistance * 5f)));
+                // attrazione morbida extra
+                particles[i].velocity += dir.normalized * (speed * AttractionForceMultiplier * (1f - distance / (arriveDistance * ArriveDistanceMultiplier)));
+
+                // vortice solo vicino
+                Vector3 perpendicular = new Vector3(-dir.y, dir.x, 0f);
+                particles[i].velocity += perpendicular * (speed * VortexForceMultiplier);
             }
 
-            // check arrivo
+            // scomparsa finale
             if (distance <= arriveDistance)
+            {
+                particles[i].remainingLifetime = 0f;
                 arrivedCount++;
+            }
         }
 
         // calcola la percentuale di completamento

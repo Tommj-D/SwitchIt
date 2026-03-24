@@ -4908,3 +4908,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ParticlesToTarget
   completionThreshold: 0.9
+  ArriveDistanceMultiplier: 20
+  AttractionForceMultiplier: 0.6
+  VortexForceMultiplier: 0.3

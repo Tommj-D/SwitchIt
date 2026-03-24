@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5741128750248175339}
   - component: {fileID: 8571483709266234369}
   - component: {fileID: 3740930888229152826}
+  - component: {fileID: -3374287798535963775}
   m_Layer: 0
   m_Name: TeleportPullFX
   m_TagString: Untagged
@@ -169,8 +170,8 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 2.7
-      minScalar: 1.5
+      scalar: 8
+      minScalar: 5
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -222,8 +223,8 @@ ParticleSystem:
     startColor:
       serializedVersion: 2
       minMaxState: 2
-      minColor: {r: 0.254902, g: 0.4117647, b: 0.882353, a: 1}
-      maxColor: {r: 0.2941177, g: 0, b: 0.509804, a: 1}
+      minColor: {r: 0.1176471, g: 0.5647059, b: 1, a: 1}
+      maxColor: {r: 0.5803922, g: 0, b: 0.8274511, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -664,7 +665,7 @@ ParticleSystem:
   ShapeModule:
     serializedVersion: 6
     enabled: 1
-    type: 10
+    type: 0
     angle: 25
     length: 5
     boxThickness: {x: 0, y: 0, z: 0}
@@ -1366,16 +1367,16 @@ ParticleSystem:
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       maxGradient:
         serializedVersion: 2
-        key0: {r: 1, g: 1, b: 1, a: 1}
-        key1: {r: 1, g: 1, b: 1, a: 0}
-        key2: {r: 0.254902, g: 0.4117647, b: 0.882353, a: 0.78431374}
+        key0: {r: 0.2941177, g: 0, b: 0.509804, a: 1}
+        key1: {r: 0.254902, g: 0.4117647, b: 0.882353, a: 0.78431374}
+        key2: {r: 0.254902, g: 0.4117647, b: 0.882353, a: 0}
         key3: {r: 0, g: 0, b: 0, a: 0}
         key4: {r: 0, g: 0, b: 0, a: 0}
         key5: {r: 0, g: 0, b: 0, a: 0}
         key6: {r: 0, g: 0, b: 0, a: 0}
         key7: {r: 0, g: 0, b: 0, a: 0}
         ctime0: 0
-        ctime1: 65535
+        ctime1: 47185
         ctime2: 47185
         ctime3: 0
         ctime4: 0
@@ -1383,8 +1384,8 @@ ParticleSystem:
         ctime6: 0
         ctime7: 0
         atime0: 0
-        atime1: 65535
-        atime2: 47185
+        atime1: 47185
+        atime2: 65535
         atime3: 65535
         atime4: 0
         atime5: 0
@@ -1393,7 +1394,7 @@ ParticleSystem:
         m_Mode: 0
         m_ColorSpace: 0
         m_NumColorKeys: 2
-        m_NumAlphaKeys: 2
+        m_NumAlphaKeys: 3
       minGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -1426,8 +1427,8 @@ ParticleSystem:
         m_NumAlphaKeys: 2
   UVModule:
     serializedVersion: 2
-    enabled: 0
-    mode: 0
+    enabled: 1
+    mode: 1
     timeMode: 0
     fps: 30
     frameOverTime:
@@ -1545,7 +1546,7 @@ ParticleSystem:
     uvChannelMask: -1
     rowMode: 1
     sprites:
-    - sprite: {fileID: 0}
+    - sprite: {fileID: -2413806693520163455, guid: 67e961d05c67dfb4db1601a68ecef851, type: 3}
     flipU: 0
     flipV: 0
   VelocityModule:
@@ -2747,7 +2748,7 @@ ParticleSystem:
     strength:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 1
+      scalar: 2
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -4894,3 +4895,19 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
+--- !u!114 &-3374287798535963775
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5354946170535676697}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 053c00b2ba4b5407c89ae8402551fe70, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ParticlesToTarget
+  completionThreshold: 0.9
+  ArriveDistanceMultiplier: 15
+  AttractionForceMultiplier: 0.8
+  VortexForceMultiplier: 0.3

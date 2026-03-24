@@ -55,10 +55,22 @@ public class SwitchLevel : MonoBehaviour
             vcam.Follow = magicStonePoint;
         }
 
+
         // FX magico
+        GameObject fx = null;
         if (teleportEffect != null)
         {
-            Instantiate(teleportEffect, player.transform.position, Quaternion.identity);
+            fx = Instantiate(teleportEffect, player.transform.position, Quaternion.identity);
+
+            // 👉 FAI SEGUIRE IL PLAYER
+            fx.transform.SetParent(player.transform);
+            fx.transform.localPosition = Vector3.zero;
+
+            ParticlesToTarget p = fx.GetComponent<ParticlesToTarget>();
+            if (p != null)
+            {
+                p.Init(magicStonePoint, null, 0, 6f, 0.2f);
+            }
         }
 
         // Transizione audio
@@ -84,6 +96,12 @@ public class SwitchLevel : MonoBehaviour
 
         // Assorbimento verso la pietra magica
         yield return StartCoroutine(AbsorbPlayer(player));
+
+        //Elimino la particella figlio del player
+        if (fx != null)
+        {
+            fx.transform.SetParent(null); 
+        }
 
         if (GameManager.Instance != null)
         {
@@ -116,7 +134,7 @@ public class SwitchLevel : MonoBehaviour
                 c.a = Mathf.Lerp(1, 0, t);
                 sr.color = c;
             }
-
+                
             yield return null;
         }
     }
