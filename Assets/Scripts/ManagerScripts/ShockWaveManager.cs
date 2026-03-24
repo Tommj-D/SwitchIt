@@ -49,8 +49,13 @@ public class ShockWaveManager : MonoBehaviour
             return;
         }
 
+        Vector2 corrected = new Vector2(screenPos.x, screenPos.y);
+
+        //OFFSET CORRETTIVO (aggiustalo leggermente)
+        corrected += new Vector2(0f, 0.006f); //altrimenti -0.01f,
+
         _material.SetVector(waveCenterID,
-            new Vector4(screenPos.x, screenPos.y, 0, 0));
+            new Vector4(corrected.x, corrected.y, 0, 0));
 
         _material.SetFloat("_ShockWaveStrenght", strenght);
 
@@ -76,5 +81,27 @@ public class ShockWaveManager : MonoBehaviour
             _material.SetFloat(waveDistanceFromCenter, lerpedAmount);
             yield return null;
         }
+    }
+
+    void LateUpdate()
+    {
+        if (_cam == null) return;
+
+        float distance = 2.2f;
+
+        float height = 2f * Mathf.Tan(_cam.fieldOfView * 0.5f * Mathf.Deg2Rad) * distance;
+        float width = height * _cam.aspect;
+
+        transform.position = _cam.transform.position + _cam.transform.forward * distance;
+
+        SpriteRenderer sr = GetComponent<SpriteRenderer>();
+        float spriteWidth = sr.sprite.bounds.size.x;
+        float spriteHeight = sr.sprite.bounds.size.y;
+
+        transform.localScale = new Vector3(
+            width / spriteWidth,
+            height / spriteHeight,
+            1f
+        );
     }
 }
