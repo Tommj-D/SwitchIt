@@ -52,7 +52,7 @@ public class ShockWaveManager : MonoBehaviour
         Vector2 corrected = new Vector2(screenPos.x, screenPos.y);
 
         //OFFSET CORRETTIVO (aggiustalo leggermente)
-        corrected += new Vector2(0f, 0.006f); //altrimenti -0.01f,
+        corrected += new Vector2(0.003f, 0.006f); //altrimenti -0.01f,
 
         _material.SetVector(waveCenterID,
             new Vector4(corrected.x, corrected.y, 0, 0));
@@ -63,7 +63,7 @@ public class ShockWaveManager : MonoBehaviour
             StopCoroutine(shockWaveCoroutine);
 
         shockWaveCoroutine = StartCoroutine(
-            ShockWaveAction(-0.1f, 1f, duration));
+            ShockWaveAction(-0.1f, 1.5f, duration));
     }
 
     private IEnumerator ShockWaveAction(float startPos, float endPos, float duration)

@@ -15121,7 +15121,7 @@ MonoBehaviour:
   deathParticle: {fileID: 1126785116543351055, guid: 80439d11f5194024793495e2956dbd06, type: 3}
   fullSprite: {fileID: 7890150273709778190}
   riggedBody: {fileID: 6610645402375781762}
-  shockWaveDuration: 1
+  shockWaveDuration: 1.1
   shockWaveStrenght: -0.1
   deathColor: {r: 8, g: 0, b: 0, a: 1}
   playerFadeInTime: 0.15
