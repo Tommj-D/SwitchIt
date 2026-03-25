@@ -26,7 +26,7 @@ public class WorldSwitch : MonoBehaviour
 
     [HideInInspector] public bool isFantasyWorldActive = false;
 
-    public bool isSwitching = false;
+    [HideInInspector]  public bool isSwitching = false;
 
     void Awake()
     {
