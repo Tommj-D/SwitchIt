@@ -5095,6 +5095,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Button
   puzzleController: {fileID: 0}
   particellePolvere: {fileID: 4276158590037913709}
+  targetCircleIndex: 2
   isAnimated: 1
 --- !u!1 &2621601246348145383
 GameObject:
@@ -10408,7 +10409,7 @@ MonoBehaviour:
   m_Intensity: 2.2
   m_LightVolumeIntensity: 1
   m_LightVolumeEnabled: 0
-  m_ApplyToSortingLayers: 00000000f3794d9827d06ce2a922291a3b5e14a045ce73b0
+  m_ApplyToSortingLayers: 00000000f3794d9827d06ce23b5e14a0
   m_LightCookieSprite: {fileID: 0}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
   m_LightOrder: 0
