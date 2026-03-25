@@ -25,9 +25,7 @@ public class WorldSwitch : MonoBehaviour
     public GameObject MagicFog;
 
     [HideInInspector] public bool isFantasyWorldActive = false;
-
     [HideInInspector]  public bool isSwitching = false;
-
     void Awake()
     {
         if (Instance == null)
@@ -108,6 +106,17 @@ public class WorldSwitch : MonoBehaviour
                 "MusicFantasyVol",
                 -25f,
                 0.5f);
+        }
+
+        //Ritorno alla gravita normale nel mondo reale
+        if (!isFantasyWorldActive)
+        {
+            PlayerMovement player = FindFirstObjectByType<PlayerMovement>();
+
+            if (player != null && player.IsGravityInverted())
+            {
+                player.ResetGravity();
+            }
         }
         // Cambio audio
         if (AudioManager.Instance != null)
