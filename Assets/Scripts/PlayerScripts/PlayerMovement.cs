@@ -35,6 +35,7 @@ public class PlayerMovement : MonoBehaviour
     public int maxJumps = 2; // numero massimo di salti che il player può fare
     private int jumpsRemaining;
     private bool isGrounded;
+    private bool canFlipGravity = true;
     private bool isJumping = false;
     [Header("Fantasy Jump")]
     [Range(0.5f, 1f)]
@@ -208,11 +209,15 @@ public class PlayerMovement : MonoBehaviour
             {
                 if (AudioManager.Instance != null && AudioManager.Instance.jumpLanding != null)
                     AudioManager.Instance.PlaySFX(AudioManager.Instance.jumpLanding);
-                    
                 isJumping = false;
             }
             ResetJumps();
             animator.SetBool("isJumping", false);
+        }
+
+        if (groundedNow)
+        {
+            canFlipGravity = true;
         }
 
         isGrounded = groundedNow;
@@ -249,10 +254,13 @@ public class PlayerMovement : MonoBehaviour
     {
         if (!context.performed) return; 
 
-        if (WorldSwitch.Instance != null && WorldSwitch.Instance.isFantasyWorldActive && !isFlipping && WorldSwitch.Instance.canSwitchGravity && isGrounded)
+        if (WorldSwitch.Instance != null && WorldSwitch.Instance.isFantasyWorldActive && !isFlipping && WorldSwitch.Instance.canSwitchGravity && canFlipGravity)
         {
             gravityDirection *= -1;
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0);
+
+            canFlipGravity = false;
+
             StartCoroutine(SmoothFlip());
         }
     }
