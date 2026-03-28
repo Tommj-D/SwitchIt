@@ -78,18 +78,18 @@ Tilemap:
   m_AnimatedTiles: {}
   m_TileAssetArray:
   - m_RefCount: 1
-    m_Data: {fileID: 11400000, guid: 33ebdbe70aac06d4a8a4d46459020838, type: 2}
+    m_Data: {fileID: 11400000, guid: 84c08c8f3810c194fb20aaacdee2ea91, type: 2}
   - m_RefCount: 1
-    m_Data: {fileID: 11400000, guid: a844c385b91c10e4098a77ff3b6a7c81, type: 2}
+    m_Data: {fileID: 11400000, guid: 76a340a185025f047a744377734d17a4, type: 2}
   - m_RefCount: 1
-    m_Data: {fileID: 11400000, guid: 49bee295279588148acb731cd91ef859, type: 2}
+    m_Data: {fileID: 11400000, guid: 975a1770fe81ae44a9424db1b09a26ed, type: 2}
   m_TileSpriteArray:
   - m_RefCount: 1
-    m_Data: {fileID: 21300000, guid: 2fa3cbfa3d618894cb2540a17bee8da1, type: 3}
+    m_Data: {fileID: 21300000, guid: f2943c351b31da541af99f22bf96e693, type: 3}
   - m_RefCount: 1
-    m_Data: {fileID: 21300000, guid: 2c62264155282ae4e8331ecdbb71f3a5, type: 3}
+    m_Data: {fileID: 21300000, guid: a19d5dc269186c642aad2a625861d060, type: 3}
   - m_RefCount: 1
-    m_Data: {fileID: 21300000, guid: 0ca22b74d58659c438cd630b98174fb3, type: 3}
+    m_Data: {fileID: 21300000, guid: f495ce0d0ba0a0a43a317087f5239191, type: 3}
   m_TileMatrixArray:
   - m_RefCount: 3
     m_Data:
@@ -245,7 +245,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDamping: 0
   m_AngularDamping: 0.05
-  m_GravityScale: 0
+  m_GravityScale: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
