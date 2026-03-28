@@ -187,7 +187,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e85f3f9b9cc9c415b9cff6b9f1a74a68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Dissolve
-  dissolveTime: 2
+  dissolveTime: 2.2
   useVertical: 0
   destroyAfterDissolve: 1
   outlineThickness: 0.05
