@@ -5272,7 +5272,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3285379c633a4bc499e5edafea2e4e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Button
-  puzzleController: {fileID: 9161038078269785119}
+  puzzleControllers:
+  - {fileID: 9161038078269785119}
   particellePolvere: {fileID: 1112477005798364039}
   targetCircleIndex: 0
   isAnimated: 1
@@ -10220,7 +10221,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3285379c633a4bc499e5edafea2e4e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Button
-  puzzleController: {fileID: 9161038078269785119}
+  puzzleControllers:
+  - {fileID: 9161038078269785119}
   particellePolvere: {fileID: 7704876836104829152}
   targetCircleIndex: 1
   isAnimated: 1

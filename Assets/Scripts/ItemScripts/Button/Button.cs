@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Button : MonoBehaviour
 {
-    public ButtonPuzzleController puzzleController;
+    public ButtonPuzzleController[] puzzleControllers;
 
     private bool activated = false;
     private Animator animator;
@@ -24,15 +24,19 @@ public class Button : MonoBehaviour
         if (activated) return;
         if (!other.CompareTag("Player")) return;
 
-        if (puzzleController == null) 
+        if (puzzleControllers == null || puzzleControllers.Length == 0)
         {
-            Debug.LogWarning("Il Button non ha un riferimento al ButtonPuzzleController!");
+            Debug.LogWarning("Il Button non ha PuzzleController assegnati!");
             return;
         }
 
         activated = true;
 
-        puzzleController.ButtonPressed(transform, targetCircleIndex);
+        foreach (var controller in puzzleControllers)
+        {
+            if (controller != null)
+                controller.ButtonPressed(transform, targetCircleIndex);
+        }
 
         if (animator != null && isAnimated)
         {
