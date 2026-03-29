@@ -9340,6 +9340,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4254550379262345409, guid: ea9c248a8ce7c4f549d05f4bab4e2151, type: 3}
+      propertyPath: spriteMask
+      value: 
+      objectReference: {fileID: 2036754921}
     - target: {fileID: 8183839459215317137, guid: ea9c248a8ce7c4f549d05f4bab4e2151, type: 3}
       propertyPath: m_Name
       value: StanzaSegreta_Collider
@@ -29045,11 +29049,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 310517173473750455, guid: 1a7346351f6d0b34dabb96a88a0e7063, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 235.9
+      value: 221.9
       objectReference: {fileID: 0}
     - target: {fileID: 310517173473750455, guid: 1a7346351f6d0b34dabb96a88a0e7063, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -146.8
+      value: -122.4
       objectReference: {fileID: 0}
     - target: {fileID: 310517173473750455, guid: 1a7346351f6d0b34dabb96a88a0e7063, type: 3}
       propertyPath: m_LocalPosition.z
@@ -38585,11 +38589,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1288312201822447041, guid: f5bedbd203125ba4f89de886d70c88a2, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -89.3963
+      value: -103.3963
       objectReference: {fileID: 0}
     - target: {fileID: 1288312201822447041, guid: f5bedbd203125ba4f89de886d70c88a2, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -98.08067
+      value: -73.68067
       objectReference: {fileID: 0}
     - target: {fileID: 3234543264439612519, guid: f5bedbd203125ba4f89de886d70c88a2, type: 3}
       propertyPath: Target.TrackingTarget
@@ -38597,11 +38601,11 @@ PrefabInstance:
       objectReference: {fileID: 1525771555}
     - target: {fileID: 6763211893344866778, guid: f5bedbd203125ba4f89de886d70c88a2, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -89.3963
+      value: -103.3963
       objectReference: {fileID: 0}
     - target: {fileID: 6763211893344866778, guid: f5bedbd203125ba4f89de886d70c88a2, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -94.43259
+      value: -73.68067
       objectReference: {fileID: 0}
     - target: {fileID: 6951153654006219685, guid: f5bedbd203125ba4f89de886d70c88a2, type: 3}
       propertyPath: m_LocalPosition.x
@@ -38693,7 +38697,7 @@ Camera:
   m_CorrespondingSourceObject: {fileID: 9160554240508493716, guid: f5bedbd203125ba4f89de886d70c88a2, type: 3}
   m_PrefabInstance: {fileID: 1703963822}
   m_PrefabAsset: {fileID: 0}
---- !u!43 &1750549026
+--- !u!43 &1814364930
 Mesh:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -48234,6 +48238,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7272398226465254032}
     m_Modifications:
+    - target: {fileID: 942188012127990002, guid: 564bcac6181104d838c26240d212a514, type: 3}
+      propertyPath: m_Color.b
+      value: 0.9843138
+      objectReference: {fileID: 0}
+    - target: {fileID: 942188012127990002, guid: 564bcac6181104d838c26240d212a514, type: 3}
+      propertyPath: m_Color.g
+      value: 0.98823535
+      objectReference: {fileID: 0}
+    - target: {fileID: 942188012127990002, guid: 564bcac6181104d838c26240d212a514, type: 3}
+      propertyPath: m_Color.r
+      value: 0.5411765
+      objectReference: {fileID: 0}
     - target: {fileID: 3294493695604022150, guid: 564bcac6181104d838c26240d212a514, type: 3}
       propertyPath: m_Name
       value: Background_Real
