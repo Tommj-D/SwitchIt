@@ -74,7 +74,7 @@ public abstract class Enemy : MonoBehaviour
         // Se tocca un muro o un ostacolo, cambia direzione
         if (collision.gameObject.CompareTag("Obstacle"))
         {
-            Flip();
+            OnObstacleHit();
         }
     }
 
@@ -156,5 +156,10 @@ public abstract class Enemy : MonoBehaviour
     public void DisableEnemy()
     {
         gameObject.SetActive(false);
+    }
+
+    protected virtual void OnObstacleHit()
+    {
+        Flip();
     }
 }

@@ -184,4 +184,9 @@ public class Slime_Blue : Enemy
             hasJumped = false; // reset
         }
     }
+
+    protected override void OnObstacleHit()
+    {
+        // lo slime blu non si gira se icnontra un obstacle
+    }
 }
