@@ -35,7 +35,6 @@ public class PlayerMovement : MonoBehaviour
     public int maxJumps = 2; // numero massimo di salti che il player può fare
     private int jumpsRemaining;
     private bool isGrounded;
-    private bool canFlipGravity = true;
     private bool isJumping = false;
     [Header("Fantasy Jump")]
     [Range(0.5f, 1f)]
@@ -52,6 +51,9 @@ public class PlayerMovement : MonoBehaviour
     public float maxFallSpeed = 18f;
     public float fallSpeedMultiplier = 2f;
     private int gravityDirection = 1; // 1 per normale, -1 per invertita
+    private bool canFlipGravity = true;
+    private float gravityFlipCooldown = 0.2f;
+    private float lastFlipTime;
     [Header("Fantasy Gravity")]
     [Range(0.1f, 1f)]
     public float fantasyGravityMultiplier = 0.7f; // gravità ridotta nel mondo fantasy
@@ -215,7 +217,7 @@ public class PlayerMovement : MonoBehaviour
             animator.SetBool("isJumping", false);
         }
 
-        if (groundedNow)
+        if (groundedNow && Time.time > lastFlipTime + gravityFlipCooldown)
         {
             canFlipGravity = true;
         }
@@ -260,6 +262,7 @@ public class PlayerMovement : MonoBehaviour
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0);
 
             canFlipGravity = false;
+            lastFlipTime = Time.time; 
 
             StartCoroutine(SmoothFlip());
         }
