@@ -28,11 +28,18 @@ public class Slime_Blue : Enemy
     protected override void Start()
     {
         base.Start();
-        direction = initialDirection;
-        if (sr != null)
-            sr.flipX = direction < 0;
+
+        ApplyInitialDirection();
 
         nextJumpTime = Random.Range(jumpIntervalMin, jumpIntervalMax);
+    }
+
+    private void ApplyInitialDirection()
+    {
+        direction = initialDirection;
+
+        if (sr != null)
+            sr.flipX = direction < 0;
     }
 
     protected override void Update()
@@ -187,6 +194,30 @@ public class Slime_Blue : Enemy
 
     protected override void OnObstacleHit()
     {
-        // lo slime blu non si gira se icnontra un obstacle
+        // lo slime blu non si gira se incontra un obstacle
+    }
+
+    public override void ResetEnemy()
+    {
+        base.ResetEnemy();
+
+        StopAllCoroutines();
+
+        ApplyInitialDirection();
+
+        // Reset stato salto
+        isJumping = false;
+        hasJumped = false;
+        hasPerformedJump = false;
+
+        jumpTimer = 0f;
+        nextJumpTime = Random.Range(jumpIntervalMin, jumpIntervalMax);
+
+        // Reset velocità
+        if (rb != null)
+            rb.linearVelocity = Vector2.zero;
+
+        // Reset rotazione
+        transform.rotation = Quaternion.identity;
     }
 }
