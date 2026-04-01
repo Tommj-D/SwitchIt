@@ -193,6 +193,13 @@ public class PlayerRespawn : MonoBehaviour
         // Imposto posizione
         transform.position = respawnPoint.position;
 
+        //RESETTA LA GRAVITÀ DEL GIOCATORE
+        PlayerMovement movement = GetComponent<PlayerMovement>();
+        if (movement != null)
+        {
+            movement.ResetStateForRespawn();
+        }
+
         rb.simulated = false;
         rb.linearVelocity = Vector2.zero;
 

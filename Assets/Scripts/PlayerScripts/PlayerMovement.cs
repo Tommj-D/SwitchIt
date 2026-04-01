@@ -344,4 +344,30 @@ public class PlayerMovement : MonoBehaviour
         Gizmos.color = Color.white;
         Gizmos.DrawCube(groundCheckPos.position, groundCheckSize);
     }
+
+    // Ripristina la gravità e la rotazione di base quando il giocatore rinasce
+    public void ResetStateForRespawn()
+    {
+        StopAllCoroutines();
+        isFlipping = false;
+        
+        // Resetta la nostra variabile di direzione
+        gravityDirection = 1;
+        
+        // Raddrizza il giocatore
+        transform.rotation = Quaternion.identity;
+        
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector2.zero;
+            rb.gravityScale = baseGravity; 
+        }
+        
+        ResetJumps();
+        isJumping = false;
+        if (animator != null)
+        {
+            animator.SetBool("isJumping", false);
+        }
+    }
 }
