@@ -52,14 +52,9 @@ public abstract class Enemy : MonoBehaviour
                 respawn.Die();
         }
 
-        foreach (ContactPoint2D contact in collision.contacts)
+        if(!collision.gameObject.CompareTag("Ground"))
         {
-            // se la collisione è laterale
-            if (Mathf.Abs(contact.normal.x) > 0.5f)
-            {
-                Flip();
-                break;
-            }
+            OnObstacleHit();
         }
     }
 
@@ -74,7 +69,7 @@ public abstract class Enemy : MonoBehaviour
         // Se tocca un muro o un ostacolo, cambia direzione
         if (collision.gameObject.CompareTag("Obstacle"))
         {
-            OnObstacleHit();
+            Flip();
         }
     }
 
