@@ -17,6 +17,10 @@ public abstract class Enemy : MonoBehaviour
     protected Collider2D[] allColliders;
     protected EnemyHead[] heads;
 
+    [Header("Split Settings")]
+    public bool canSplit = false;
+    public int size = 1;
+    public GameObject smallerVersionPrefab;
     protected virtual void Start()
     {
         animator = GetComponent<Animator>();
@@ -87,11 +91,22 @@ public abstract class Enemy : MonoBehaviour
 
         if (rb != null)
         {
-            rb.bodyType = RigidbodyType2D.Kinematic;
-            rb.linearVelocity = Vector2.zero;
+            if (rb != null)
+            {
+                rb.linearVelocity = Vector2.zero;
+                rb.bodyType = RigidbodyType2D.Kinematic; 
+            }
         }
 
-        animator?.SetTrigger("Die");
+        // Se può splittare, NON distruggere subito
+        if (canSplit && size > 1)
+        {
+            animator?.SetTrigger("Split"); // animazione diversa
+        }
+        else
+        {
+            animator?.SetTrigger("Die");
+        }
     }
 
     private void Flip()
@@ -148,6 +163,35 @@ public abstract class Enemy : MonoBehaviour
         }
     }
 
+    //Funzione che chiamo se il nemico è grande e volgio che si divida in 2 più piccoli
+    protected virtual void Split()
+    {
+        float forceX = 4f;
+        float forceY = 3f;
+
+        for (int i = 0; i < 2; i++)
+        {
+            GameObject newEnemy = Instantiate(smallerVersionPrefab, transform.position, Quaternion.identity);
+
+            Enemy enemyScript = newEnemy.GetComponent<Enemy>();
+            enemyScript.size = size - 1;
+
+            Rigidbody2D newRb = newEnemy.GetComponent<Rigidbody2D>();
+            if (newRb != null)
+            {
+                float dir = (i == 0) ? -1 : 1;
+
+                // reset velocità per sicurezza
+                newRb.linearVelocity = Vector2.zero;
+
+                // spinta più “bella”
+                newRb.AddForce(new Vector2(dir * forceX, forceY), ForceMode2D.Impulse);
+            }
+        }
+
+        Destroy(gameObject);
+    }
+
     public void DisableEnemy()
     {
         gameObject.SetActive(false);
@@ -156,5 +200,10 @@ public abstract class Enemy : MonoBehaviour
     protected virtual void OnObstacleHit()
     {
         Flip();
+    }
+
+    public void PerformSplit()
+    {
+        Split();
     }
 }
