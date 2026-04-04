@@ -3,24 +3,22 @@ using UnityEngine;
 public abstract class Enemy : MonoBehaviour
 {
     protected Animator animator;
+    protected SpriteRenderer sr;
+    protected Rigidbody2D rb;
+    protected Collider2D[] allColliders;
+    protected EnemyHead[] heads;
+
     public float patrolSpeed = 3.0f;
     public bool isKillable = true;
 
     protected bool isDead = false;
     protected bool isActive = false;
     protected bool isVisible = false; // se è entrato nella camera almeno una volta
-    protected int direction = 1; // 1 = destra, -1 = sinistra
+    protected int direction = 1;       // 1 = destra, -1 = sinistra
+
     private float lastFlipTime;
     [SerializeField] private float flipCooldown = 0.2f;
-    protected SpriteRenderer sr;
-    protected Rigidbody2D rb;
-    protected Collider2D[] allColliders;
-    protected EnemyHead[] heads;
 
-    [Header("Split Settings")]
-    public bool canSplit = false;
-    public int size = 1;
-    public GameObject smallerVersionPrefab;
     protected virtual void Start()
     {
         animator = GetComponent<Animator>();
@@ -28,20 +26,18 @@ public abstract class Enemy : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         allColliders = GetComponents<Collider2D>();
         heads = GetComponentsInChildren<EnemyHead>();
-
     }
 
     protected virtual void Update()
     {
         if (isDead || !isActive) return;
-
         Move();
     }
 
-    // Ogni nemico deve implementare il suo movimento (es. in uno script che eredita da questo)
+    // Ogni nemico deve implementare il suo movimento
     protected abstract void Move();
 
-    // Ogni nemico deve implementare il suo suono (es. in uno script che eredita da questo)
+    // Ogni nemico deve implementare il suo suono
     protected abstract void Sound();
 
     protected virtual void OnCollisionEnter2D(Collision2D collision)
@@ -56,7 +52,7 @@ public abstract class Enemy : MonoBehaviour
                 respawn.Die();
         }
 
-        if(!collision.gameObject.CompareTag("Ground"))
+        if (!collision.gameObject.CompareTag("Ground"))
         {
             OnObstacleHit();
         }
@@ -69,7 +65,7 @@ public abstract class Enemy : MonoBehaviour
         {
             OnStomped();
         }
-        
+
         // Se tocca un muro o un ostacolo, cambia direzione
         if (collision.gameObject.CompareTag("Obstacle"))
         {
@@ -77,7 +73,7 @@ public abstract class Enemy : MonoBehaviour
         }
     }
 
-    public void OnStomped()
+    public virtual void OnStomped()
     {
         if (isDead) return;
 
@@ -91,22 +87,11 @@ public abstract class Enemy : MonoBehaviour
 
         if (rb != null)
         {
-            if (rb != null)
-            {
-                rb.linearVelocity = Vector2.zero;
-                rb.bodyType = RigidbodyType2D.Kinematic; 
-            }
+            rb.bodyType = RigidbodyType2D.Kinematic;
+            rb.linearVelocity = Vector2.zero;
         }
 
-        // Se può splittare, NON distruggere subito
-        if (canSplit && size > 1)
-        {
-            animator?.SetTrigger("Split"); // animazione diversa
-        }
-        else
-        {
-            animator?.SetTrigger("Die");
-        }
+        animator?.SetTrigger("Die");
     }
 
     private void Flip()
@@ -114,7 +99,6 @@ public abstract class Enemy : MonoBehaviour
         if (Time.time - lastFlipTime < flipCooldown) return;
 
         lastFlipTime = Time.time;
-
         direction *= -1;
 
         if (sr != null)
@@ -134,7 +118,6 @@ public abstract class Enemy : MonoBehaviour
     {
         isDead = false;
         isKillable = true;
-
         isActive = false;
         isVisible = false;
 
@@ -163,35 +146,6 @@ public abstract class Enemy : MonoBehaviour
         }
     }
 
-    //Funzione che chiamo se il nemico è grande e volgio che si divida in 2 più piccoli
-    protected virtual void Split()
-    {
-        float forceX = 4f;
-        float forceY = 3f;
-
-        for (int i = 0; i < 2; i++)
-        {
-            GameObject newEnemy = Instantiate(smallerVersionPrefab, transform.position, Quaternion.identity);
-
-            Enemy enemyScript = newEnemy.GetComponent<Enemy>();
-            enemyScript.size = size - 1;
-
-            Rigidbody2D newRb = newEnemy.GetComponent<Rigidbody2D>();
-            if (newRb != null)
-            {
-                float dir = (i == 0) ? -1 : 1;
-
-                // reset velocità per sicurezza
-                newRb.linearVelocity = Vector2.zero;
-
-                // spinta più “bella”
-                newRb.AddForce(new Vector2(dir * forceX, forceY), ForceMode2D.Impulse);
-            }
-        }
-
-        Destroy(gameObject);
-    }
-
     public void DisableEnemy()
     {
         gameObject.SetActive(false);
@@ -202,8 +156,11 @@ public abstract class Enemy : MonoBehaviour
         Flip();
     }
 
-    public void PerformSplit()
+    public void SetDirection(int dir)
     {
-        Split();
+        direction = dir;
+
+        if (sr != null)
+            sr.flipX = direction < 0;
     }
 }

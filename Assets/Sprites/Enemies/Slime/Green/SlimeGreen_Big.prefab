@@ -11,10 +11,10 @@ GameObject:
   - component: {fileID: 8444132332664598213}
   - component: {fileID: 3056438107265814006}
   - component: {fileID: 4900253653419395071}
-  - component: {fileID: 5690411556543653757}
   - component: {fileID: 1213344763952736056}
   - component: {fileID: 5816190636224803829}
   - component: {fileID: 6307226036895869702}
+  - component: {fileID: 5298134293589363509}
   m_Layer: 0
   m_Name: SlimeGreen_Big
   m_TagString: Enemy
@@ -107,7 +107,7 @@ Animator:
   m_GameObject: {fileID: 2275780812173932544}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 37bcd330dbf2e4a118a49a52a0d82195, type: 2}
+  m_Controller: {fileID: 9100000, guid: 89aaebe355d346b40af738d224f2010f, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -119,25 +119,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &5690411556543653757
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2275780812173932544}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fc931ebf3bbd7c546b22c84cf65dee7e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Slime_Green
-  patrolSpeed: 2
-  isKillable: 1
-  flipCooldown: 0.2
-  canSplit: 1
-  size: 2
-  smallerVersionPrefab: {fileID: 8068589428734277748, guid: 27bf31f6833d5b742a6b7841e983dd6b, type: 3}
-  initialDirection: -1
 --- !u!60 &1213344763952736056
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -245,6 +226,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f69593e4ea0657c4695cf7c10b3abc83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RespawnableObject
+--- !u!114 &5298134293589363509
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2275780812173932544}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a967525aec834c13ad76e6de5ade5b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Slime_Green_Big
+  patrolSpeed: 1
+  isKillable: 1
+  flipCooldown: 0.2
+  initialDirection: -1
+  smallEnemyPrefab: {fileID: 8068589428734277748, guid: 27bf31f6833d5b742a6b7841e983dd6b, type: 3}
+  spawnCount: 2
+  spawnOffset: 0.5
 --- !u!1 &4399058840277973690
 GameObject:
   m_ObjectHideFlags: 0
@@ -336,5 +336,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c03a09b166a920a4ab893576aa4549e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHead
-  enemy: {fileID: 5690411556543653757}
-  jumpingForce: 8
+  enemy: {fileID: 5298134293589363509}
+  jumpingForce: 12
