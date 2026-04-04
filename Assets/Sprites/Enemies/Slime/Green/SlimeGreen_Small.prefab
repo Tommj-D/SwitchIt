@@ -224,12 +224,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc931ebf3bbd7c546b22c84cf65dee7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Slime_Green
-  patrolSpeed: 2
+  patrolSpeed: 2.5
   isKillable: 1
-  wallCheckDistance: 0.2
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 8
+  flipCooldown: 0.2
+  initialDirection: -1
 --- !u!60 &501101685884834853
 PolygonCollider2D:
   m_ObjectHideFlags: 0

@@ -238,13 +238,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a967525aec834c13ad76e6de5ade5b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Slime_Green_Big
-  patrolSpeed: 1
+  patrolSpeed: 1.9
   isKillable: 1
   flipCooldown: 0.2
   initialDirection: -1
   smallEnemyPrefab: {fileID: 8068589428734277748, guid: 27bf31f6833d5b742a6b7841e983dd6b, type: 3}
   spawnCount: 2
   spawnOffset: 0.5
+  launchForceX: 7
+  launchForceY: 5
 --- !u!1 &4399058840277973690
 GameObject:
   m_ObjectHideFlags: 0

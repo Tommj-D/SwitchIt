@@ -36,5 +36,17 @@ public class Slime_Green : Enemy
         base.ResetEnemy();
         ApplyInitialDirection();
     }
+
+    public void InitDirection(int dir)
+    {
+        initialDirection = dir;
+        direction = dir;
+
+        if (sr == null)
+            sr = GetComponent<SpriteRenderer>();
+
+        if (sr != null)
+            sr.flipX = direction < 0;
+    }
 }
 
