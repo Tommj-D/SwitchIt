@@ -66,18 +66,23 @@ public class Mace_Fall : MonoBehaviour
     private IEnumerator StartGoUp()
     {
         yield return new WaitForSeconds(0.5f);
-        float targetY = originalPosition.y;
-        while (transform.position.y < targetY)
+
+        while (Vector3.Distance(transform.position, originalPosition) > 0.01f)
         {
-            transform.Translate(Vector3.up * upSpeed * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(
+                transform.position,
+                originalPosition,
+                upSpeed * Time.deltaTime
+            );
+
             yield return null;
         }
+
         transform.position = originalPosition;
-        isActivated = false; // Reset activation for future triggers
+        isActivated = false;
 
         if (IsPlayerUnder())
         {
-            // Riattiva la sequenza 
             isActivated = true;
             StartCoroutine(StartShake());
         }
