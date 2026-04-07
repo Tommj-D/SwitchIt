@@ -15,11 +15,18 @@ public class EnemyHead : MonoBehaviour
         Rigidbody2D rb = collision.GetComponent<Rigidbody2D>();
         if (rb == null) return;
 
-        if (collision.transform.position.y < transform.position.y)
+        PlayerMovement playerMovement = collision.GetComponent<PlayerMovement>();
+        if (playerMovement == null) return;
+
+        // Direzione gravità reale del player
+        float gravitySign = playerMovement.IsGravityInverted() ? -1f : 1f;
+
+        // Controllo posizione (devo essere "sopra" rispetto alla gravità)
+        if ((collision.transform.position.y - transform.position.y) * gravitySign < 0)
             return;
-            
-        // Controllo che il player stia cadendo
-        if (rb.linearVelocity.y >= 0)
+
+        // Controllo movimento (devo andare verso il nemico)
+        if (rb.linearVelocity.y * gravitySign >= 0)
             return;
 
         PlayerRespawn playerRespawn = collision.GetComponent<PlayerRespawn>();
@@ -28,20 +35,17 @@ public class EnemyHead : MonoBehaviour
 
         hasBeenStomped = true;
 
-        // Rimbalzo 
-        rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpingForce);
+        // Rimbalzo
+        rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
+        rb.AddForce(Vector2.up * jumpingForce * gravitySign, ForceMode2D.Impulse);
 
-        PlayerMovement playerMovement = collision.GetComponent<PlayerMovement>();
-        if (playerMovement != null)
-            playerMovement.ResetJumps();
+        playerMovement.ResetJumps();
 
-        // Ora uccido il nemico
+        // Uccido nemico
         enemy.OnStomped();
 
-        // Score
         ScoreManager.instance?.SegnalaNemicoSconfitto();
 
-        // Disattivo collider testa
         foreach (Collider2D col in GetComponents<Collider2D>())
             col.enabled = false;
     }
