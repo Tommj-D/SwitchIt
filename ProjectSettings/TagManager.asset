@@ -11,6 +11,7 @@ TagManager:
   - Enemy
   - Hidden
   - Obstacle
+  - Spike
   layers:
   - Default
   - TransparentFX

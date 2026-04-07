@@ -52,7 +52,7 @@ public abstract class Enemy : MonoBehaviour
                 respawn.Die();
         }
 
-        if (!collision.gameObject.CompareTag("Ground"))
+        if (!collision.gameObject.CompareTag("Ground")|| !collision.gameObject.CompareTag("Spike"))
         {
             OnObstacleHit();
         }

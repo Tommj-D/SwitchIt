@@ -71,7 +71,7 @@ public class PlayerRespawn : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (!isDying && collision.gameObject.CompareTag("Enemy"))
+        if (!isDying && (collision.gameObject.CompareTag("Enemy")) || collision.gameObject.CompareTag("Spike"))
         {   
             StartCoroutine(DeathSequence());
         }
