@@ -131,12 +131,24 @@ public abstract class Enemy : MonoBehaviour
         }
 
         // Riattiva collider
-        foreach (var c in allColliders)
-            c.enabled = true;
+        if (allColliders != null)
+        {
+            foreach (var c in allColliders)
+            {
+                if (c != null) 
+                    c.enabled = true;
+            }
+        }
 
         // Reset delle EnemyHead
-        foreach (var head in heads)
-            head.ResetHead();
+        if (heads != null)
+        {
+            foreach (var head in heads)
+            {
+                if (head != null) 
+                    head.ResetHead();
+            }
+        }
 
         var renderer = GetComponent<Renderer>();
         if (renderer != null && renderer.isVisible)

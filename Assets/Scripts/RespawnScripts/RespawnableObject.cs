@@ -90,8 +90,9 @@ public class RespawnableObject : MonoBehaviour
         if (animator != null)
         {
             animator.runtimeAnimatorController = startController;
-            // forza stato di partenza (se valido)
-            if (startAnimatorStateHash != -1)
+            
+            //forza stato di partenza solo se valido E se l'oggetto è acceso
+            if (startAnimatorStateHash != -1 && gameObject.activeInHierarchy)
             {
                 animator.Play(startAnimatorStateHash, 0, 0f);
                 animator.Update(0f);

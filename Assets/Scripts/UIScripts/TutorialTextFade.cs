@@ -18,11 +18,20 @@ public class TutorialTextFade : MonoBehaviour
 
     private Vector3 startPos;
     private Coroutine fadeCoroutine;
+    private bool playerInArea = false; // Controlla se il giocatore è davanti al cartello
 
     private void Start()
     {
         if (tutorialCompletato)
         {
+            // Se il tutorial è già stato fatto in una vita precedente, 
+            // cerca il giocatore e sbloccagli l'abilità all'istante prima di sparire.
+            PlayerMovement player = FindAnyObjectByType<PlayerMovement>();
+            if (player != null) 
+            {
+                player.gravityUnlocked = true;
+            }
+
             gameObject.SetActive(false);
             return;
         }
@@ -44,12 +53,19 @@ public class TutorialTextFade : MonoBehaviour
         // Movimento fluttuante
         float offsetY = Mathf.Sin(Time.time * floatSpeed) * floatAmplitude;
         float offsetX = Mathf.Cos(Time.time * floatSpeed * 0.8f) * floatAmplitudeX;
-
         transform.position = startPos + new Vector3(offsetX, offsetY, 0f);
 
-        if (Keyboard.current != null && Keyboard.current[tastoScomparsa].wasPressedThisFrame)
+        // MODIFICA: Il tasto funziona SOLO se il giocatore è nell'area del tutorial
+        if (playerInArea && Keyboard.current != null && Keyboard.current[tastoScomparsa].wasPressedThisFrame)
         {
             tutorialCompletato = true;
+
+            // Sicurezza: se chiude il testo, assicuriamoci che abbia l'abilità
+            PlayerMovement player = FindAnyObjectByType<PlayerMovement>();
+            if (player != null)
+            {
+                player.gravityUnlocked = true;
+            }
 
             if (fadeCoroutine != null) StopCoroutine(fadeCoroutine);
             fadeCoroutine = StartCoroutine(EseguiFade(0f));
@@ -62,6 +78,14 @@ public class TutorialTextFade : MonoBehaviour
 
         if (collision.CompareTag("Player"))
         {
+            playerInArea = true; // IL GIOCATORE È ENTRATO
+
+            PlayerMovement player = collision.GetComponent<PlayerMovement>();
+            if (player != null)
+            {
+                player.gravityUnlocked = true;
+            }
+
             if (fadeCoroutine != null) StopCoroutine(fadeCoroutine);
             fadeCoroutine = StartCoroutine(EseguiFade(1f));
         }
@@ -73,6 +97,8 @@ public class TutorialTextFade : MonoBehaviour
 
         if (collision.CompareTag("Player") && gameObject.activeInHierarchy)
         {
+            playerInArea = false; // IL GIOCATORE È USCITO
+
             if (fadeCoroutine != null) StopCoroutine(fadeCoroutine);
             fadeCoroutine = StartCoroutine(EseguiFade(0f));
         }
@@ -101,5 +127,12 @@ public class TutorialTextFade : MonoBehaviour
         {
             gameObject.SetActive(false);
         }
+    }
+
+    // Questo comando dice a Unity di eseguire questa funzione nel momento esatto in cui premi PLAY
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+    private static void ResetPerTestEditor()
+    {
+        tutorialCompletato = false;
     }
 }

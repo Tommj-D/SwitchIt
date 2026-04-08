@@ -62,6 +62,9 @@ public class PlayerMovement : MonoBehaviour
     public float flipDuration = 0.25f;
     private bool isFlipping = false;
 
+    [Header("Abilità Sbloccate")]
+    public bool gravityUnlocked = false; // falso per il Livello 3, VERO per i livelli successivi!
+
     [Header("Camera")]
     public CinemachineCamera vcam;
     public float cameraOffsetX = 4f;
@@ -252,9 +255,12 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    public void InvertGravity(InputAction.CallbackContext context)
+  public void InvertGravity(InputAction.CallbackContext context)
     {
         if (!context.performed) return; 
+
+        //Se l'abilità non è sbloccata, ignoriamo il comando
+        if (!gravityUnlocked) return;
 
         if (WorldSwitch.Instance != null && WorldSwitch.Instance.isFantasyWorldActive && !isFlipping && WorldSwitch.Instance.canSwitchGravity && canFlipGravity)
         {
