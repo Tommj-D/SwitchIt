@@ -23,9 +23,9 @@ TagManager:
   - FantasyWorld
   - Player
   - TrapsTrigger
-  - 
-  - 
-  - 
+  - Back
+  - Ground_Back
+  - PlayerBack
   - 
   - 
   - 
@@ -49,10 +49,16 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: WorldBack
+    uniqueID: 1287656843
+    locked: 0
+  - name: PlayerBack
+    uniqueID: 2917631803
+    locked: 0
   - name: Hidden
     uniqueID: 2555214323
     locked: 0
-  - name: Word
+  - name: World
     uniqueID: 3798781991
     locked: 0
   - name: Player

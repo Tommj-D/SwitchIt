@@ -14903,12 +14903,13 @@ MonoBehaviour:
   groundCheckSize: {x: 0.75, y: 0.05}
   groundLayer:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 2056
   baseGravity: 1.5
   maxFallSpeed: 20
   fallSpeedMultiplier: 2.5
   fantasyGravityMultiplier: 0.656
   flipDuration: 0.25
+  gravityUnlocked: 0
   vcam: {fileID: 0}
   cameraOffsetX: 4.5
 --- !u!50 &1716597626252583210
