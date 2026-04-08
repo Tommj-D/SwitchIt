@@ -4,6 +4,13 @@ using System.Collections;
 
 public class MagicTeleport : MonoBehaviour
 {
+    [Header("Layer Settings")]
+    public string nuovoLayer = "Player_Back";
+
+    [Header("Sorting Layer")]
+    public string nuovoSortingLayer = "PlayerBack";
+    public int nuovoOrderInLayer = 5;
+
     [Header("Impostazioni Teletrasporto")]
     public Transform destinazione; // Il Buco_Uscita
     public Image schermoNero;      // L'immagine UI
@@ -78,6 +85,18 @@ public class MagicTeleport : MonoBehaviour
         // Sposta il giocatore
         player.transform.position = destinazione.position;
         
+        // Cambio layer player + figli
+        int layerIndex = LayerMask.NameToLayer(nuovoLayer);
+        SetLayerRecursively(player, layerIndex);
+
+        // Cambio sorting layer sprite
+        SpriteRenderer[] renderers = player.GetComponentsInChildren<SpriteRenderer>();
+        foreach (SpriteRenderer sr in renderers)
+        {
+            sr.sortingLayerName = nuovoSortingLayer;
+            sr.sortingOrder = nuovoOrderInLayer;
+        }
+
         // Resetta immediatamente la grandezza originale PRIMA che si veda
         player.transform.localScale = scalaOriginalePlayer;
         
@@ -125,5 +144,16 @@ public class MagicTeleport : MonoBehaviour
         if(schermoNero != null) { Color c = schermoNero.color; c.a = 0; schermoNero.color = c; }
 
         inCorso = false;
+    }
+
+    //Per cambiare il layer al player e a i suoi figli
+    void SetLayerRecursively(GameObject obj, int layer)
+    {
+        obj.layer = layer;
+
+        foreach (Transform child in obj.transform)
+        {
+            SetLayerRecursively(child.gameObject, layer);
+        }
     }
 }
