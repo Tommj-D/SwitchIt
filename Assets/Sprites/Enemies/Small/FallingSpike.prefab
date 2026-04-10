@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 987537562488986220}
   - component: {fileID: 6462344214565941395}
   - component: {fileID: -2550453409393857365}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: FallingSpike
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -83,8 +83,8 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -496185305
-  m_SortingLayer: 2
-  m_SortingOrder: 20
+  m_SortingLayer: 4
+  m_SortingOrder: 3
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 006840a3143209e49978b3ace77c06ce, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -235,7 +235,7 @@ GameObject:
   - component: {fileID: 6632858501853846610}
   - component: {fileID: 7914873331200813751}
   - component: {fileID: 8539920029203787340}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Punta
   m_TagString: Untagged
   m_Icon: {fileID: 0}
