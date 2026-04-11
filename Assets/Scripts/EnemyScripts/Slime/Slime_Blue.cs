@@ -3,8 +3,12 @@ using UnityEngine;
 
 public class Slime_Blue : Enemy
 {
+
     [Header("Direction (1 = right, -1 = left)")]
     [SerializeField] private int initialDirection = 1;
+
+    [Header("Inverted Gravity")]
+    [SerializeField] private bool isInverted = false;
 
     [Header("Jump Settings")]
     [SerializeField] private float jumpForce = 6f;
@@ -133,7 +137,9 @@ public class Slime_Blue : Enemy
         animator?.SetTrigger("Jump");
 
         rb.linearVelocity = new Vector2(direction * jumpHorizontalSpeed, 0f);
-        rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+
+        float gravityDirection = isInverted ? -1f : 1f;
+        rb.AddForce(Vector2.up * jumpForce * gravityDirection, ForceMode2D.Impulse);
     }
 
     private void CheckGround()
@@ -158,8 +164,14 @@ public class Slime_Blue : Enemy
             zRotation = Mathf.Clamp(rb.linearVelocity.y * -5f, -30f, 30f);
         }
 
-        // Mantieni la rotazione Y (direzione), cambia solo Z
-        transform.rotation = Quaternion.Euler(0, transform.rotation.eulerAngles.y, zRotation);
+        // 👇 SALVA X e Y attuali
+        Vector3 currentRotation = transform.rotation.eulerAngles;
+
+        transform.rotation = Quaternion.Euler(
+            currentRotation.x,   // mantiene 180
+            currentRotation.y,
+            zRotation
+        );
     }
 
     protected override void Sound()
