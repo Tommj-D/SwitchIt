@@ -16,6 +16,9 @@ public class ScoreManager : MonoBehaviour
     public int puntiPerMoneta = 5;
     public int puntiPerNemico = 10;
     
+    [Header("Progressione")]
+    public int livelloSuccessivoDaSbloccare = 2;
+    
     private int moneteRaccolte = 0;
     private int nemiciSconfitti = 0;
     private bool livelloFinito = false;
@@ -87,6 +90,7 @@ public class ScoreManager : MonoBehaviour
         Debug.Log("PUNTEGGIO FINALE TOTALE: " + punteggioTotale);
 
         InviaAPlayFab(punteggioTotale);
+        SbloccaLivelloSuccessivo(livelloSuccessivoDaSbloccare);
     }
 
     private void InviaAPlayFab(int punteggio)
@@ -100,5 +104,21 @@ public class ScoreManager : MonoBehaviour
         PlayFabClientAPI.UpdatePlayerStatistics(request, 
             result => Debug.Log("Punteggio di " + punteggio + " salvato online!"), 
             error => Debug.LogError("Errore PlayFab: " + error.ErrorMessage));
+    }
+
+    private void SbloccaLivelloSuccessivo(int livelloDaSbloccare)
+    {
+        var request = new UpdateUserDataRequest
+        {
+            Data = new Dictionary<string, string>
+            {
+                {"MaxLevelUnlocked", livelloDaSbloccare.ToString()} 
+            }
+        };
+
+        PlayFabClientAPI.UpdateUserData(request, 
+            result => Debug.Log("Progresso salvato! Livello " + livelloDaSbloccare + " sbloccato."), 
+            error => Debug.LogError("Errore salvataggio progresso: " + error.ErrorMessage)
+        );
     }
 }
