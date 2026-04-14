@@ -38,6 +38,9 @@ public class PlayerRespawn : MonoBehaviour
     private SpriteRenderer fullSpriteRenderer;
 
     private bool isDying = false;
+    private int defaultLayer;
+    private string defaultSortingLayer;
+    private int defaultSortingOrder;
 
     private void Awake()
     {
@@ -47,7 +50,13 @@ public class PlayerRespawn : MonoBehaviour
         playerInput = GetComponent<PlayerInput>();
 
         if (fullSprite != null)
+        {
             fullSpriteRenderer = fullSprite.GetComponent<SpriteRenderer>();
+            defaultSortingLayer = fullSpriteRenderer.sortingLayerName;
+            defaultSortingOrder = fullSpriteRenderer.sortingOrder;
+        }
+
+        defaultLayer = gameObject.layer;
     }
 
     private void Start()
@@ -193,6 +202,13 @@ public class PlayerRespawn : MonoBehaviour
         // Imposto posizione
         transform.position = respawnPoint.position;
 
+        SetLayerRecursively(gameObject, defaultLayer);
+        if (fullSpriteRenderer != null)
+        {
+            fullSpriteRenderer.sortingLayerName = defaultSortingLayer;
+            fullSpriteRenderer.sortingOrder = defaultSortingOrder;
+        }
+
         //RESETTA LA GRAVITÀ DEL GIOCATORE
         PlayerMovement movement = GetComponent<PlayerMovement>();
         if (movement != null)
@@ -329,5 +345,14 @@ public class PlayerRespawn : MonoBehaviour
     {
         if (isDying) return;
         StartCoroutine(DeathSequence());
+    }
+
+    private void SetLayerRecursively(GameObject obj, int newLayer)
+    {
+        obj.layer = newLayer;
+        foreach (Transform child in obj.transform)
+        {
+            SetLayerRecursively(child.gameObject, newLayer);
+        }
     }
 }
