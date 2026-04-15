@@ -52,9 +52,9 @@ public abstract class Enemy : MonoBehaviour
                 respawn.Die();
         }
 
-        if (!collision.gameObject.CompareTag("Ground") && !collision.gameObject.CompareTag("Spike"))
+        if (collision.gameObject.CompareTag("Obstacle") || collision.gameObject.CompareTag("Enemy"))
         {
-            OnObstacleHit();
+            Flip();
         }
     }
 
@@ -69,7 +69,7 @@ public abstract class Enemy : MonoBehaviour
         // Se tocca un muro o un ostacolo, cambia direzione
         if (collision.gameObject.CompareTag("Obstacle"))
         {
-            Flip();
+            OnObstacleHit();
         }
     }
 
