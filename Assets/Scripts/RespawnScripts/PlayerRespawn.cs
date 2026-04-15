@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.Rendering;
 
 public class PlayerRespawn : MonoBehaviour
 {
@@ -127,7 +128,11 @@ public class PlayerRespawn : MonoBehaviour
         {
             Vector3 spawnPos = transform.position;
             spawnPos.z = riggedBody.transform.position.z;
+
             GameObject particles = Instantiate(deathParticle, spawnPos, Quaternion.identity);
+
+            ApplyLayerFromPlayer(particles, gameObject);
+            SetLayerRecursively(particles, GetCurrentPlayerLayer());
         }
 
         if (fullSprite != null)
@@ -144,6 +149,9 @@ public class PlayerRespawn : MonoBehaviour
             riggedBody.transform.localScale = transform.localScale;
 
             riggedBody.SetActive(true);
+
+            SetLayerRecursively(riggedBody, GetCurrentPlayerLayer());
+
             LightEffect_Shader.Instance.PlayEffect(deathColor, MaxIntensity, playerFadeInTime, playerFadeOutTime);
         }
 
@@ -202,11 +210,12 @@ public class PlayerRespawn : MonoBehaviour
         // Imposto posizione
         transform.position = respawnPoint.position;
 
-        SetLayerRecursively(gameObject, defaultLayer);
+        //Setto layer e sorting in base al punto di respawn
+        int targetLayer = GetCurrentPlayerLayer();
+        SetLayerRecursively(gameObject, targetLayer);
         if (fullSpriteRenderer != null)
         {
-            fullSpriteRenderer.sortingLayerName = defaultSortingLayer;
-            fullSpriteRenderer.sortingOrder = defaultSortingOrder;
+            ApplySortingRecursively(gameObject, defaultSortingLayer, defaultSortingOrder);
         }
 
         //RESETTA LA GRAVITÀ DEL GIOCATORE
@@ -347,12 +356,86 @@ public class PlayerRespawn : MonoBehaviour
         StartCoroutine(DeathSequence());
     }
 
+
+    //Setta bene i layer al respawn
     private void SetLayerRecursively(GameObject obj, int newLayer)
     {
         obj.layer = newLayer;
         foreach (Transform child in obj.transform)
         {
             SetLayerRecursively(child.gameObject, newLayer);
+        }
+    }
+
+    private int GetCurrentPlayerLayer()
+    {
+        if (RespawnManager.Instance == null)
+            return defaultLayer;
+
+        Transform point = RespawnManager.Instance.GetRespawnPoint();
+        if (point == null)
+            return defaultLayer;
+
+        //esempio: se il checkpoint è nel layer Player_Back
+        if (point.gameObject.layer == LayerMask.NameToLayer("Player_Back"))
+            return LayerMask.NameToLayer("Player_Back");
+
+        return LayerMask.NameToLayer("Player");
+    }
+
+    private void ApplyLayerFromPlayer(GameObject target, GameObject player)
+    {
+        int layer = player.layer;
+
+        // Layer
+        SetLayerRecursively(target, layer);
+
+        // Sorting Layer (usa quello del player visivo)
+        if (fullSpriteRenderer != null)
+        {
+            string sortingLayer = fullSpriteRenderer.sortingLayerName;
+            int order = fullSpriteRenderer.sortingOrder;
+
+            SpriteRenderer[] renderers = target.GetComponentsInChildren<SpriteRenderer>(true);
+            foreach (var sr in renderers)
+            {
+                sr.sortingLayerName = sortingLayer;
+                sr.sortingOrder = order;
+            }
+
+            ParticleSystemRenderer[] particles = target.GetComponentsInChildren<ParticleSystemRenderer>(true);
+            foreach (var p in particles)
+            {
+                p.sortingLayerName = sortingLayer;
+                p.sortingOrder = order;
+            }
+        }
+    }
+
+    private void ApplySortingRecursively(GameObject obj, string sortingLayer, int order)
+    {
+        //Sorting Group (priorità massima)
+        SortingGroup[] groups = obj.GetComponentsInChildren<SortingGroup>(true);
+        foreach (var sg in groups)
+        {
+            sg.sortingLayerName = sortingLayer;
+            sg.sortingOrder = order;
+        }
+
+        // Sprite Renderer
+        SpriteRenderer[] renderers = obj.GetComponentsInChildren<SpriteRenderer>(true);
+        foreach (var sr in renderers)
+        {
+            sr.sortingLayerName = sortingLayer;
+            sr.sortingOrder = order;
+        }
+
+        // Particle System
+        ParticleSystemRenderer[] particles = obj.GetComponentsInChildren<ParticleSystemRenderer>(true);
+        foreach (var p in particles)
+        {
+            p.sortingLayerName = sortingLayer;
+            p.sortingOrder = order;
         }
     }
 }

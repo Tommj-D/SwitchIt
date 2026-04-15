@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using UnityEngine.Rendering;
 
 public class MagicTeleport : MonoBehaviour
 {
@@ -12,23 +13,23 @@ public class MagicTeleport : MonoBehaviour
     public int nuovoOrderInLayer = 5;
 
     [Header("Impostazioni Teletrasporto")]
-    public Transform destinazione; // Il Buco_Uscita
-    public Image schermoNero;      // L'immagine UI
-    public float durataFade = 0.5f; // Durata della transizione
+    public Transform destinazione;
+    public Image schermoNero;
+    public float durataFade = 0.5f;
 
     [Header("Impostazioni Fisiche")]
-    public float forzaSaltoUscita = 15f; 
+    public float forzaSaltoUscita = 15f;
 
     [Header("Camera Confiner")]
     public CameraConfinerManager cameraConfinerManager;
     public Collider2D confinerDestinazione;
 
     [Header("Effetti Sonori (Opzionali)")]
-    public AudioClip suonoEntrata; // Suono di caduta/risucchio
-    public AudioClip suonoUscita;  // Suono di comparsa/salto
+    public AudioClip suonoEntrata;
+    public AudioClip suonoUscita;
 
     private bool inCorso = false;
-    private Vector3 scalaOriginalePlayer; // Per ricordare quanto era grande il player
+    private Vector3 scalaOriginalePlayer;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -42,11 +43,10 @@ public class MagicTeleport : MonoBehaviour
     {
         inCorso = true;
         Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
-        
-        // Salviamo la grandezza originale del player (es. 1,1,1)
+
         scalaOriginalePlayer = player.transform.localScale;
 
-        // --- 🎵 SUONO ENTRATA ---
+        // --- SUONO ENTRATA ---
         if (suonoEntrata != null)
         {
             if (AudioManager.Instance != null)
@@ -55,58 +55,51 @@ public class MagicTeleport : MonoBehaviour
                 AudioSource.PlayClipAtPoint(suonoEntrata, transform.position);
         }
 
-        // --- FASE 1: CADUTA, RIMPICCIOLIMENTO E FADE OUT ---
+        // --- FASE 1: FADE OUT + SHRINK ---
         float timer = 0;
         while (timer < durataFade)
         {
             timer += Time.deltaTime;
-            float avanzamento = timer / durataFade; // Va da 0 a 1 man mano che passa il tempo
+            float t = timer / durataFade;
 
-            // 1. Fade dello schermo a Nero
             if (schermoNero != null)
             {
                 Color c = schermoNero.color;
-                c.a = Mathf.Lerp(0, 1, avanzamento);
+                c.a = Mathf.Lerp(0, 1, t);
                 schermoNero.color = c;
             }
 
-            // 2. Rimpicciolisci il Player (dalla scala originale a zero)
-            player.transform.localScale = Vector3.Lerp(scalaOriginalePlayer, Vector3.zero, avanzamento);
+            player.transform.localScale = Vector3.Lerp(scalaOriginalePlayer, Vector3.zero, t);
 
-            yield return null; // Aspetta il prossimo frame e continua a cadere
+            yield return null;
         }
 
-        // Assicuriamoci che alla fine sia tutto nero e il player minuscolo
-        if(schermoNero != null) { Color c = schermoNero.color; c.a = 1; schermoNero.color = c; }
+        if (schermoNero != null)
+        {
+            Color c = schermoNero.color;
+            c.a = 1;
+            schermoNero.color = c;
+        }
+
         player.transform.localScale = Vector3.zero;
 
-        
-        // --- FASE 2: TELETRASPORTO E RESET ---
-        // Sposta il giocatore
+        // --- TELETRASPORTO ---
         player.transform.position = destinazione.position;
-        
-        // Cambio layer player + figli
-        int layerIndex = LayerMask.NameToLayer(nuovoLayer);
-        SetLayerRecursively(player, layerIndex);
 
-        // Cambio sorting layer sprite
-        SpriteRenderer[] renderers = player.GetComponentsInChildren<SpriteRenderer>();
-        foreach (SpriteRenderer sr in renderers)
-        {
-            sr.sortingLayerName = nuovoSortingLayer;
-            sr.sortingOrder = nuovoOrderInLayer;
-        }
+        // 🔥 APPLICA TUTTO (layer + sorting + particelle)
+        ApplyLayerAndSorting(player);
 
-        // Resetta immediatamente la grandezza originale PRIMA che si veda
         player.transform.localScale = scalaOriginalePlayer;
-        
+
         cameraConfinerManager.SetConfiner(confinerDestinazione);
-        
-        // Brevissima pausa per far aggiornare la camera
+
         yield return new WaitForSeconds(0.1f);
 
+        // 🔥 RIAPPLICA DOPO UN FRAME (fix per ragdoll / oggetti attivati dopo)
+        yield return null;
+        ApplyLayerAndSorting(player);
 
-        // --- 🎵 SUONO USCITA ---
+        // --- SUONO USCITA ---
         if (suonoUscita != null)
         {
             if (AudioManager.Instance != null)
@@ -115,38 +108,73 @@ public class MagicTeleport : MonoBehaviour
                 AudioSource.PlayClipAtPoint(suonoUscita, destinazione.position);
         }
 
-        // --- FASE 3: SALTO IN USCITA E FADE IN ---
-        // Applica il salto verso l'alto
+        // --- SALTO ---
         if (rb != null)
         {
-            // Resetta la velocità verticale attuale per avere un salto pulito
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0); 
-            // Spara in alto! (ForceMode2D.Impulse è come un'esplosione istantanea)
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0);
             rb.AddForce(Vector2.up * forzaSaltoUscita, ForceMode2D.Impulse);
         }
 
-        // Fade dello schermo per tornare trasparente
+        // --- FADE IN ---
         timer = 0;
         while (timer < durataFade)
         {
             timer += Time.deltaTime;
-            float avanzamento = timer / durataFade;
+            float t = timer / durataFade;
 
             if (schermoNero != null)
             {
                 Color c = schermoNero.color;
-                c.a = Mathf.Lerp(1, 0, avanzamento);
+                c.a = Mathf.Lerp(1, 0, t);
                 schermoNero.color = c;
             }
+
             yield return null;
         }
-        // Assicuriamoci che lo schermo sia pulito alla fine
-        if(schermoNero != null) { Color c = schermoNero.color; c.a = 0; schermoNero.color = c; }
+
+        if (schermoNero != null)
+        {
+            Color c = schermoNero.color;
+            c.a = 0;
+            schermoNero.color = c;
+        }
 
         inCorso = false;
     }
 
-    //Per cambiare il layer al player e a i suoi figli
+    // METODO UNICO COMPLETO
+    void ApplyLayerAndSorting(GameObject obj)
+    {
+        int layer = LayerMask.NameToLayer(nuovoLayer);
+
+        // Layer ricorsivo
+        SetLayerRecursively(obj, layer);
+
+        // Sprite Renderer
+        SpriteRenderer[] renderers = obj.GetComponentsInChildren<SpriteRenderer>(true);
+        foreach (SpriteRenderer sr in renderers)
+        {
+            sr.sortingLayerName = nuovoSortingLayer;
+            sr.sortingOrder = nuovoOrderInLayer;
+        }
+
+        // Particle System
+        ParticleSystemRenderer[] particles = obj.GetComponentsInChildren<ParticleSystemRenderer>(true);
+        foreach (var p in particles)
+        {
+            p.sortingLayerName = nuovoSortingLayer;
+            p.sortingOrder = nuovoOrderInLayer;
+        }
+
+        // Sorting Group 
+        SortingGroup[] groups = obj.GetComponentsInChildren<SortingGroup>(true);
+        foreach (SortingGroup sg in groups)
+        {
+            sg.sortingLayerName = nuovoSortingLayer;
+            sg.sortingOrder = nuovoOrderInLayer;
+        }
+    }
+
     void SetLayerRecursively(GameObject obj, int layer)
     {
         obj.layer = layer;
