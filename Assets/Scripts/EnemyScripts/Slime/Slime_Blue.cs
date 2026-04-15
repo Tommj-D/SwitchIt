@@ -28,6 +28,7 @@ public class Slime_Blue : Enemy
     private bool hasJumped = false;
     private float nextJumpTime = 0f;
     private bool hasPerformedJump = false;
+    private bool justLanded;
 
     protected override void Start()
     {
@@ -70,15 +71,21 @@ public class Slime_Blue : Enemy
 
     protected override void OnCollisionEnter2D(Collision2D collision)
     {
-        base.OnCollisionEnter2D(collision);
-
         if (isDead) return;
 
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
+            return;
+
+
+        base.OnCollisionEnter2D(collision);
         foreach (ContactPoint2D contact in collision.contacts)
         {
             // collisione laterale
             if (Mathf.Abs(contact.normal.x) > 0.5f)
             {
+                if (justLanded)
+                    return;
+
                 // se è in aria e colpisce un muro, rimbalza indietro
                 if (!isGrounded && rb != null)
                 {
@@ -164,7 +171,7 @@ public class Slime_Blue : Enemy
             zRotation = Mathf.Clamp(rb.linearVelocity.y * -5f, -30f, 30f);
         }
 
-        // 👇 SALVA X e Y attuali
+        //SALVA X e Y attuali
         Vector3 currentRotation = transform.rotation.eulerAngles;
 
         transform.rotation = Quaternion.Euler(
@@ -201,7 +208,15 @@ public class Slime_Blue : Enemy
             }
 
             hasJumped = false; // reset
+            justLanded = true;
+            StartCoroutine(ResetJustLanded());
         }
+    }
+
+    private IEnumerator ResetJustLanded()
+    {
+        yield return new WaitForFixedUpdate();
+        justLanded = false;
     }
 
     protected override void OnObstacleHit()
