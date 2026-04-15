@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8885550998698576306}
   - component: {fileID: 1760397348172387830}
   - component: {fileID: 3214623397753104522}
-  m_Layer: 10
+  m_Layer: 0
   m_Name: Saw_Left
   m_TagString: Death
   m_Icon: {fileID: 0}
