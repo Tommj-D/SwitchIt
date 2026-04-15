@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 3904510868308263378}
   m_Layer: 11
   m_Name: Back_Real
-  m_TagString: Ground
+  m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -177,7 +177,7 @@ TilemapRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1287656843
-  m_SortingLayer: 1
+  m_SortingLayer: -2
   m_SortingOrder: 10
   m_MaskInteraction: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
@@ -315,7 +315,7 @@ GameObject:
   - component: {fileID: 4088265620727982633}
   m_Layer: 10
   m_Name: 'Wall_Back_Real '
-  m_TagString: Untagged
+  m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -419,7 +419,7 @@ TilemapRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1287656843
-  m_SortingLayer: 1
+  m_SortingLayer: -2
   m_SortingOrder: 10
   m_MaskInteraction: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}

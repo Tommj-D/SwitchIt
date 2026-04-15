@@ -247,6 +247,10 @@ PrefabInstance:
       propertyPath: m_ColliderPaths.Array.size
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2674992393445428537, guid: b8fa7fe33c5affd4d8923aac7a265692, type: 3}
+      propertyPath: m_TagString
+      value: Ground
+      objectReference: {fileID: 0}
     - target: {fileID: 6334042007728334777, guid: b8fa7fe33c5affd4d8923aac7a265692, type: 3}
       propertyPath: m_Name
       value: Grid_Fantasy
@@ -681,6 +685,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2939779141892143114}
     m_Modifications:
+    - target: {fileID: 202338868051990465, guid: e370c983a35de904aa7356992878bc1e, type: 3}
+      propertyPath: m_TagString
+      value: Obstacle
+      objectReference: {fileID: 0}
     - target: {fileID: 2515599082894402030, guid: e370c983a35de904aa7356992878bc1e, type: 3}
       propertyPath: m_Name
       value: Grid_Real
