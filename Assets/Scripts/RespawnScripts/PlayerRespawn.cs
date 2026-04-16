@@ -6,6 +6,13 @@ using UnityEngine.Rendering;
 
 public class PlayerRespawn : MonoBehaviour
 {
+    private const string BACK_LAYER = "Back";
+    private const string PLAYER_LAYER = "Player";
+    private const string PLAYER_BACK_LAYER = "Player_Back";
+
+    private const string PLAYER_SORTING = "Player";
+    private const string PLAYER_BACK_SORTING = "PlayerBack";
+
     private PlayerInput playerInput;
 
     [Header("Magic Respawn")]
@@ -212,10 +219,13 @@ public class PlayerRespawn : MonoBehaviour
 
         //Setto layer e sorting in base al punto di respawn
         int targetLayer = GetCurrentPlayerLayer();
+        string targetSortingLayer = GetCurrentSortingLayer();
+
         SetLayerRecursively(gameObject, targetLayer);
+
         if (fullSpriteRenderer != null)
         {
-            ApplySortingRecursively(gameObject, defaultSortingLayer, defaultSortingOrder);
+            ApplySortingRecursively(gameObject, targetSortingLayer, defaultSortingOrder);
         }
 
         //RESETTA LA GRAVITÀ DEL GIOCATORE
@@ -376,11 +386,25 @@ public class PlayerRespawn : MonoBehaviour
         if (point == null)
             return defaultLayer;
 
-        //esempio: se il checkpoint è nel layer Player_Back
-        if (point.gameObject.layer == LayerMask.NameToLayer("Player_Back"))
-            return LayerMask.NameToLayer("Player_Back");
+        if (point.gameObject.layer == LayerMask.NameToLayer(BACK_LAYER))
+            return LayerMask.NameToLayer(PLAYER_BACK_LAYER);
 
-        return LayerMask.NameToLayer("Player");
+        return LayerMask.NameToLayer(PLAYER_LAYER);
+    }
+
+    private string GetCurrentSortingLayer()
+    {
+        if (RespawnManager.Instance == null)
+            return defaultSortingLayer;
+
+        Transform point = RespawnManager.Instance.GetRespawnPoint();
+        if (point == null)
+            return defaultSortingLayer;
+
+        if (point.gameObject.layer == LayerMask.NameToLayer(BACK_LAYER))
+            return PLAYER_BACK_SORTING;
+
+        return PLAYER_SORTING;
     }
 
     private void ApplyLayerFromPlayer(GameObject target, GameObject player)
