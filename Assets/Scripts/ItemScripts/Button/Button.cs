@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Button : MonoBehaviour
 {
-    public ButtonPuzzleController[] puzzleControllers;
+    public MonoBehaviour[] puzzleControllers;
 
     private bool activated = false;
     private Animator animator;
@@ -34,8 +34,10 @@ public class Button : MonoBehaviour
 
         foreach (var controller in puzzleControllers)
         {
-            if (controller != null)
-                controller.ButtonPressed(transform, targetCircleIndex);
+            if (controller is IButtonPuzzle puzzle)
+            {
+                puzzle.PressButton(transform, targetCircleIndex);
+            }
         }
 
         if (animator != null && isAnimated)

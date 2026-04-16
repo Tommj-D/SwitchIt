@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class ButtonPuzzleController : MonoBehaviour
+public class ButtonPuzzleController : MonoBehaviour, IButtonPuzzle
 {
     // ======== RIFERIMENTI A OGGETTI NELLA SCENA ========
     [Header("Cerchi da illuminare")]
@@ -306,5 +306,10 @@ public class ButtonPuzzleController : MonoBehaviour
             if (circleRenderer != null)
                 circleRenderer.material.SetColor("_HitEffectColor", extColor);
         }
+    }
+
+    public void PressButton(Transform buttonPos, int index)
+    {
+        ButtonPressed(buttonPos, index);
     }
 }
