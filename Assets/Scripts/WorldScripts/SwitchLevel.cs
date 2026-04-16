@@ -80,7 +80,7 @@ public class SwitchLevel : MonoBehaviour
             ParticlesToTarget p = fx1.GetComponent<ParticlesToTarget>();
             if (p != null)
             {
-                p.Init(magicStonePoint, null, 0, 6f, 0.2f);
+                p.Init(magicStonePoint, null, () => { }, 6f, 0.2f);
             }
         }
 

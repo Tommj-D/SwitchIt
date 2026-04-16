@@ -2,8 +2,9 @@ using UnityEngine;
 
 public class ParticlesToTarget : MonoBehaviour
 {
+    private MonoBehaviour controller;
+    private System.Action onComplete;   
     private Transform target;
-    private ButtonPuzzleController controller;
     private int circleIndex;
 
     private float speed;
@@ -20,11 +21,11 @@ public class ParticlesToTarget : MonoBehaviour
     public float VortexForceMultiplier = 0.5f;     // forza vortice
 
     // Inizializzazione dal controller
-    public void Init(Transform target, ButtonPuzzleController controller, int circleIndex, float speed, float arriveDistance = 0.2f)
+    public void Init(Transform target, MonoBehaviour controller, System.Action onComplete, float speed, float arriveDistance = 0.2f)
     {
         this.target = target;
         this.controller = controller;
-        this.circleIndex = circleIndex;
+        this.onComplete = onComplete;
         this.speed = speed;
         this.arriveDistance = arriveDistance;
     }
@@ -81,7 +82,7 @@ public class ParticlesToTarget : MonoBehaviour
         if (!activated && completion >= completionThreshold)
         {
             activated = true;
-            controller?.ActivateCircle(circleIndex);
+            onComplete?.Invoke();
 
             // stoppa emissione e distrugge dopo breve
             ps.Stop();

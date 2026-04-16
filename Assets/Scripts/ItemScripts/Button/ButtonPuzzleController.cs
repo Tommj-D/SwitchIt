@@ -266,7 +266,7 @@ public class ButtonPuzzleController : MonoBehaviour
 
         ParticlesToTarget mover = ps.GetComponent<ParticlesToTarget>();
         if (mover != null)
-            mover.Init(target, this, circleIndex, particleSpeed);
+            mover.Init(target, this, () => ActivateCircle(circleIndex), particleSpeed);
 
         ps.Play();
     }
