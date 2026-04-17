@@ -14903,7 +14903,10 @@ MonoBehaviour:
   groundCheckSize: {x: 0.75, y: 0.05}
   groundLayer:
     serializedVersion: 2
-    m_Bits: 2056
+    m_Bits: 8
+  groundBackLayer:
+    serializedVersion: 2
+    m_Bits: 2048
   baseGravity: 1.5
   maxFallSpeed: 20
   fallSpeedMultiplier: 2.5

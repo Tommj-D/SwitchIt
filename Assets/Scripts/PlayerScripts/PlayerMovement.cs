@@ -45,6 +45,7 @@ public class PlayerMovement : MonoBehaviour
     public Transform groundCheckPos; // punto di controllo a terra
     public Vector2 groundCheckSize = new Vector2(0.5f, 0.05f); // dimensione del box di controllo
     public LayerMask groundLayer;
+    public LayerMask groundBackLayer;
 
     [Header("Gravity")]
     public float baseGravity = 2f;
@@ -201,11 +202,13 @@ public class PlayerMovement : MonoBehaviour
 
     private void GroundCeck()
     {
+        LayerMask currentGround = GetCurrentGroundLayer();
+
         bool groundedNow = Physics2D.OverlapBox(
             groundCheckPos.position,
             groundCheckSize,
             0,
-            groundLayer
+            currentGround
         );
 
         if (groundedNow && !isGrounded)
@@ -375,5 +378,19 @@ public class PlayerMovement : MonoBehaviour
         {
             animator.SetBool("isJumping", false);
         }
+    }
+
+    //Per gestire Ground e GroundBack a seconda del layer del player (Player o Player_Back)
+    LayerMask GetCurrentGroundLayer()
+    {
+        int playerLayer = gameObject.layer;
+
+        if (playerLayer == LayerMask.NameToLayer("Player"))
+            return groundLayer;
+
+        if (playerLayer == LayerMask.NameToLayer("Player_Back"))
+            return groundBackLayer;
+
+        return groundLayer; // fallback sicurezza
     }
 }
