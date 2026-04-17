@@ -22,8 +22,18 @@ public class SimpleParticlePuzzle : MonoBehaviour, IButtonPuzzle
     [Header("Timing")]
     public float delayBeforeAction = 0.2f;
 
+    [Header("Fade")]
+    public float fadeDuration = 0.5f;
+
     private bool isBusy = false;
     private bool puzzleSolved = false;
+
+    private void Awake()
+    {
+        // Disattiva tutti gli oggetti da mostrare all'inizio
+        foreach (GameObject obj in objectsToShow)
+            if (obj != null) obj.SetActive(false);
+    }
 
     // ======== INPUT ========
     public void PressButton(Transform buttonPos, int index)
@@ -74,7 +84,29 @@ public class SimpleParticlePuzzle : MonoBehaviour, IButtonPuzzle
             if (obj != null) obj.SetActive(false);
 
         foreach (GameObject obj in objectsToShow)
-            if (obj != null) obj.SetActive(true);
+        {
+            if (obj == null) continue;
+
+            obj.SetActive(true);
+
+            // Se contiene particelle niente fade
+            if (HasParticles(obj))
+            {
+                SetAlphaInstant(obj, 1f);
+                continue;
+            }
+
+            // Se è attivo davvero nella scena fade
+            if (obj.activeInHierarchy)
+            {
+                StartCoroutine(FadeInObject(obj));
+            }
+            else
+            {
+                // È in un mondo disattivo  niente fade
+                SetAlphaInstant(obj, 1f);
+            }
+        }
 
         // SOUND
         if (AudioManager.Instance != null)
@@ -93,5 +125,49 @@ public class SimpleParticlePuzzle : MonoBehaviour, IButtonPuzzle
         }
 
         isBusy = false;
+    }
+
+    //Per il fade IN
+    private IEnumerator FadeInObject(GameObject obj)
+    {
+        float t = 0f;
+
+        SetAlphaInstant(obj, 0f);
+
+        while (t < fadeDuration)
+        {
+            t += Time.deltaTime;
+            float alpha = t / fadeDuration;
+
+            SetAlphaInstant(obj, alpha);
+
+            yield return null;
+        }
+
+        SetAlphaInstant(obj, 1f);
+    }
+
+    private void SetAlphaInstant(GameObject obj, float alpha)
+    {
+        // SpriteRenderer
+        foreach (var sr in obj.GetComponentsInChildren<SpriteRenderer>())
+        {
+            Color c = sr.color;
+            c.a = alpha;
+            sr.color = c;
+        }
+
+        // Tilemap
+        foreach (var tile in obj.GetComponentsInChildren<UnityEngine.Tilemaps.Tilemap>())
+        {
+            Color c = tile.color;
+            c.a = alpha;
+            tile.color = c;
+        }
+    }
+
+    private bool HasParticles(GameObject obj)
+    {
+        return obj.GetComponentInChildren<ParticleSystem>() != null;
     }
 }
