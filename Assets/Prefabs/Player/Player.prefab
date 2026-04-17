@@ -14909,7 +14909,7 @@ MonoBehaviour:
   fallSpeedMultiplier: 2.5
   fantasyGravityMultiplier: 0.656
   flipDuration: 0.25
-  gravityUnlocked: 0
+  gravityUnlocked: 1
   vcam: {fileID: 0}
   cameraOffsetX: 4.5
 --- !u!50 &1716597626252583210
