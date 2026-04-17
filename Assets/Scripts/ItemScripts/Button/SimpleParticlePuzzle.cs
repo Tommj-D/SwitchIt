@@ -99,14 +99,14 @@ public class SimpleParticlePuzzle : MonoBehaviour, IButtonPuzzle
                 continue;
             }
 
-            // Se è attivo davvero nella scena fade
+            // Se ï¿½ attivo davvero nella scena fade
             if (obj.activeInHierarchy)
             {
                 StartCoroutine(FadeInObject(obj));
             }
             else
             {
-                // È in un mondo disattivo  niente fade
+                // ï¿½ in un mondo disattivo  niente fade
                 SetAlphaInstant(obj, 1f);
             }
         }
@@ -120,9 +120,9 @@ public class SimpleParticlePuzzle : MonoBehaviour, IButtonPuzzle
             ? burstFantasy
             : burstReal;
 
-        if (burstPrefab != null)
+        if (burstPrefab != null && target != null)
         {
-            ParticleSystem burst = Instantiate(burstPrefab, transform.position, Quaternion.identity);
+            ParticleSystem burst = Instantiate(burstPrefab, target.position, Quaternion.identity);
             burst.Play();
             Destroy(burst.gameObject, 2f);
         }
