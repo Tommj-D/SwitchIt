@@ -25,6 +25,9 @@ public class SimpleParticlePuzzle : MonoBehaviour, IButtonPuzzle
     [Header("Fade")]
     public float fadeDuration = 0.5f;
 
+    [Header("Audio")]
+    public float volumeSFX = 1f;
+
     private bool isBusy = false;
     private bool puzzleSolved = false;
 
@@ -110,7 +113,7 @@ public class SimpleParticlePuzzle : MonoBehaviour, IButtonPuzzle
 
         // SOUND
         if (AudioManager.Instance != null)
-            AudioManager.Instance.PlaySFX(AudioManager.Instance.glowingSound);
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.particlesArrivalSound, volumeSFX);
 
         // BURST
         ParticleSystem burstPrefab = WorldSwitch.Instance.isFantasyWorldActive
