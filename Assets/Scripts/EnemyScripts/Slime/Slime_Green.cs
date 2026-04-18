@@ -54,7 +54,16 @@ public class Slime_Green : Enemy
 
     protected override void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!isGrounded) return;
+        if (collision.CompareTag("Death"))
+        {
+            OnStomped();
+            return;
+        }
+
+        //  OBSTACLE SOLO A TERRA
+        if (collision.CompareTag("Obstacle") && !isGrounded)
+            return;
+
 
         base.OnTriggerEnter2D(collision);
     }
