@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 9110986876037357872}
   - component: {fileID: 2016669212007951329}
   m_Layer: 0
-  m_Name: Slime_Blue
+  m_Name: Slime_Blue_Small(SplitBig)
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

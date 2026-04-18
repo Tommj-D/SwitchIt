@@ -53,9 +53,10 @@ public class Slime_Blue : Enemy
 
         if (isDead || !isActive) return;
 
-        CheckGround();
-        HandleLanding(); 
+        CheckGround(); 
         HandleJump();
+        HandleLanding();
+        
         HandleRotation();
 
         wasGrounded = isGrounded;
@@ -75,7 +76,6 @@ public class Slime_Blue : Enemy
 
         if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
             return;
-
 
         base.OnCollisionEnter2D(collision);
         foreach (ContactPoint2D contact in collision.contacts)
@@ -246,5 +246,17 @@ public class Slime_Blue : Enemy
 
         // Reset rotazione
         transform.rotation = Quaternion.identity;
+    }
+
+    public void InitDirection(int dir)
+    {
+        initialDirection = dir;
+        direction = dir;
+
+        if (sr == null)
+            sr = GetComponent<SpriteRenderer>();
+
+        if (sr != null)
+            sr.flipX = direction < 0;
     }
 }

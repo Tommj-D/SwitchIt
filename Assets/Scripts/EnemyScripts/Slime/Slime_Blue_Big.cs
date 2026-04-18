@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class Slime_Green_Big : Slime_Green
+public class Slime_Blue_Big : Slime_Blue
 {
     [Header("Split Settings")]
     [SerializeField] private GameObject smallEnemyPrefab;
@@ -16,7 +16,7 @@ public class Slime_Green_Big : Slime_Green
     {
         if (isDead) return;
 
-        base.OnStomped(); // animazione + stato
+        base.OnStomped();
         SpawnSmalls();
     }
 
@@ -34,43 +34,37 @@ public class Slime_Green_Big : Slime_Green
 
             GameObject newEnemy = Instantiate(smallEnemyPrefab, spawnPos, Quaternion.identity);
 
-            Slime_Green slime = newEnemy.GetComponent<Slime_Green>();
+            Slime_Blue slime = newEnemy.GetComponent<Slime_Blue>();
             Rigidbody2D newRb = newEnemy.GetComponent<Rigidbody2D>();
 
             float dir = (i == 0) ? -1f : 1f;
 
             if (slime != null)
             {
-                slime.InitDirection((int)dir);
+                slime.InitDirection((int)dir);   
 
-                slime.SetGrounded(false);
-
-                // blocca movimento
                 StartCoroutine(EnableMovementAfterDelay(slime, 0.2f));
             }
 
             if (newRb != null)
             {
-                //VELOCITÀ DIRETTA (meglio di AddForce)
                 float randomX = Random.Range(0.9f, 1.3f);
                 float randomY = Random.Range(1.0f, 1.4f);
 
-                Vector2 velocity = new Vector2(
+                newRb.linearVelocity = new Vector2(
                     dir * launchForceX * randomX,
                     launchForceY * randomY
                 );
-
-                newRb.linearVelocity = velocity;
             }
         }
     }
 
     private IEnumerator EnableMovementAfterDelay(Enemy enemy, float delay)
     {
-        enemy.SetMovement(false);  // blocca Move()
+        enemy.SetMovement(false);
 
         yield return new WaitForSeconds(delay);
 
-        enemy.SetMovement(true); // riattiva
+        enemy.SetMovement(true);
     }
 }
