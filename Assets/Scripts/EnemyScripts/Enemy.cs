@@ -14,6 +14,7 @@ public abstract class Enemy : MonoBehaviour
     protected bool isDead = false;
     protected bool isActive = false;
     protected bool isVisible = false; // se è entrato nella camera almeno una volta
+    protected bool canMove = true;
     protected int direction = 1;       // 1 = destra, -1 = sinistra
 
     private float lastFlipTime;
@@ -30,7 +31,7 @@ public abstract class Enemy : MonoBehaviour
 
     protected virtual void Update()
     {
-        if (isDead || !isActive) return;
+        if (isDead || !isActive || !canMove) return;
         Move();
     }
 
@@ -174,5 +175,11 @@ public abstract class Enemy : MonoBehaviour
 
         if (sr != null)
             sr.flipX = direction < 0;
+    }
+
+    // Permette di bloccare o sbloccare il movimento del nemico (usato per i piccoli slime che spawnano)
+    public void SetMovement(bool value)
+    {
+        canMove = value;
     }
 }

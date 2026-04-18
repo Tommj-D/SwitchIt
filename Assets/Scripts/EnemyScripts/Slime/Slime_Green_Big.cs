@@ -40,6 +40,8 @@ public class Slime_Green_Big : Slime_Green
             {
                 slime.InitDirection((int)dir);
 
+                slime.SetGrounded(false);
+
                 // blocca movimento
                 StartCoroutine(EnableMovementAfterDelay(slime, 0.2f));
             }
@@ -62,10 +64,10 @@ public class Slime_Green_Big : Slime_Green
 
     private IEnumerator EnableMovementAfterDelay(Enemy enemy, float delay)
     {
-        enemy.enabled = false; // blocca Move()
+        enemy.SetMovement(false);  // blocca Move()
 
         yield return new WaitForSeconds(delay);
 
-        enemy.enabled = true; // riattiva
+        enemy.SetMovement(true); // riattiva
     }
 }

@@ -244,7 +244,7 @@ MonoBehaviour:
   initialDirection: -1
   smallEnemyPrefab: {fileID: 8068589428734277748, guid: 27bf31f6833d5b742a6b7841e983dd6b, type: 3}
   spawnCount: 2
-  spawnOffset: 0.5
+  spawnOffset: 1
   launchForceX: 7
   launchForceY: 5
 --- !u!1 &4399058840277973690

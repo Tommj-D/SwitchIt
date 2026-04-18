@@ -5,6 +5,8 @@ public class Slime_Green : Enemy
     [Header("Direction (1 = right, -1 = left)")]
     [SerializeField] private int initialDirection = 1; 
 
+    protected bool isGrounded = true;
+
     protected override void Start()
     {
         base.Start();
@@ -37,6 +39,26 @@ public class Slime_Green : Enemy
         ApplyInitialDirection();
     }
 
+    protected override void OnCollisionEnter2D(Collision2D collision)
+    {
+        foreach (var contact in collision.contacts)
+        {
+            if (contact.normal.y > 0.5f)
+            {
+                isGrounded = true;
+                break;
+            }
+        }
+        base.OnCollisionEnter2D(collision);
+    }
+
+    protected override void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (!isGrounded) return;
+
+        base.OnTriggerEnter2D(collision);
+    }
+
     public void InitDirection(int dir)
     {
         initialDirection = dir;
@@ -47,6 +69,18 @@ public class Slime_Green : Enemy
 
         if (sr != null)
             sr.flipX = direction < 0;
+    }
+
+    public void SetGrounded(bool value)
+    {
+        isGrounded = value;
+    }
+
+    protected override void OnObstacleHit()
+    {
+        if (!isGrounded) return; 
+
+        base.OnObstacleHit();
     }
 }
 
