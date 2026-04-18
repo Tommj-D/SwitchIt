@@ -45,7 +45,9 @@ public class SimpleParticlePuzzle : MonoBehaviour, IButtonPuzzle
 
         if (target == null)
         {
-            Debug.LogWarning("Target non assegnato!");
+            Debug.LogWarning("Target non assegnato! Eseguo azione diretta.");
+            isBusy = true;
+            StartCoroutine(ExecuteAction());
             return;
         }
 
