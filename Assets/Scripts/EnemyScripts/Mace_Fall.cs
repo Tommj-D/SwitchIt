@@ -90,7 +90,12 @@ public class Mace_Fall : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D other)
     {
-        if (isFalling && other.gameObject.CompareTag("Ground"))
+        if (!isFalling) return;
+
+        int otherLayer = other.gameObject.layer;
+
+        if (otherLayer == LayerMask.NameToLayer("Ground") ||
+            otherLayer == LayerMask.NameToLayer("Ground_Back"))
         {
             // Suono di impatto
             if (AudioManager.Instance != null)
@@ -99,10 +104,12 @@ public class Mace_Fall : MonoBehaviour
             }
 
             isFalling = false;
+
             if (impactParticles != null)
             {
                 Instantiate(impactParticles, transform.position + new Vector3(0, -0.65f, 0), Quaternion.identity);
             }
+
             StartCoroutine(StartGoUp());
         }
     }

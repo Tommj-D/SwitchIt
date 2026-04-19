@@ -73,7 +73,7 @@ public class Spike_Fall : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        // Se tocca un oggetto con layer "Ground"
+        // Se tocca un oggetto con layer "Player"
         if (collision.gameObject.CompareTag("Player"))
         {
             if (AudioManager.Instance != null)
