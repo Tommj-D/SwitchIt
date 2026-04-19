@@ -74,6 +74,19 @@ public class Slime_Blue : Enemy
     {
         if (isDead) return;
 
+        foreach (ContactPoint2D contact in collision.contacts)
+        {   
+            //Se lo slime atterra sulle spine dopo un salto muore
+            if (collision.gameObject.CompareTag("Spike"))
+            {
+                if (!isGrounded && rb != null && rb.linearVelocity.y < 0f)
+                {
+                    OnStomped();
+                    return;
+                }
+            }
+        }
+
         if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
             return;
 
