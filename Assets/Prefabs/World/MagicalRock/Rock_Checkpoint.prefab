@@ -453,9 +453,6 @@ MonoBehaviour:
   runeColor_Then: {r: 0.048066884, g: 0.5924529, b: 0.048066884, a: 1}
   particlesColor_Then: {r: 0, g: 0.84705883, b: 0, a: 1}
   rockLightColor: {r: 0, g: 0.8470589, b: 0, a: 0}
-  lightPulseSpeed: 3
-  lightPulseAmount: 0.3
-  activationFlash: 1.5
 --- !u!61 &1470550275666796546
 BoxCollider2D:
   m_ObjectHideFlags: 0
