@@ -9639,9 +9639,9 @@ ParticleSystemRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: -90
+  m_SortingLayerID: -1298130551
+  m_SortingLayer: -3
+  m_SortingOrder: -50
   m_MaskInteraction: 0
   m_RenderMode: 0
   m_MeshDistribution: 0
@@ -15181,7 +15181,7 @@ ParticleSystem:
     boxThickness: {x: 0, y: 0, z: 0}
     radiusThickness: 1
     donutRadius: 0.2
-    m_Position: {x: 0, y: 0, z: 70}
+    m_Position: {x: 0, y: 0, z: 60}
     m_Rotation: {x: 0, y: 0, z: 0}
     m_Scale: {x: 90, y: 70, z: 1}
     placementMode: 0
@@ -19312,9 +19312,9 @@ ParticleSystemRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: -90
+  m_SortingLayerID: 1287656843
+  m_SortingLayer: -2
+  m_SortingOrder: 0
   m_MaskInteraction: 0
   m_RenderMode: 0
   m_MeshDistribution: 0
