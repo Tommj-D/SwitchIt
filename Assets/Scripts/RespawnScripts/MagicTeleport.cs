@@ -28,6 +28,7 @@ public class MagicTeleport : MonoBehaviour
     public AudioClip suonoEntrata;
     public AudioClip suonoUscita;
 
+    public bool changeGravity = false; // Opzione per resettare la gravità del player al teletrasporto
     private bool inCorso = false;
     private Vector3 scalaOriginalePlayer;
 
@@ -86,7 +87,15 @@ public class MagicTeleport : MonoBehaviour
         // --- TELETRASPORTO ---
         player.transform.position = destinazione.position;
 
-        // 🔥 APPLICA TUTTO (layer + sorting + particelle)
+        // ---CAMBIA DIREZIOE DELLA GARVITA SE CHANGEGRAVITY=TRUE---
+        PlayerMovement pm = player.GetComponent<PlayerMovement>();
+
+        if (pm != null)
+        {
+            if (changeGravity)
+                pm.ForceFlipGravity();
+        }
+        //APPLICA TUTTO (layer + sorting + particelle)
         ApplyLayerAndSorting(player);
 
         player.transform.localScale = scalaOriginalePlayer;
@@ -95,7 +104,7 @@ public class MagicTeleport : MonoBehaviour
 
         yield return new WaitForSeconds(0.1f);
 
-        // 🔥 RIAPPLICA DOPO UN FRAME (fix per ragdoll / oggetti attivati dopo)
+        // RIAPPLICA DOPO UN FRAME (fix per ragdoll / oggetti attivati dopo)
         yield return null;
         ApplyLayerAndSorting(player);
 

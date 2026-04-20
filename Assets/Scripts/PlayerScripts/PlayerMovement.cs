@@ -393,4 +393,15 @@ public class PlayerMovement : MonoBehaviour
 
         return groundLayer; // fallback sicurezza
     }
+
+    // Metodo pubblico per forzare il flip della gravità (usato da MagicTeleport)
+    public void ForceFlipGravity()
+    {
+        gravityDirection *= -1;
+
+        rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0);
+
+        StopAllCoroutines();
+        StartCoroutine(SmoothFlip());
+    }
 }
