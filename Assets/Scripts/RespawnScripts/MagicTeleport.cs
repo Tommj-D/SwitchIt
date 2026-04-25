@@ -100,7 +100,10 @@ public class MagicTeleport : MonoBehaviour
 
         player.transform.localScale = scalaOriginalePlayer;
 
-        cameraConfinerManager.SetConfiner(confinerDestinazione);
+        if (cameraConfinerManager != null && confinerDestinazione != null)
+        {
+            cameraConfinerManager.SetConfiner(confinerDestinazione);
+        }
 
         yield return new WaitForSeconds(0.1f);
 
