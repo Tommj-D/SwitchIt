@@ -5275,7 +5275,7 @@ MonoBehaviour:
   puzzleControllers:
   - {fileID: 9161038078269785119}
   particellePolvere: {fileID: 1112477005798364039}
-  targetCircleIndex: 0
+  targetCircleIndex: 1
   isAnimated: 1
 --- !u!1 &1752843617784919957
 GameObject:
@@ -10224,7 +10224,7 @@ MonoBehaviour:
   puzzleControllers:
   - {fileID: 9161038078269785119}
   particellePolvere: {fileID: 7704876836104829152}
-  targetCircleIndex: 1
+  targetCircleIndex: 0
   isAnimated: 1
 --- !u!1 &2123993035238294467
 GameObject:
@@ -20745,9 +20745,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 4446788231101108337}
   - {fileID: 5161534774369434000}
   - {fileID: 8230272940500344163}
-  - {fileID: 4446788231101108337}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &9161038078269785119
