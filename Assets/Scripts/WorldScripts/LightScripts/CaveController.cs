@@ -20,6 +20,9 @@ public class CaveController : MonoBehaviour
     public float maskPositionSpeed = 5f;
     public float maskFlipSpeed = 5f;
 
+    public bool makeSoundEffect = true;
+    public bool isCave = true;
+
     private Vector3 originalMaskScale;
     private Vector3 targetMaskScale;
 
@@ -84,48 +87,57 @@ public class CaveController : MonoBehaviour
     {
         if (!other.CompareTag("Player")) return;
 
-        //Modifico musica all'interno della grotta
-        VolumeController.Instance.FadeMixerParam(VolumeController.Instance.masterMixer, "MusicLowpass", 800f, 0.4f);
-        VolumeController.Instance.DuckMixer(VolumeController.Instance.masterMixer, "MusicVol", 3f, 0.4f);
-
-        if (AudioManager.Instance != null&&!isActivated)
-        {
-            AudioManager.Instance.PlaySFX(AudioManager.Instance.secretEntranceSound);
-            isActivated = true;
-        }
-
+        // Questo avviene sempre
         isPlayerInsideCave = true;
-        LightManager.Instance.EnterCave();
 
         if (spriteMask != null)
         {
             targetMaskScale = spriteMaskDimension;
             targetMaskPosition = originalMaskPosition + spriteMaskPosition;
         }
-    }   
+
+        // Questo avvine solo se è una grotta
+        if (isCave)
+        {
+            VolumeController.Instance.FadeMixerParam(VolumeController.Instance.masterMixer, "MusicLowpass", 800f, 0.4f);
+            VolumeController.Instance.DuckMixer(VolumeController.Instance.masterMixer, "MusicVol", 3f, 0.4f);
+
+            if (AudioManager.Instance != null && !isActivated && makeSoundEffect)
+            {
+                AudioManager.Instance.PlaySFX(AudioManager.Instance.secretEntranceSound);
+                isActivated = true;
+            }
+
+            LightManager.Instance.EnterCave();
+        }
+    }
 
 
     private void OnTriggerExit2D(Collider2D other)
     {
         if (!other.CompareTag("Player")) return;
-        // Ripristino musica all'uscita dalla grotta
-        if(GameManager.Instance != null && !GameManager.Instance.isChangingLevel)
-            VolumeController.Instance.ResetGameplayVolumes(0.4f);
 
+        // Questo avviene sempre
         isPlayerInsideCave = false;
-        LightManager.Instance.ExitCave();
 
         if (spriteMask != null)
         {
-            // Torna alla scala originale
             targetMaskScale = originalMaskScale;
             targetMaskPosition = originalMaskPosition;
 
-            currentMaskOffset = spriteMaskPosition; 
+            currentMaskOffset = spriteMaskPosition;
 
             spriteMask.transform.localScale = originalMaskScale;
             spriteMask.transform.localPosition = originalMaskPosition;
         }
-    }
 
+        // Questo avvine solo se è una grotta
+        if (isCave)
+        {
+            if (GameManager.Instance != null && !GameManager.Instance.isChangingLevel)
+                VolumeController.Instance.ResetGameplayVolumes(0.4f);
+
+            LightManager.Instance.ExitCave();
+        }
+    }
 }

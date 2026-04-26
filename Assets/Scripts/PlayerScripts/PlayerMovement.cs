@@ -70,6 +70,10 @@ public class PlayerMovement : MonoBehaviour
     public CinemachineCamera vcam;
     public float cameraOffsetX = 4f;
 
+    [Header("Dimension Lock")]
+    private bool canSwitchDimension = true; //Per fare in modo che non si possa cambiare dimensione quando cambio gravità
+    private bool ignoreDimensionLock = false; //Usata per forzare il cambio dimensione anche quando canSwitchDimension è false (usata da MagicTeleport quando teletrasporta il player a terra, permettendogli di cambiare dimensione anche se non ha ancora toccato terra dopo il flip)
+
     private float offsetSmoothTime = 0.3f; //Quanto velocemante la cam segue il player 
     private float targetOffsetX;
     private float currentOffsetX;
@@ -213,6 +217,8 @@ public class PlayerMovement : MonoBehaviour
 
         if (groundedNow && !isGrounded)
         {
+            canSwitchDimension = true; //Tocca terra, sblocca il cambio dimensione
+
             if (isJumping)
             {
                 if (AudioManager.Instance != null && AudioManager.Instance.jumpLanding != null)
@@ -271,7 +277,9 @@ public class PlayerMovement : MonoBehaviour
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0);
 
             canFlipGravity = false;
-            lastFlipTime = Time.time; 
+            lastFlipTime = Time.time;
+
+            canSwitchDimension = false; //Blocca il cambio dimensione fino a quando non tocchiamo terra
 
             StartCoroutine(SmoothFlip());
         }
@@ -288,6 +296,8 @@ public class PlayerMovement : MonoBehaviour
         {
             gravityDirection = 1;
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0);
+
+            canSwitchDimension = false; //Blocca il cambio dimensione fino a quando non tocchiamo terra
 
             StopAllCoroutines();
             StartCoroutine(SmoothFlip());
@@ -318,7 +328,7 @@ public class PlayerMovement : MonoBehaviour
     //----------- WORLD SWITCH-----------//
     public void DimensionSwitch(InputAction.CallbackContext context)
     {
-        if (!context.performed || GetComponent<PlayerRespawn>().IsDying() || GameManager.Instance.isChangingLevel ||WorldSwitch.Instance==null) return;
+        if (!context.performed || (!canSwitchDimension && !ignoreDimensionLock) || GetComponent<PlayerRespawn>().IsDying() || GameManager.Instance.isChangingLevel ||WorldSwitch.Instance==null) return;
 
         WorldSwitch.Instance.SwitchWorld();
     }
@@ -403,5 +413,16 @@ public class PlayerMovement : MonoBehaviour
 
         StopAllCoroutines();
         StartCoroutine(SmoothFlip());
+    }
+
+    // Metodi per gestire il blocco del cambio dimensione (usati da MagicTeleport)
+    public void EnableDimensionOverride()
+    {
+        ignoreDimensionLock = true;
+    }
+
+    public void DisableDimensionOverride()
+    {
+        ignoreDimensionLock = false;
     }
 }

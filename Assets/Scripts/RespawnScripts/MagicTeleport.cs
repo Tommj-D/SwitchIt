@@ -92,6 +92,8 @@ public class MagicTeleport : MonoBehaviour
 
         if (pm != null)
         {
+            pm.EnableDimensionOverride(); // Disabilita il controllo della dimensione da parte del player (da playerMovement)
+
             if (changeGravity)
                 pm.ForceFlipGravity();
         }
@@ -149,6 +151,11 @@ public class MagicTeleport : MonoBehaviour
             Color c = schermoNero.color;
             c.a = 0;
             schermoNero.color = c;
+        }
+
+        if (pm != null)
+        {
+            pm.DisableDimensionOverride(); // Riabilita il controllo della dimensione da parte del player (da playerMovement)
         }
 
         inCorso = false;
