@@ -188,6 +188,18 @@ public class PlayerRespawn : MonoBehaviour
         if(WorldSwitch.Instance!=null && WorldSwitch.Instance.isFantasyWorldActive) 
             WorldSwitch.Instance.SwitchWorldWithoutAnimation();
 
+        Slime_Blue_Big[] blueSlimes = FindObjectsByType<Slime_Blue_Big>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        foreach (Slime_Blue_Big slime in blueSlimes)
+        {
+            slime.ResetEnemy();
+        }
+
+        Slime_Green_Big[] greenSlimes = FindObjectsByType<Slime_Green_Big>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        foreach (Slime_Green_Big slime in greenSlimes)
+        {
+            slime.ResetEnemy();
+        }
+
         StartCoroutine(SceneController.Instance.FadeIn(SceneController.Instance.fadeDuration));
 
         if (animator != null)
