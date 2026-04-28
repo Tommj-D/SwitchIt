@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3820884388316061349}
   - component: {fileID: 8736948552359049654}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Asset 14
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -100,7 +100,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9144691088877311064}
-  m_Layer: 0
+  - component: {fileID: 4079905542557763878}
+  m_Layer: 10
   m_Name: Flower&Rock
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -125,6 +126,19 @@ Transform:
   - {fileID: 3820884388316061349}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!210 &4079905542557763878
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5814967312694052291}
+  m_Enabled: 1
+  m_SortingLayerID: -496185305
+  m_SortingLayer: 2
+  m_SortingOrder: 11
+  m_SortAtRoot: 0
+  m_Sort3DAs2D: 0
 --- !u!1 &7016415218036597171
 GameObject:
   m_ObjectHideFlags: 0
@@ -135,7 +149,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2491410530103755397}
   - component: {fileID: 5748770751052113464}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Asset 7
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -226,7 +240,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7111733131185155840}
   - component: {fileID: 8106808749166911309}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Asset 8
   m_TagString: Untagged
   m_Icon: {fileID: 0}
