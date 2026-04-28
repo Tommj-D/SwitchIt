@@ -47271,7 +47271,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2823120193775002407, guid: 279ec995ac28cdc499624ca22d233a6e, type: 3}
       propertyPath: m_ColliderPaths.Array.size
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2823120193775002407, guid: 279ec995ac28cdc499624ca22d233a6e, type: 3}
       propertyPath: m_CompositePaths.m_Paths.Array.size
@@ -48095,7 +48095,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3223326499704946784, guid: 279ec995ac28cdc499624ca22d233a6e, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3244185885505465488, guid: 279ec995ac28cdc499624ca22d233a6e, type: 3}
       propertyPath: m_Size.x
@@ -55639,7 +55639,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3454445225764361799, guid: 279ec995ac28cdc499624ca22d233a6e, type: 3}
       propertyPath: m_ColliderPaths.Array.size
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3454445225764361799, guid: 279ec995ac28cdc499624ca22d233a6e, type: 3}
       propertyPath: m_CompositePaths.m_Paths.Array.size
@@ -102721,7 +102721,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2904741245219955628, guid: 330f1a4a807b2fc4db07205022f1ec26, type: 3}
       propertyPath: m_ColliderPaths.Array.size
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2904741245219955628, guid: 330f1a4a807b2fc4db07205022f1ec26, type: 3}
       propertyPath: m_CompositePaths.m_Paths.Array.size
@@ -175206,7 +175206,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3904510868308263378, guid: ff2ac5f23c7cd455b9a804367d172799, type: 3}
       propertyPath: m_ColliderPaths.Array.size
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3904510868308263378, guid: ff2ac5f23c7cd455b9a804367d172799, type: 3}
       propertyPath: m_CompositePaths.m_Paths.Array.size
@@ -177994,7 +177994,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4088265620727982633, guid: ff2ac5f23c7cd455b9a804367d172799, type: 3}
       propertyPath: m_ColliderPaths.Array.size
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4588855132832573650, guid: ff2ac5f23c7cd455b9a804367d172799, type: 3}
       propertyPath: m_SortingLayer
@@ -197489,7 +197489,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2507415703715003059, guid: 0507f4f0ae17e3e46bd84aab453f3233, type: 3}
       propertyPath: m_ColliderPaths.Array.size
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2507415703715003059, guid: 0507f4f0ae17e3e46bd84aab453f3233, type: 3}
       propertyPath: m_CompositePaths.m_Paths.Array.size
@@ -223915,7 +223915,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3904510868308263378, guid: ff2ac5f23c7cd455b9a804367d172799, type: 3}
       propertyPath: m_ColliderPaths.Array.size
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3904510868308263378, guid: ff2ac5f23c7cd455b9a804367d172799, type: 3}
       propertyPath: m_CompositePaths.m_Paths.Array.size
@@ -229491,7 +229491,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4088265620727982633, guid: ff2ac5f23c7cd455b9a804367d172799, type: 3}
       propertyPath: m_ColliderPaths.Array.size
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4588855132832573650, guid: ff2ac5f23c7cd455b9a804367d172799, type: 3}
       propertyPath: m_ChunkCullingBounds.x
@@ -250090,7 +250090,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2507415703715003059, guid: 0507f4f0ae17e3e46bd84aab453f3233, type: 3}
       propertyPath: m_ColliderPaths.Array.size
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2507415703715003059, guid: 0507f4f0ae17e3e46bd84aab453f3233, type: 3}
       propertyPath: m_CompositePaths.m_Paths.Array.size
