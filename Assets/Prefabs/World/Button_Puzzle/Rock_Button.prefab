@@ -5093,7 +5093,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3285379c633a4bc499e5edafea2e4e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Button
-  puzzleController: {fileID: 0}
+  puzzleControllers: []
   particellePolvere: {fileID: 4276158590037913709}
   targetCircleIndex: 2
   isAnimated: 1
@@ -10405,7 +10405,7 @@ MonoBehaviour:
   m_LightType: 3
   m_BlendStyleIndex: 0
   m_FalloffIntensity: 0.4
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.91764706, b: 0.015686275, a: 1}
   m_Intensity: 2.2
   m_LightVolumeIntensity: 1
   m_LightVolumeEnabled: 0

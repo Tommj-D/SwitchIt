@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class SlimeSpawnerButton : MonoBehaviour
@@ -17,6 +18,8 @@ public class SlimeSpawnerButton : MonoBehaviour
     public ParticleSystem particellePolvere;
     private Animator animator;
 
+    private bool canPress = true;
+
     private void Start()
     {
         if (isAnimated)
@@ -28,8 +31,10 @@ public class SlimeSpawnerButton : MonoBehaviour
         // 1. Controlliamo che sia il giocatore
         if (!other.CompareTag("Player")) return;
 
+        if (!canPress) return;
+
         // 2. Controlliamo se il pulsante è ancora in "Ricarica" (Cooldown)
-        if (Time.time < lastPressTime + cooldownDelay) return;
+        canPress = false;
 
         // Aggiorniamo il tempo dell'ultima pressione
         lastPressTime = Time.time;
@@ -39,6 +44,8 @@ public class SlimeSpawnerButton : MonoBehaviour
 
         // 4. Avviamo gli effetti visivi e sonori
         PlayEffects();
+
+        StartCoroutine(ResetButton());
     }
 
     private void SpawnSlimes()
@@ -82,4 +89,36 @@ public class SlimeSpawnerButton : MonoBehaviour
             particellePolvere.Play();
         }
     }
+
+    private IEnumerator ResetButton()
+    {
+        yield return new WaitForSeconds(cooldownDelay);
+
+        if (animator != null && isAnimated)
+        {
+            animator.SetTrigger("Reset"); // 👈 trigger di ritorno
+        }
+
+        // stesso suono della pressione
+        if (AudioManager.Instance != null && AudioManager.Instance.sfxSource != null)
+        {
+            AudioManager.Instance.sfxSource.PlayOneShot(AudioManager.Instance.buttonSound);
+        }
+
+        if (particellePolvere != null)
+        {
+            particellePolvere.Play();
+        }
+    }
+
+    public void OnResetAnimationFinished()
+    {
+        canPress = true;
+
+        if (animator != null && isAnimated)
+        {
+            animator.SetTrigger("Idle"); //torna all'idle
+        }
+    }
+
 }
