@@ -219,6 +219,8 @@ public class PlayerMovement : MonoBehaviour
         {
             canSwitchDimension = true; //Tocca terra, sblocca il cambio dimensione
 
+            DisableDimensionOverride();
+            
             if (isJumping)
             {
                 if (AudioManager.Instance != null && AudioManager.Instance.jumpLanding != null)

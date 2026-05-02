@@ -153,10 +153,10 @@ public class MagicTeleport : MonoBehaviour
             schermoNero.color = c;
         }
 
-        if (pm != null)
+        /*if (pm != null)
         {
             pm.DisableDimensionOverride(); // Riabilita il controllo della dimensione da parte del player (da playerMovement)
-        }
+        }*/
 
         inCorso = false;
     }
