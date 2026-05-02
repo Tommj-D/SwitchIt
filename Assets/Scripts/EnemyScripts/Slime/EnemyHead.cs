@@ -16,32 +16,43 @@ public class EnemyHead : MonoBehaviour
         if (rb == null) return;
 
         PlayerMovement playerMovement = collision.GetComponent<PlayerMovement>();
-        if (playerMovement == null) return;
 
-        // Direzione gravità reale del player
-        float gravitySign = playerMovement.IsGravityInverted() ? -1f : 1f;
+        // ===== CASO PLAYER =====
+        if (playerMovement != null)
+        {
+            float gravitySign = playerMovement.IsGravityInverted() ? -1f : 1f;
 
-        // Controllo posizione (devo essere "sopra" rispetto alla gravità)
-        if ((collision.transform.position.y - transform.position.y) * gravitySign < 0)
+            if ((collision.transform.position.y - transform.position.y) * gravitySign < 0)
+                return;
+
+            if (rb.linearVelocity.y * gravitySign >= 0)
+                return;
+
+            PlayerRespawn playerRespawn = collision.GetComponent<PlayerRespawn>();
+            if (playerRespawn != null && playerRespawn.IsDying())
+                return;
+
+            // Rimbalzo player
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
+            rb.AddForce(Vector2.up * jumpingForce * gravitySign, ForceMode2D.Impulse);
+
+            playerMovement.ResetJumps();
+        }
+
+        // ===== CASO ENEMY =====
+        else if (collision.GetComponent<Enemy>() != null)
+        {
+            // Qui puoi decidere se mettere controlli o no
+            // Per ora: attiva sempre
+        }
+        else
+        {
             return;
+        }
 
-        // Controllo movimento (devo andare verso il nemico)
-        if (rb.linearVelocity.y * gravitySign >= 0)
-            return;
-
-        PlayerRespawn playerRespawn = collision.GetComponent<PlayerRespawn>();
-        if (playerRespawn != null && playerRespawn.IsDying())
-            return;
-
+        // ===== COMUNE =====
         hasBeenStomped = true;
 
-        // Rimbalzo
-        rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);
-        rb.AddForce(Vector2.up * jumpingForce * gravitySign, ForceMode2D.Impulse);
-
-        playerMovement.ResetJumps();
-
-        // Uccido nemico
         enemy.OnStomped();
 
         ScoreManager.instance?.SegnalaNemicoSconfitto();
