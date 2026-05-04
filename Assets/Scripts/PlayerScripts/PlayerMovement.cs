@@ -43,7 +43,7 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("GroundCheck")]
     public Transform groundCheckPos; // punto di controllo a terra
-    public Vector2 groundCheckSize = new Vector2(0.5f, 0.05f); // dimensione del box di controllo
+   public Vector2 groundCheckSize = new Vector2(0.5f, 0.2f); // Aumentato da 0.05f a 0.2f!
     public LayerMask groundLayer;
     public LayerMask groundBackLayer;
 
@@ -116,6 +116,8 @@ public class PlayerMovement : MonoBehaviour
         ///ANIMAZIONI///
         animator.SetFloat("Speed", Mathf.Abs(rb.linearVelocity.x));
         animator.SetFloat("VerticalSpeed", Mathf.Abs(rb.linearVelocity.y));
+
+        animator.SetBool("isGrounded", isGrounded);
 
         if (rb.linearVelocity.x == 0 && jumpsRemaining == maxJumps && Time.time >= nextBlinkTime)
         {
@@ -204,7 +206,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    private void GroundCeck()
+   private void GroundCeck()
     {
         LayerMask currentGround = GetCurrentGroundLayer();
 
@@ -214,6 +216,15 @@ public class PlayerMovement : MonoBehaviour
             0,
             currentGround
         );
+
+        // --- LA MAGIA CHE RISOLVE IL BUG ---
+        // Se la nostra velocità verticale (Y) è in salita (maggiore di 0.1),
+        // significa che stiamo saltando. Quindi FORZIAMO il gioco a capire che NON siamo a terra!
+        if (rb.linearVelocity.y * gravityDirection > 0.1f)
+        {
+            groundedNow = false;
+        }
+        // -----------------------------------
 
         if (groundedNow && !isGrounded)
         {
@@ -238,7 +249,7 @@ public class PlayerMovement : MonoBehaviour
 
         isGrounded = groundedNow;
     }
-
+    
     public void ResetJumps()
     {
         jumpsRemaining = maxJumps;

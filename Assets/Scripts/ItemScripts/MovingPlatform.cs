@@ -1,4 +1,4 @@
-using System.Collections.Generic; // Ci serve per fare la lista dei "passeggeri"
+using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -9,9 +9,14 @@ public class MovingPlatform : MonoBehaviour
     public Transform posB;
     public float speed = 3f;
 
+    [Header("Effetti Visivi")]
+    public string hexFantasyColor = "#1E90FF"; // Il colore azzurro magico!
+    private Color fantasyColor;
+    private Color normalColor;
+    private SpriteRenderer sr;
+
     private Vector3 targetPos;
     private Rigidbody2D rb;
-    
     private List<Rigidbody2D> passeggeri = new List<Rigidbody2D>();
 
     void Start()
@@ -21,10 +26,43 @@ public class MovingPlatform : MonoBehaviour
 
         rb.bodyType = RigidbodyType2D.Kinematic;
         rb.interpolation = RigidbodyInterpolation2D.Interpolate;
+
+        // --- PREPARAZIONE COLORI ---
+        sr = GetComponent<SpriteRenderer>();
+        if (sr != null)
+        {
+            normalColor = sr.color; // Salva il colore originale per quando torni al mondo normale
+        }
+        
+        // Converte il codice esadecimale in un colore che Unity può usare
+        ColorUtility.TryParseHtmlString(hexFantasyColor, out fantasyColor);
+    }
+
+    // Usiamo Update per gli effetti visivi (è più fluido del FixedUpdate)
+    void Update()
+    {
+        if (sr != null && WorldSwitch.Instance != null)
+        {
+            if (WorldSwitch.Instance.isFantasyWorldActive)
+            {
+                sr.color = fantasyColor; // Diventa azzurra
+            }
+            else
+            {
+                sr.color = normalColor; // Torna normale
+            }
+        }
     }
 
     void FixedUpdate()
     {
+        // --- LA MAGIA DEL BLOCCO DIMENSIONALE ---
+        if (WorldSwitch.Instance != null && WorldSwitch.Instance.isFantasyWorldActive)
+        {
+            return; // Ferma tutto il movimento fisico
+        }
+
+        // --- MOVIMENTO NORMALE ---
         Vector2 nuovaPosizione = Vector2.MoveTowards(rb.position, targetPos, speed * Time.fixedDeltaTime);
         Vector2 spostamento = nuovaPosizione - rb.position;
         rb.MovePosition(nuovaPosizione);

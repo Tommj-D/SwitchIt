@@ -200,6 +200,13 @@ public class PlayerRespawn : MonoBehaviour
             slime.ResetEnemy();
         }
 
+        // Trova tutti i pulsanti spawner nel livello
+        SlimeSpawnerButton[] spawnerButtons = FindObjectsByType<SlimeSpawnerButton>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        foreach (SlimeSpawnerButton spawner in spawnerButtons)
+        {
+            spawner.ResetSpawner();
+        }
+        
         StartCoroutine(SceneController.Instance.FadeIn(SceneController.Instance.fadeDuration));
 
         if (animator != null)
