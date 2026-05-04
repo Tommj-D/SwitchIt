@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement; // FONDAMENTALE: Aggiunto per poter cambiare le scene!
 
 public class VolumeUI : MonoBehaviour
 {
@@ -25,5 +26,11 @@ public class VolumeUI : MonoBehaviour
         {
             VolumeController.Instance.ClearUI(volumeMenuPanel);
         }
+    }
+
+    public void LoadLevelSelection()
+    {
+        Time.timeScale = 1f; 
+        SceneManager.LoadScene("Menu"); 
     }
 }
