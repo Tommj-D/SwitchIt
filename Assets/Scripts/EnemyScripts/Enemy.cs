@@ -55,7 +55,7 @@ public abstract class Enemy : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Obstacle") || collision.gameObject.CompareTag("Enemy"))
         {
-            Flip();
+            OnObstacleHit();
         }
     }
 
@@ -95,7 +95,7 @@ public abstract class Enemy : MonoBehaviour
         animator?.SetTrigger("Die");
     }
 
-    private void Flip()
+    protected void Flip()
     {
         if (Time.time - lastFlipTime < flipCooldown) return;
 

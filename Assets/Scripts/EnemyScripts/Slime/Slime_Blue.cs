@@ -87,26 +87,17 @@ public class Slime_Blue : Enemy
             }
         }
 
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Ground") || collision.gameObject.layer == LayerMask.NameToLayer("Ground_Back"))
             return;
 
-        base.OnCollisionEnter2D(collision);
-        foreach (ContactPoint2D contact in collision.contacts)
+        
+        if (collision.gameObject.CompareTag("Obstacle") || collision.gameObject.CompareTag("Enemy"))
         {
-            // collisione laterale
-            if (Mathf.Abs(contact.normal.x) > 0.5f)
-            {
-                if (justLanded)
-                    return;
-
-                // se è in aria e colpisce un muro, rimbalza indietro
-                if (!isGrounded && rb != null)
-                {
-                    rb.linearVelocity = new Vector2(direction * jumpHorizontalSpeed, rb.linearVelocity.y);
-                }
-
-                break;
-            }
+            HandleWallCollision(collision);
+        }
+        else
+        {
+            base.OnCollisionEnter2D(collision);
         }
     }
 
@@ -234,7 +225,11 @@ public class Slime_Blue : Enemy
 
     protected override void OnObstacleHit()
     {
-        // lo slime blu non si gira se incontra un obstacle
+        // NON girarti se:
+        if (!isGrounded) return;     // sei in aria
+        if (justLanded) return;      // hai appena toccato terra
+
+        Flip();
     }
 
     public override void ResetEnemy()
@@ -271,5 +266,34 @@ public class Slime_Blue : Enemy
 
         if (sr != null)
             sr.flipX = direction < 0;
+    }
+
+    // Gestione collisione con muri e ostacoli hittati mnetre lo slime è in aria o a terra
+    private void HandleWallCollision(Collision2D collision)
+    {
+        foreach (ContactPoint2D contact in collision.contacts)
+        {
+            // controlliamo se è davvero un muro (non pavimento)
+            if (Mathf.Abs(contact.normal.x) > 0.5f)
+            {
+                // ignora subito dopo atterraggio
+                if (justLanded)
+                    return;
+
+                // IN ARIA → rimbalzo
+                if (!isGrounded && rb != null)
+                {
+                    rb.linearVelocity = new Vector2(-direction * jumpHorizontalSpeed, rb.linearVelocity.y);
+                    return;
+                }
+
+                // A TERRA → gira
+                if (isGrounded)
+                {
+                    Flip();
+                    return;
+                }
+            }
+        }
     }
 }
