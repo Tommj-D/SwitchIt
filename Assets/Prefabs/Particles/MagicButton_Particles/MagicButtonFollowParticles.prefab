@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 8263331167563460860}
   - component: {fileID: 4869304731774896736}
   - component: {fileID: 4853592833663810352}
-  - component: {fileID: -5752959655020359508}
+  - component: {fileID: 2654379233473572969}
   m_Layer: 0
-  m_Name: MagicButtonParticles_Loop
+  m_Name: MagicButtonFollowParticles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -51,7 +51,7 @@ ParticleSystem:
   emitterVelocityMode: 1
   looping: 0
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:
@@ -223,8 +223,8 @@ ParticleSystem:
     startColor:
       serializedVersion: 2
       minMaxState: 2
-      minColor: {r: 0, g: 0.7490196, b: 1, a: 1}
-      maxColor: {r: 0.4980392, g: 1, b: 0, a: 1}
+      minColor: {r: 1, g: 0, b: 0, a: 1}
+      maxColor: {r: 0.2941177, g: 0, b: 0.509804, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -289,7 +289,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 3
       scalar: 0.2
-      minScalar: 0.05
+      minScalar: 0.1
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -4054,7 +4054,7 @@ ParticleSystem:
     textureScale: {x: 1, y: 1}
     ribbonCount: 1
     shadowBias: 0.5
-    worldSpace: 1
+    worldSpace: 0
     dieWithParticles: 1
     sizeAffectsWidth: 1
     sizeAffectsLifetime: 0
@@ -4863,7 +4863,7 @@ ParticleSystemRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 438903465
   m_SortingLayer: 4
-  m_SortingOrder: 200
+  m_SortingOrder: 50
   m_MaskInteraction: 0
   m_RenderMode: 0
   m_MeshDistribution: 0
@@ -4896,7 +4896,7 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
---- !u!114 &-5752959655020359508
+--- !u!114 &2654379233473572969
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4905,11 +4905,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 6894045136040199870}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 91f50ea7983a1482093d7c2595d9e1e4, type: 3}
+  m_Script: {fileID: 11500000, guid: 053c00b2ba4b5407c89ae8402551fe70, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ParticleSystemToTarget
-  speed: 3
-  attractionForce: 15
-  arriveDistance: 0.2
-  completionThreshold: 0.6
-  burstPrefab: {fileID: 9159694564422747756, guid: 78fa21a8147544a828ffda7378c2d12d, type: 3}
+  m_EditorClassIdentifier: Assembly-CSharp::ParticlesToTarget
+  completionThreshold: 0.75
+  ArriveDistanceMultiplier: 20
+  AttractionForceMultiplier: 0.6
+  VortexForceMultiplier: 0.3
