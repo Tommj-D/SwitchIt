@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8263331167563460860}
   - component: {fileID: 4869304731774896736}
   - component: {fileID: 4853592833663810352}
-  - component: {fileID: 7545703362592132624}
+  - component: {fileID: -5752959655020359508}
   m_Layer: 0
   m_Name: MagicButtonParticles_Loop
   m_TagString: Untagged
@@ -107,7 +107,7 @@ ParticleSystem:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-  moveWithTransform: 0
+  moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
   randomSeed: 0
@@ -4896,7 +4896,7 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
---- !u!114 &7545703362592132624
+--- !u!114 &-5752959655020359508
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4907,6 +4907,9 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 91f50ea7983a1482093d7c2595d9e1e4, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SimpleParticleToTarget
+  m_EditorClassIdentifier: Assembly-CSharp::ParticleSystemToTarget
   speed: 3
+  attractionForce: 15
+  arriveDistance: 0.2
+  completionThreshold: 0.6
   burstPrefab: {fileID: 9159694564422747756, guid: 78fa21a8147544a828ffda7378c2d12d, type: 3}

@@ -66,8 +66,13 @@ public class SlimeSpawnerButton : MonoBehaviour
         {
             GameObject particle = Instantiate(particlePrefab, transform.position, Quaternion.identity);
 
-            SimpleParticleToTarget p = particle.GetComponent<SimpleParticleToTarget>();
-            p.speed = particleSpeed;
+            ParticleSystemToTarget p = particle.GetComponent<ParticleSystemToTarget>();
+
+            p.Init(targetPos, () =>
+            {
+                GameObject slime = Instantiate(slimePrefab, targetPos, Quaternion.identity);
+                spawnedSlimes.Add(slime);
+            });
 
             if (i == 0)
             {
