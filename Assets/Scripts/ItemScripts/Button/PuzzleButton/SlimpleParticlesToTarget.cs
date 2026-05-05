@@ -3,6 +3,10 @@ using UnityEngine;
 public class SimpleParticleToTarget : MonoBehaviour
 {
     public float speed = 5f;
+
+    [Header("Final Effect")]
+    public GameObject burstPrefab;
+
     private Vector3 target;
     private System.Action onArrive;
 
@@ -13,13 +17,26 @@ public class SimpleParticleToTarget : MonoBehaviour
     }
 
     void Update()
-    {   
+    {
         transform.position = Vector3.MoveTowards(transform.position, target, speed * Time.deltaTime);
 
         if (Vector3.Distance(transform.position, target) < 0.05f)
         {
-            onArrive?.Invoke();
-            Destroy(gameObject);
+            Arrive();
         }
+    }
+
+    void Arrive()
+    {
+        // burst
+        if (burstPrefab != null)
+        {
+            Instantiate(burstPrefab, target, Quaternion.identity);
+        }
+
+        // slime
+        onArrive?.Invoke();
+
+        Destroy(gameObject);
     }
 }

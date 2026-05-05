@@ -4909,3 +4909,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SimpleParticleToTarget
   speed: 3
+  burstPrefab: {fileID: 9159694564422747756, guid: 78fa21a8147544a828ffda7378c2d12d, type: 3}

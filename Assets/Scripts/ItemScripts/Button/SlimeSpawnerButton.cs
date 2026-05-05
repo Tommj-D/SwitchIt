@@ -58,26 +58,29 @@ public class SlimeSpawnerButton : MonoBehaviour
 
         Vector3 baseSpawnPos = spawnCenter != null ? spawnCenter.position : transform.position;
 
+        // 👉 UN SOLO punto di arrivo (fondamentale)
+        float randomX = Random.Range(-spawnRadius, spawnRadius);
+        Vector3 targetPos = baseSpawnPos + new Vector3(randomX, 0.5f, 0f);
+
         for (int i = 0; i < slimesPerPress; i++)
         {
-            float randomX = Random.Range(-spawnRadius, spawnRadius);
-            Vector3 targetPos = baseSpawnPos + new Vector3(randomX, 0.5f, 0f);
-
             GameObject particle = Instantiate(particlePrefab, transform.position, Quaternion.identity);
 
             SimpleParticleToTarget p = particle.GetComponent<SimpleParticleToTarget>();
-
-            if (p == null)
-            {
-                Debug.LogError("SimpleParticleToTarget NON trovato sul prefab!");
-            }
             p.speed = particleSpeed;
 
-            p.Init(targetPos, () =>
+            if (i == 0)
             {
-                GameObject slime = Instantiate(slimePrefab, targetPos, Quaternion.identity);
-                spawnedSlimes.Add(slime);
-            });
+                p.Init(targetPos, () =>
+                {
+                    GameObject slime = Instantiate(slimePrefab, targetPos, Quaternion.identity);
+                    spawnedSlimes.Add(slime);
+                });
+            }
+            else
+            {
+                p.Init(targetPos, null);
+            }
         }
     }
 
