@@ -319586,43 +319586,43 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 386900294269499124, guid: 90658218177e940acbbe28220c62314c, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 386900294269499124, guid: 90658218177e940acbbe28220c62314c, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 926249729515193783, guid: 90658218177e940acbbe28220c62314c, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 926249729515193783, guid: 90658218177e940acbbe28220c62314c, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 926249729515193783, guid: 90658218177e940acbbe28220c62314c, type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1490341324108391757, guid: 90658218177e940acbbe28220c62314c, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1490341324108391757, guid: 90658218177e940acbbe28220c62314c, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1490341324108391757, guid: 90658218177e940acbbe28220c62314c, type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3351378839381384291, guid: 90658218177e940acbbe28220c62314c, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3351378839381384291, guid: 90658218177e940acbbe28220c62314c, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6183267886881632272, guid: 90658218177e940acbbe28220c62314c, type: 3}
       propertyPath: m_Name
@@ -319710,7 +319710,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6976650716766072295, guid: 90658218177e940acbbe28220c62314c, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
