@@ -3995,11 +3995,11 @@ ParticleSystem:
   TrailModule:
     enabled: 1
     mode: 0
-    ratio: 0.4
+    ratio: 0.34
     lifetime:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 0.04
+      scalar: 0.03
       minScalar: 0.01
       maxCurve:
         serializedVersion: 2
