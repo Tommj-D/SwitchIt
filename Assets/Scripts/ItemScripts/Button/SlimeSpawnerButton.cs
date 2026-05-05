@@ -17,6 +17,10 @@ public class SlimeSpawnerButton : MonoBehaviour
     [Header("Effetti")]
     public bool isAnimated = true;
     public ParticleSystem particellePolvere;
+
+    [Header("Particelle verso target")]
+    public GameObject particlePrefab;
+    public float particleSpeed = 5f;
     private Animator animator;
 
     private bool canPress = true;
@@ -46,9 +50,9 @@ public class SlimeSpawnerButton : MonoBehaviour
 
     private void SpawnSlimes()
     {
-        if (slimePrefab == null)
+        if (slimePrefab == null || particlePrefab == null)
         {
-            Debug.LogWarning("Attenzione: Nessun prefab Slime assegnato al pulsante!");
+            Debug.LogWarning("Prefab mancanti!");
             return;
         }
 
@@ -57,13 +61,23 @@ public class SlimeSpawnerButton : MonoBehaviour
         for (int i = 0; i < slimesPerPress; i++)
         {
             float randomX = Random.Range(-spawnRadius, spawnRadius);
-            Vector3 finalSpawnPos = baseSpawnPos + new Vector3(randomX, 0.5f, 0f);
+            Vector3 targetPos = baseSpawnPos + new Vector3(randomX, 0.5f, 0f);
 
-            // Salviamo il nuovo slime in una variabile temporanea...
-            GameObject newSlime = Instantiate(slimePrefab, finalSpawnPos, Quaternion.identity);
-            
-            // ...e lo aggiungiamo alla nostra lista della memoria!
-            spawnedSlimes.Add(newSlime);
+            GameObject particle = Instantiate(particlePrefab, transform.position, Quaternion.identity);
+
+            SimpleParticleToTarget p = particle.GetComponent<SimpleParticleToTarget>();
+
+            if (p == null)
+            {
+                Debug.LogError("SimpleParticleToTarget NON trovato sul prefab!");
+            }
+            p.speed = particleSpeed;
+
+            p.Init(targetPos, () =>
+            {
+                GameObject slime = Instantiate(slimePrefab, targetPos, Quaternion.identity);
+                spawnedSlimes.Add(slime);
+            });
         }
     }
 
