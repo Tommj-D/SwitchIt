@@ -190,7 +190,7 @@ MonoBehaviour:
   posB: {fileID: 4190639885132953663}
   speed: 3
   normalColor: {r: 1, g: 1, b: 1, a: 1}
-  fantasyColor: {r: 0, g: 1, b: 1, a: 1}
+  fantasyColor: {r: 0.1176471, g: 0.5647059, b: 1, a: 1}
   moveReal: 0
   moveFantasy: 1
 --- !u!50 &7226828543928482719
@@ -276,7 +276,7 @@ Transform:
   m_GameObject: {fileID: 6600029533153415063}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6.7, y: 0, z: 0}
+  m_LocalPosition: {x: 8.21, y: -7.1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
