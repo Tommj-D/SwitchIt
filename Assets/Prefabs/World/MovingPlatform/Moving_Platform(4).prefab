@@ -137,7 +137,7 @@ GameObject:
   m_Layer: 3
   m_Name: Start
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 1206586993520771344, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -150,7 +150,7 @@ Transform:
   m_GameObject: {fileID: 2502328622162766845}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -14.5, y: 0, z: 0}
+  m_LocalPosition: {x: -5, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -168,7 +168,7 @@ GameObject:
   m_Layer: 3
   m_Name: Finish
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 1206586993520771344, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -181,7 +181,7 @@ Transform:
   m_GameObject: {fileID: 2662682575666260689}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 9.599976, y: 0, z: 0}
+  m_LocalPosition: {x: 8.2, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -488,7 +488,7 @@ Transform:
   m_GameObject: {fileID: 8961558339964764618}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -5, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -586,4 +586,7 @@ MonoBehaviour:
   posA: {fileID: 4303012220025937153}
   posB: {fileID: 8211517710269978483}
   speed: 3
-  hexFantasyColor: '#1E90FF'
+  normalColor: {r: 1, g: 1, b: 1, a: 1}
+  fantasyColor: {r: 0.1176471, g: 0.5647059, b: 1, a: 1}
+  moveReal: 1
+  moveFantasy: 0

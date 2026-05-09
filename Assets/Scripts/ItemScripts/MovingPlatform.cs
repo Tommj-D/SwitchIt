@@ -15,9 +15,9 @@ public class MovingPlatform : MonoBehaviour
 
     [Header("Movimento Dimensioni")]
     public bool moveReal = true;
-    public bool moveFantasy = false;
+    public bool moveFantasy = true;
 
-    private SpriteRenderer sr;
+    private SpriteRenderer[] spriteRenderers;
 
     private Vector3 targetPos;
     private Rigidbody2D rb;
@@ -31,7 +31,7 @@ public class MovingPlatform : MonoBehaviour
         rb.bodyType = RigidbodyType2D.Kinematic;
         rb.interpolation = RigidbodyInterpolation2D.Interpolate;
 
-        sr = GetComponent<SpriteRenderer>();
+        spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
 
         // Imposta subito il colore corretto all'avvio
         UpdateColor();
@@ -44,16 +44,26 @@ public class MovingPlatform : MonoBehaviour
 
     void UpdateColor()
     {
-        if (sr == null || WorldSwitch.Instance == null)
+        if (spriteRenderers == null || WorldSwitch.Instance == null)
             return;
+
+        Color targetColor;
 
         if (WorldSwitch.Instance.isFantasyWorldActive)
         {
-            sr.color = fantasyColor;
+            targetColor = fantasyColor;
         }
         else
         {
-            sr.color = normalColor;
+            targetColor = normalColor;
+        }
+
+        foreach (SpriteRenderer sr in spriteRenderers)
+        {
+            if (sr != null)
+            {
+                sr.color = targetColor;
+            }
         }
     }
 

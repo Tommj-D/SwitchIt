@@ -124,8 +124,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MovingPlatform
   posA: {fileID: 8377564139019590692}
   posB: {fileID: 1120952401675722988}
-  speed: 3
-  hexFantasyColor: '#1E90FF'
+  speed: 10
+  normalColor: {r: 1, g: 1, b: 1, a: 1}
+  fantasyColor: {r: 0, g: 1, b: 1, a: 1}
+  moveReal: 1
+  moveFantasy: 0
 --- !u!1 &4271512580740765808
 GameObject:
   m_ObjectHideFlags: 0
@@ -138,7 +141,7 @@ GameObject:
   m_Layer: 3
   m_Name: Start
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 1206586993520771344, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -150,8 +153,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4271512580740765808}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -14.5, y: 0, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -169,7 +172,7 @@ GameObject:
   m_Layer: 3
   m_Name: Finish
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 1206586993520771344, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -181,8 +184,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4406687091473253507}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 9.599976, y: 0, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
