@@ -9,10 +9,14 @@ public class MovingPlatform : MonoBehaviour
     public Transform posB;
     public float speed = 3f;
 
-    [Header("Effetti Visivi")]
-    public string hexFantasyColor = "#1E90FF"; // Il colore azzurro magico!
-    private Color fantasyColor;
-    private Color normalColor;
+    [Header("Colori")]
+    public Color normalColor = Color.white;
+    public Color fantasyColor = Color.cyan;
+
+    [Header("Movimento Dimensioni")]
+    public bool moveReal = true;
+    public bool moveFantasy = false;
+
     private SpriteRenderer sr;
 
     private Vector3 targetPos;
@@ -27,44 +31,49 @@ public class MovingPlatform : MonoBehaviour
         rb.bodyType = RigidbodyType2D.Kinematic;
         rb.interpolation = RigidbodyInterpolation2D.Interpolate;
 
-        // --- PREPARAZIONE COLORI ---
         sr = GetComponent<SpriteRenderer>();
-        if (sr != null)
-        {
-            normalColor = sr.color; // Salva il colore originale per quando torni al mondo normale
-        }
-        
-        // Converte il codice esadecimale in un colore che Unity può usare
-        ColorUtility.TryParseHtmlString(hexFantasyColor, out fantasyColor);
+
+        // Imposta subito il colore corretto all'avvio
+        UpdateColor();
     }
 
-    // Usiamo Update per gli effetti visivi (è più fluido del FixedUpdate)
     void Update()
     {
-        if (sr != null && WorldSwitch.Instance != null)
+        UpdateColor();
+    }
+
+    void UpdateColor()
+    {
+        if (sr == null || WorldSwitch.Instance == null)
+            return;
+
+        if (WorldSwitch.Instance.isFantasyWorldActive)
         {
-            if (WorldSwitch.Instance.isFantasyWorldActive)
-            {
-                sr.color = fantasyColor; // Diventa azzurra
-            }
-            else
-            {
-                sr.color = normalColor; // Torna normale
-            }
+            sr.color = fantasyColor;
+        }
+        else
+        {
+            sr.color = normalColor;
         }
     }
 
     void FixedUpdate()
     {
-        // --- LA MAGIA DEL BLOCCO DIMENSIONALE ---
-        if (WorldSwitch.Instance != null && WorldSwitch.Instance.isFantasyWorldActive)
+        if (WorldSwitch.Instance != null)
         {
-            return; // Ferma tutto il movimento fisico
+            bool isFantasy = WorldSwitch.Instance.isFantasyWorldActive;
+
+            if (isFantasy && !moveFantasy)
+                return;
+
+            if (!isFantasy && !moveReal)
+                return;
         }
 
-        // --- MOVIMENTO NORMALE ---
+        // Movimento piattaforma
         Vector2 nuovaPosizione = Vector2.MoveTowards(rb.position, targetPos, speed * Time.fixedDeltaTime);
         Vector2 spostamento = nuovaPosizione - rb.position;
+
         rb.MovePosition(nuovaPosizione);
 
         foreach (Rigidbody2D passeggero in passeggeri)
@@ -75,6 +84,7 @@ public class MovingPlatform : MonoBehaviour
             }
         }
 
+        // Cambio destinazione
         if (Vector2.Distance(rb.position, targetPos) < 0.05f)
         {
             if (targetPos == posA.position)
@@ -89,6 +99,7 @@ public class MovingPlatform : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             Rigidbody2D rbGiocatore = collision.gameObject.GetComponent<Rigidbody2D>();
+
             if (rbGiocatore != null && !passeggeri.Contains(rbGiocatore))
             {
                 passeggeri.Add(rbGiocatore);
@@ -101,6 +112,7 @@ public class MovingPlatform : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             Rigidbody2D rbGiocatore = collision.gameObject.GetComponent<Rigidbody2D>();
+
             if (rbGiocatore != null && passeggeri.Contains(rbGiocatore))
             {
                 passeggeri.Remove(rbGiocatore);
