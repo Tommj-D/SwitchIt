@@ -217,10 +217,7 @@ public class PlayerMovement : MonoBehaviour
             currentGround
         );
 
-        // --- LA MAGIA CHE RISOLVE IL BUG ---
-        // Se la nostra velocità verticale (Y) è in salita (maggiore di 0.1),
-        // significa che stiamo saltando. Quindi FORZIAMO il gioco a capire che NON siamo a terra!
-        if (rb.linearVelocity.y * gravityDirection > 0.1f)
+        if (rb.linearVelocity.y * gravityDirection > 3.5f)
         {
             groundedNow = false;
         }

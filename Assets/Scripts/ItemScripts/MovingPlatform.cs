@@ -17,8 +17,11 @@ public class MovingPlatform : MonoBehaviour
     public bool moveReal = true;
     public bool moveFantasy = true;
 
-    private SpriteRenderer[] spriteRenderers;
+    [Header("Sicurezza Salto")]
+    [Tooltip("Deve essere più basso della tua forza di salto, ma più alto della velocità della piattaforma.")]
+    public float limiteInerzia = 8f; 
 
+    private SpriteRenderer[] spriteRenderers;
     private Vector3 targetPos;
     private Rigidbody2D rb;
     private List<Rigidbody2D> passeggeri = new List<Rigidbody2D>();
@@ -27,43 +30,23 @@ public class MovingPlatform : MonoBehaviour
     {
         targetPos = posB.position;
         rb = GetComponent<Rigidbody2D>();
-
         rb.bodyType = RigidbodyType2D.Kinematic;
         rb.interpolation = RigidbodyInterpolation2D.Interpolate;
 
         spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
-
-        // Imposta subito il colore corretto all'avvio
         UpdateColor();
     }
 
-    void Update()
-    {
-        UpdateColor();
-    }
+    void Update() { UpdateColor(); }
 
     void UpdateColor()
     {
-        if (spriteRenderers == null || WorldSwitch.Instance == null)
-            return;
+        if (spriteRenderers == null || WorldSwitch.Instance == null) return;
 
-        Color targetColor;
-
-        if (WorldSwitch.Instance.isFantasyWorldActive)
-        {
-            targetColor = fantasyColor;
-        }
-        else
-        {
-            targetColor = normalColor;
-        }
-
+        Color targetColor = WorldSwitch.Instance.isFantasyWorldActive ? fantasyColor : normalColor;
         foreach (SpriteRenderer sr in spriteRenderers)
         {
-            if (sr != null)
-            {
-                sr.color = targetColor;
-            }
+            if (sr != null) sr.color = targetColor;
         }
     }
 
@@ -72,35 +55,50 @@ public class MovingPlatform : MonoBehaviour
         if (WorldSwitch.Instance != null)
         {
             bool isFantasy = WorldSwitch.Instance.isFantasyWorldActive;
-
-            if (isFantasy && !moveFantasy)
-                return;
-
-            if (!isFantasy && !moveReal)
-                return;
+            if (isFantasy && !moveFantasy) return;
+            if (!isFantasy && !moveReal) return;
         }
 
-        // Movimento piattaforma
         Vector2 nuovaPosizione = Vector2.MoveTowards(rb.position, targetPos, speed * Time.fixedDeltaTime);
         Vector2 spostamento = nuovaPosizione - rb.position;
-
+        
         rb.MovePosition(nuovaPosizione);
 
-        foreach (Rigidbody2D passeggero in passeggeri)
+        // IL NUOVO SISTEMA BLINDA-PASSEGGERI
+        for (int i = passeggeri.Count - 1; i >= 0; i--)
         {
-            if (passeggero != null)
+            Rigidbody2D passeggero = passeggeri[i];
+            
+            if (passeggero == null) 
             {
-                passeggero.position += spostamento;
+                passeggeri.RemoveAt(i);
+                continue;
+            }
+
+            // 1. Lo spostiamo orizzontalmente in modo perfetto
+            passeggero.position += new Vector2(spostamento.x, 0);
+
+            // 2. Se l'ascensore scende, lo tiriamo giù fisicamente
+            if (spostamento.y < 0)
+            {
+                passeggero.position += new Vector2(0, spostamento.y);
+            }
+
+            // 3. LA GHIGLIOTTINA DELL'INERZIA (Anti-Saltino)
+            // Se la fisica sta spingendo il giocatore in su (velocità > 0)...
+            // MA questa velocità è inferiore alla forza di un VERO salto (es. minore di 8)...
+            if (passeggero.linearVelocity.y > 0 && passeggero.linearVelocity.y < limiteInerzia)
+            {
+                // Schiacciamo brutalmente la velocità verso il basso!
+                // Un valore di -1f lo terrà magicamente e costantemente incollato al pavimento,
+                // eliminando qualsiasi accumulo di inerzia quando arriva in cima.
+                passeggero.linearVelocity = new Vector2(passeggero.linearVelocity.x, -1f);
             }
         }
 
-        // Cambio destinazione
         if (Vector2.Distance(rb.position, targetPos) < 0.05f)
         {
-            if (targetPos == posA.position)
-                targetPos = posB.position;
-            else
-                targetPos = posA.position;
+            targetPos = (targetPos == posA.position) ? posB.position : posA.position;
         }
     }
 
@@ -109,7 +107,6 @@ public class MovingPlatform : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             Rigidbody2D rbGiocatore = collision.gameObject.GetComponent<Rigidbody2D>();
-
             if (rbGiocatore != null && !passeggeri.Contains(rbGiocatore))
             {
                 passeggeri.Add(rbGiocatore);
@@ -122,7 +119,6 @@ public class MovingPlatform : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             Rigidbody2D rbGiocatore = collision.gameObject.GetComponent<Rigidbody2D>();
-
             if (rbGiocatore != null && passeggeri.Contains(rbGiocatore))
             {
                 passeggeri.Remove(rbGiocatore);
