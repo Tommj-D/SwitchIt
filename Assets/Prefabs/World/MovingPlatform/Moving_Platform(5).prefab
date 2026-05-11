@@ -161,7 +161,11 @@ MonoBehaviour:
   posA: {fileID: 1434348997085588432}
   posB: {fileID: 485678206710900013}
   speed: 3
-  hexFantasyColor: '#1E90FF'
+  normalColor: {r: 1, g: 1, b: 1, a: 1}
+  fantasyColor: {r: 0.1176471, g: 0.5647059, b: 1, a: 1}
+  moveReal: 1
+  moveFantasy: 1
+  limiteInerzia: 8
 --- !u!1 &920586112398915928
 GameObject:
   m_ObjectHideFlags: 0
