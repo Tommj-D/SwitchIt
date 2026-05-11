@@ -3,6 +3,7 @@ using TMPro;
 using PlayFab;
 using PlayFab.ClientModels;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement; // <-- AGGIUNTO: Necessario per ricaricare la scena
 
 public class ScoreManager : MonoBehaviour
 {
@@ -57,7 +58,26 @@ public class ScoreManager : MonoBehaviour
             {
                 testoTempo.text = Mathf.CeilToInt(tempoRimanente).ToString();
             }
+
+            // --- NUOVA LOGICA: IL TEMPO È SCADUTO ---
+            if (tempoRimanente <= 0)
+            {
+                tempoRimanente = 0; // Evita numeri negativi nell'UI
+                TempoScaduto();
+            }
         }
+    }
+
+    // --- NUOVA FUNZIONE: GESTIONE SCONFITTA PER TEMPO ---
+    private void TempoScaduto()
+    {
+        Debug.Log("Tempo scaduto! Riavvio del livello corrente...");
+        livelloFinito = true; // Blocca ulteriori calcoli
+
+        // Ricarica la scena in cui ci troviamo in questo momento esatto.
+        // I dati di PlayFab (livelli sbloccati online) rimarranno intatti, 
+        // ma il livello fisico (posizione player, monete da raccogliere, ecc.) ripartirà da zero.
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     public void SegnalaMonetaRaccolta()
