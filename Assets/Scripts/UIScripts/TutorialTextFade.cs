@@ -123,7 +123,7 @@ public class TutorialTextFade : MonoBehaviour
         coloreAttuale.a = targetAlpha;
         testoTutorial.color = coloreAttuale;
 
-        if (targetAlpha == 0f)
+        if (targetAlpha == 0f && tutorialCompletato)
         {
             gameObject.SetActive(false);
         }
