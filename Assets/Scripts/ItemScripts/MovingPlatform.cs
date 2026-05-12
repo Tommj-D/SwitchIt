@@ -9,6 +9,10 @@ public class MovingPlatform : MonoBehaviour
     public Transform posB;
     public float speed = 3f;
 
+    [Header("Condizioni di Partenza")]
+    [Tooltip("Se attivato, la piattaforma resterà ferma finché il player non ci salta sopra.")]
+    public bool moveOnlyWhenSteppedOn = false;
+
     [Header("Colori")]
     public Color normalColor = Color.white;
     public Color fantasyColor = Color.cyan;
@@ -25,6 +29,9 @@ public class MovingPlatform : MonoBehaviour
     private Vector3 targetPos;
     private Rigidbody2D rb;
     private List<Rigidbody2D> passeggeri = new List<Rigidbody2D>();
+    
+    // Variabile interna per sapere se il player l'ha già "svegliata"
+    private bool hasBeenSteppedOn = false;
 
     void Start()
     {
@@ -52,6 +59,12 @@ public class MovingPlatform : MonoBehaviour
 
     void FixedUpdate()
     {
+        // --- NUOVO CONTROLLO: Deve aspettare il player? ---
+        if (moveOnlyWhenSteppedOn && !hasBeenSteppedOn)
+        {
+            return; // Interrompe qui e non muove nulla
+        }
+
         if (WorldSwitch.Instance != null)
         {
             bool isFantasy = WorldSwitch.Instance.isFantasyWorldActive;
@@ -64,7 +77,9 @@ public class MovingPlatform : MonoBehaviour
         
         rb.MovePosition(nuovaPosizione);
 
-        // IL NUOVO SISTEMA BLINDA-PASSEGGERI
+        // Dentro MovingPlatform.cs, modifica il ciclo for nel FixedUpdate:
+
+    // IL SISTEMA PASSEGGERI UNIVERSALE
         for (int i = passeggeri.Count - 1; i >= 0; i--)
         {
             Rigidbody2D passeggero = passeggeri[i];
@@ -75,24 +90,17 @@ public class MovingPlatform : MonoBehaviour
                 continue;
             }
 
-            // 1. Lo spostiamo orizzontalmente in modo perfetto
-            passeggero.position += new Vector2(spostamento.x, 0);
+            // Spostamento Universale per tutti
+            passeggero.position += spostamento;
 
-            // 2. Se l'ascensore scende, lo tiriamo giù fisicamente
-            if (spostamento.y < 0)
+            // LA GHIGLIOTTINA DELL'INERZIA: ORA AGISCE SOLO SUL PLAYER!
+            // Ignoriamo gli slime, così Unity è libero di calcolare la loro collisione in pace
+            if (passeggero.CompareTag("Player"))
             {
-                passeggero.position += new Vector2(0, spostamento.y);
-            }
-
-            // 3. LA GHIGLIOTTINA DELL'INERZIA (Anti-Saltino)
-            // Se la fisica sta spingendo il giocatore in su (velocità > 0)...
-            // MA questa velocità è inferiore alla forza di un VERO salto (es. minore di 8)...
-            if (passeggero.linearVelocity.y > 0 && passeggero.linearVelocity.y < limiteInerzia)
-            {
-                // Schiacciamo brutalmente la velocità verso il basso!
-                // Un valore di -1f lo terrà magicamente e costantemente incollato al pavimento,
-                // eliminando qualsiasi accumulo di inerzia quando arriva in cima.
-                passeggero.linearVelocity = new Vector2(passeggero.linearVelocity.x, -1f);
+                if (passeggero.linearVelocity.y > 0 && passeggero.linearVelocity.y < limiteInerzia)
+                {
+                    passeggero.linearVelocity = new Vector2(passeggero.linearVelocity.x, -2f);
+                }
             }
         }
 
@@ -106,6 +114,9 @@ public class MovingPlatform : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
+            // Sblocca la piattaforma non appena il player la tocca
+            hasBeenSteppedOn = true;
+
             Rigidbody2D rbGiocatore = collision.gameObject.GetComponent<Rigidbody2D>();
             if (rbGiocatore != null && !passeggeri.Contains(rbGiocatore))
             {
@@ -123,6 +134,14 @@ public class MovingPlatform : MonoBehaviour
             {
                 passeggeri.Remove(rbGiocatore);
             }
+        }
+    }
+
+    public void AggiungiPasseggero(Rigidbody2D passeggeroExtra)
+    {
+        if (passeggeroExtra != null && !passeggeri.Contains(passeggeroExtra))
+        {
+            passeggeri.Add(passeggeroExtra);
         }
     }
 }
