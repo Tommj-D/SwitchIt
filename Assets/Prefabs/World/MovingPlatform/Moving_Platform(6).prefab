@@ -614,10 +614,12 @@ MonoBehaviour:
   posA: {fileID: 3598741954370954404}
   posB: {fileID: 446664847913594230}
   speed: 3
+  moveOnlyWhenSteppedOn: 0
   normalColor: {r: 1, g: 1, b: 1, a: 1}
-  fantasyColor: {r: 0, g: 1, b: 1, a: 1}
+  fantasyColor: {r: 0.1176471, g: 0.5647059, b: 1, a: 1}
   moveReal: 1
   moveFantasy: 0
+  limiteInerzia: 8
 --- !u!1 &2717592441927072509
 GameObject:
   m_ObjectHideFlags: 0

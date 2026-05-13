@@ -5,71 +5,160 @@ using UnityEngine;
 public class ContinuousSlimeSpawner : MonoBehaviour
 {
     [Header("Impostazioni Slime")]
-    public GameObject slimePrefab; 
-    public float spawnInterval = 3f; 
-    public int maxSlimesAlive = 3; 
-    public float spawnRadius = 2f; 
-    public Transform spawnCenter;  
+    public GameObject slimePrefab;
 
+    [Header("Tempo Spawn")]
+    public float minSpawnTime = 1f;
+    public float maxSpawnTime = 3f;
+
+    [Header("Mondi Attivi")]
+    public bool spawnInFantasyWorld = true;
+    public bool spawnInRealWorld = false;
+
+    [Header("Effetto Spawn")]
+    public GameObject spawnParticlesPrefab;
+    public float preSpawnDelay = 0.1f;
+
+    [Header("Punti di Spawn")]
+    public List<Transform> spawnPoints = new List<Transform>();
+
+    // Lista slime spawnati
     private List<GameObject> spawnedSlimes = new List<GameObject>();
 
-    private void Start()
-    {
-        StartCoroutine(SpawnRoutine());
-    }
+    private bool playerInsideTrigger = false;
 
-    private IEnumerator SpawnRoutine()
+    private Coroutine spawnCoroutine;
+
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        while (true) 
+        if (collision.CompareTag("Player"))
         {
-            yield return new WaitForSeconds(spawnInterval);
+            playerInsideTrigger = true;
 
-            // 1. SPAWNA SOLO NEL MONDO FANTASTICO
-            if (WorldSwitch.Instance != null && !WorldSwitch.Instance.isFantasyWorldActive)
-                continue;
-
-            spawnedSlimes.RemoveAll(slime => slime == null);
-
-            if (spawnedSlimes.Count < maxSlimesAlive)
+            if (spawnCoroutine == null)
             {
-                SpawnSingleSlime();
+                spawnCoroutine = StartCoroutine(SpawnRoutine());
             }
         }
     }
 
-    private void SpawnSingleSlime()
+    private void OnTriggerExit2D(Collider2D collision)
     {
-        if (slimePrefab == null) return;
+        if (collision.CompareTag("Player"))
+        {
+            playerInsideTrigger = false;
 
-        Vector3 baseSpawnPos = spawnCenter != null ? spawnCenter.position : transform.position;
-        float randomX = Random.Range(-spawnRadius, spawnRadius);
-        
-        // Nasce sopra, così ha il tempo di cadere dritto
-        Vector3 targetPos = baseSpawnPos + new Vector3(randomX, 1.5f, 0f);
+            if (spawnCoroutine != null)
+            {
+                StopCoroutine(spawnCoroutine);
+                spawnCoroutine = null;
+            }
+        }
+    }
 
-        GameObject slime = Instantiate(slimePrefab, targetPos, Quaternion.identity);
-        
-        // Allineiamo la profondità Z per sicurezza
+    private IEnumerator SpawnRoutine()
+    {
+        while (playerInsideTrigger)
+        {
+            // Controllo mondo
+            if (CanSpawnInCurrentWorld())
+            {
+                yield return StartCoroutine(SpawnSingleSlime());
+            }
+
+            // Tempo casuale
+            float randomTime = Random.Range(minSpawnTime, maxSpawnTime);
+
+            yield return new WaitForSeconds(randomTime);
+        }
+    }
+
+    private bool CanSpawnInCurrentWorld()
+    {
+        if (WorldSwitch.Instance == null)
+            return true;
+
+        bool isFantasy = WorldSwitch.Instance.isFantasyWorldActive;
+
+        // Fantasy
+        if (isFantasy && spawnInFantasyWorld)
+            return true;
+
+        // Real
+        if (!isFantasy && spawnInRealWorld)
+            return true;
+
+        return false;
+    }
+
+    private IEnumerator SpawnSingleSlime()
+    {
+        if (slimePrefab == null)
+            yield break;
+
+        if (spawnPoints.Count == 0)
+        {
+            Debug.LogWarning("Nessun punto di spawn assegnato!");
+            yield break;
+        }
+
+        // Punto casuale
+        Transform randomPoint =
+            spawnPoints[Random.Range(0, spawnPoints.Count)];
+
+        Vector3 spawnPos = randomPoint.position;
+
+        // Particelle pre-spawn
+        if (spawnParticlesPrefab != null)
+        {
+            Instantiate(spawnParticlesPrefab, spawnPos, Quaternion.identity);
+        }
+
+        // Delay
+        yield return new WaitForSeconds(preSpawnDelay);
+
+        // Spawn slime
+        GameObject slime =
+            Instantiate(slimePrefab, spawnPos, Quaternion.identity);
+
+        // Allinea Z
         Vector3 pos = slime.transform.position;
         pos.z = transform.position.z;
         slime.transform.position = pos;
 
-        // Miglioriamo la fisica per la caduta, ma SENZA aggiungerlo manualmente alla piattaforma.
-        // Sarà la piattaforma stessa ad aggiungerlo quando lui ci sbatterà sopra i piedi.
+        // Migliora fisica
         Rigidbody2D rbSlime = slime.GetComponent<Rigidbody2D>();
+
         if (rbSlime != null)
         {
-            rbSlime.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
-            rbSlime.sleepMode = RigidbodySleepMode2D.NeverSleep;
+            rbSlime.collisionDetectionMode =
+                CollisionDetectionMode2D.Continuous;
+
+            rbSlime.sleepMode =
+                RigidbodySleepMode2D.NeverSleep;
         }
-        
+
+        // Rende lo slime figlio dello spawner
+        slime.transform.SetParent(transform);
         spawnedSlimes.Add(slime);
     }
 
+    // CHIAMA QUESTO ALLA MORTE DEL PLAYER
     public void ResetSpawner()
     {
+        StopAllCoroutines();
+
+        playerInsideTrigger = false;
+        spawnCoroutine = null;
+
         foreach (GameObject slime in spawnedSlimes)
-            if (slime != null) Destroy(slime);
+        {
+            if (slime != null)
+            {
+                Destroy(slime);
+            }
+        }
+
         spawnedSlimes.Clear();
     }
 }
