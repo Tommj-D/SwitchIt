@@ -4,12 +4,16 @@ using UnityEngine;
 
 public class ContinuousSlimeSpawner : MonoBehaviour
 {
-    [Header("Impostazioni Slime")]
-    public GameObject slimePrefab;
+    [Header("Prefab Slime")]
+    public List<GameObject> slimePrefabs = new List<GameObject>();
 
     [Header("Tempo Spawn")]
     public float minSpawnTime = 1f;
     public float maxSpawnTime = 3f;
+
+    [Header("Spawn Multiplo")]
+    [Range(0f, 1f)]
+    public float doubleSpawnChance = 0.15f;
 
     [Header("Mondi Attivi")]
     public bool spawnInFantasyWorld = true;
@@ -63,7 +67,7 @@ public class ContinuousSlimeSpawner : MonoBehaviour
             // Controllo mondo
             if (CanSpawnInCurrentWorld())
             {
-                yield return StartCoroutine(SpawnSingleSlime());
+                yield return StartCoroutine(SpawnSlimes());
             }
 
             // Tempo casuale
@@ -91,9 +95,9 @@ public class ContinuousSlimeSpawner : MonoBehaviour
         return false;
     }
 
-    private IEnumerator SpawnSingleSlime()
+    private IEnumerator SpawnSlimes()
     {
-        if (slimePrefab == null)
+        if (slimePrefabs.Count == 0)
             yield break;
 
         if (spawnPoints.Count == 0)
@@ -102,18 +106,63 @@ public class ContinuousSlimeSpawner : MonoBehaviour
             yield break;
         }
 
-        // Punto casuale
-        Transform randomPoint =
-            spawnPoints[Random.Range(0, spawnPoints.Count)];
+        // Decide quanti slime spawnare
+        int slimeToSpawn = 1;
 
-        Vector3 spawnPos = randomPoint.position;
-
-        // Particelle pre-spawn
-        if (spawnParticlesPrefab != null)
+        if (spawnPoints.Count >= 2 &&
+            Random.value <= doubleSpawnChance)
         {
-            Instantiate(spawnParticlesPrefab, spawnPos, Quaternion.identity);
+            slimeToSpawn = 2;
         }
 
+        // Copia temporanea dei punti disponibili
+        List<Transform> availablePoints =
+            new List<Transform>(spawnPoints);
+
+        for (int i = 0; i < slimeToSpawn; i++)
+        {
+            // Punto casuale
+            int randomIndex =
+                Random.Range(0, availablePoints.Count);
+
+            Transform randomPoint =
+                availablePoints[randomIndex];
+
+            availablePoints.RemoveAt(randomIndex);
+
+            Vector3 spawnPos = randomPoint.position;
+
+            // Particelle pre-spawn
+            if (spawnParticlesPrefab != null)
+            {
+                Instantiate(
+                    spawnParticlesPrefab,
+                    spawnPos,
+                    Quaternion.identity
+                );
+            }
+
+            // Prefab slime casuale
+            GameObject randomSlimePrefab =
+                slimePrefabs[
+                    Random.Range(0, slimePrefabs.Count)
+                ];
+
+            StartCoroutine(
+                SpawnSingleSlime(
+                    randomSlimePrefab,
+                    spawnPos
+                )
+            );
+        }
+
+        yield return null;
+    }
+
+    private IEnumerator SpawnSingleSlime(
+        GameObject slimePrefab,
+        Vector3 spawnPos)
+    {
         // Delay
         yield return new WaitForSeconds(preSpawnDelay);
 
@@ -140,6 +189,7 @@ public class ContinuousSlimeSpawner : MonoBehaviour
 
         // Rende lo slime figlio dello spawner
         slime.transform.SetParent(transform);
+
         spawnedSlimes.Add(slime);
     }
 

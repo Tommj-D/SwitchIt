@@ -108,7 +108,7 @@ GameObject:
   - component: {fileID: 6547202252198682842}
   - component: {fileID: 1980338730672344376}
   m_Layer: 10
-  m_Name: SlimeGreen_Small_BACK(Spawner)
+  m_Name: SlimeGreen_Small_BACK(Spawner)_small
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
