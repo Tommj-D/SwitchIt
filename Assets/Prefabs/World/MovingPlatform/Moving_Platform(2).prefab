@@ -312,7 +312,6 @@ Transform:
   m_Children:
   - {fileID: 900457184602746319}
   - {fileID: 7824535135081469997}
-  - {fileID: 6562681115992181510}
   m_Father: {fileID: 8093831688821328320}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &6468833088230971457
@@ -403,74 +402,9 @@ MonoBehaviour:
   posA: {fileID: 8472781668750598010}
   posB: {fileID: 4094284924693095389}
   speed: 3
+  moveOnlyWhenSteppedOn: 0
   normalColor: {r: 1, g: 1, b: 1, a: 1}
   fantasyColor: {r: 0.1176471, g: 0.5647059, b: 1, a: 1}
   moveReal: 1
   moveFantasy: 1
   limiteInerzia: 8
---- !u!1001 &2949043980641207268
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 871397819777985336}
-    m_Modifications:
-    - target: {fileID: 2052931942166868624, guid: 77acb79274def0e48a153979b37fbd4d, type: 3}
-      propertyPath: m_Name
-      value: Rock_Button
-      objectReference: {fileID: 0}
-    - target: {fileID: 8060907271119084060, guid: 77acb79274def0e48a153979b37fbd4d, type: 3}
-      propertyPath: puzzleControllers.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8358197486107445474, guid: 77acb79274def0e48a153979b37fbd4d, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 1.41
-      objectReference: {fileID: 0}
-    - target: {fileID: 8358197486107445474, guid: 77acb79274def0e48a153979b37fbd4d, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 1.4
-      objectReference: {fileID: 0}
-    - target: {fileID: 8358197486107445474, guid: 77acb79274def0e48a153979b37fbd4d, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8358197486107445474, guid: 77acb79274def0e48a153979b37fbd4d, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8358197486107445474, guid: 77acb79274def0e48a153979b37fbd4d, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8358197486107445474, guid: 77acb79274def0e48a153979b37fbd4d, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8358197486107445474, guid: 77acb79274def0e48a153979b37fbd4d, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8358197486107445474, guid: 77acb79274def0e48a153979b37fbd4d, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8358197486107445474, guid: 77acb79274def0e48a153979b37fbd4d, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8358197486107445474, guid: 77acb79274def0e48a153979b37fbd4d, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 77acb79274def0e48a153979b37fbd4d, type: 3}
---- !u!4 &6562681115992181510 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8358197486107445474, guid: 77acb79274def0e48a153979b37fbd4d, type: 3}
-  m_PrefabInstance: {fileID: 2949043980641207268}
-  m_PrefabAsset: {fileID: 0}
