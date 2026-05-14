@@ -5,7 +5,7 @@ public class Slime_Green : Enemy
     [Header("Direction (1 = right, -1 = left)")]
     [SerializeField] private int initialDirection = 1; 
 
-    protected bool isGrounded = true;
+    protected bool isGrounded = false;
 
     protected override void Start()
     {
