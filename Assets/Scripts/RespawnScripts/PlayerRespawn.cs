@@ -207,6 +207,18 @@ public class PlayerRespawn : MonoBehaviour
             spawner.ResetSpawner();
         }
         
+        ContinuousSlimeSpawner[] continuousSpawners = FindObjectsByType<ContinuousSlimeSpawner>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        foreach (ContinuousSlimeSpawner spawner in continuousSpawners)
+        {
+            spawner.ResetSpawner(); // Questo distrugge tutti gli slime sulla piattaforma!
+        }
+
+        MovingPlatform[] piattaforme = FindObjectsByType<MovingPlatform>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        foreach (MovingPlatform p in piattaforme)
+        {
+            p.ResetPlatform();
+        }
+
         StartCoroutine(SceneController.Instance.FadeIn(SceneController.Instance.fadeDuration));
 
         if (animator != null)

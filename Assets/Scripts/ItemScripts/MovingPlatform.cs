@@ -32,9 +32,15 @@ public class MovingPlatform : MonoBehaviour
     
     // Variabile interna per sapere se il player l'ha già "svegliata"
     private bool hasBeenSteppedOn = false;
+    
+    // NUOVO: Memoria per la posizione di partenza
+    private Vector3 posizioneIniziale;
 
     void Start()
     {
+        // Salviamo la posizione in cui si trova la piattaforma appena inizia il livello
+        posizioneIniziale = transform.position; 
+        
         targetPos = posB.position;
         rb = GetComponent<Rigidbody2D>();
         rb.bodyType = RigidbodyType2D.Kinematic;
@@ -77,9 +83,7 @@ public class MovingPlatform : MonoBehaviour
         
         rb.MovePosition(nuovaPosizione);
 
-        // Dentro MovingPlatform.cs, modifica il ciclo for nel FixedUpdate:
-
-    // IL SISTEMA PASSEGGERI UNIVERSALE
+        // IL SISTEMA PASSEGGERI UNIVERSALE
         for (int i = passeggeri.Count - 1; i >= 0; i--)
         {
             Rigidbody2D passeggero = passeggeri[i];
@@ -143,5 +147,24 @@ public class MovingPlatform : MonoBehaviour
         {
             passeggeri.Add(passeggeroExtra);
         }
+    }
+
+    // ==========================================
+    // NUOVA FUNZIONE: Da chiamare quando il giocatore muore
+    // ==========================================
+    public void ResetPlatform()
+    {
+        // 1. Dimentica di essere stata attivata (torna a dormire se la spunta è attiva)
+        hasBeenSteppedOn = false;
+
+        // 2. Torna istantaneamente alla posizione iniziale
+        transform.position = posizioneIniziale;
+        rb.position = posizioneIniziale;
+
+        // 3. Reimposta la direzione iniziale verso la posB
+        targetPos = posB.position;
+
+        // 4. Svuota la lista di eventuali passeggeri morti o rimasti incastrati
+        passeggeri.Clear();
     }
 }
