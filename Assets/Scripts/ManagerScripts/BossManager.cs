@@ -4,7 +4,7 @@ using System.Collections;
 public class BossManager : MonoBehaviour
 {
     [Header("Fase 1: Pattugliamento (Piano 1)")]
-    [Tooltip("Trascina qui i 4 punti in cui si muoverà all'inizio")]
+    [Tooltip("Trascina qui i punti in cui si muoverà all'inizio")]
     public Transform[] puntiPattugliaFase1; 
     public Vector3 rotazioneAlPunto = new Vector3(0f, 180f, 0f); // Per farlo voltare
 
@@ -13,6 +13,12 @@ public class BossManager : MonoBehaviour
     public Transform puntoFase2; 
     [Tooltip("Punto in cui scappa al Piano 3 (dopo la 2° hit)")]
     public Transform puntoFase3; 
+
+    [Header("Pattugliamento Fase 2")]
+    public Transform[] puntiPattugliaFase2;
+
+    [Header("Pattugliamento Fase 3")]
+    public Transform[] puntiPattugliaFase3;
     
     public float velocitaSpostamento = 5f;
 
@@ -26,6 +32,13 @@ public class BossManager : MonoBehaviour
     [SerializeField] private AudioClip deathSound; 
     [SerializeField] private ParticleSystem deathParticle;
 
+    [SerializeField] private ParticleSystem teleportDisappearParticle;
+    [SerializeField] private ParticleSystem teleportAppearParticle;
+
+    [Header("Tempi Teletrasporto")]
+    [SerializeField] private float tempoPrimaScomparsa = 0.4f;
+    [SerializeField] private float tempoPrimaRicomparsa = 1f;
+
     [Header("Statistiche")]
     private int hp = 3;
     private bool isInvulnerable = false;
@@ -36,6 +49,8 @@ public class BossManager : MonoBehaviour
     private Vector3 targetPos;
     private int indicePuntoAttuale = 0;
     private int faseAttuale = 1; // Controlla in che fase siamo (1, 2 o 3)
+
+    private float velocitaOriginale;
 
     // Aggiungi questa riga in alto, vicino alle altre variabili "private"
     private Rigidbody2D rb;
@@ -62,6 +77,8 @@ public class BossManager : MonoBehaviour
         {
             InvokeRepeating("PlayIdleSound", 1f, 8f);
         }
+
+        velocitaOriginale = velocitaSpostamento;
     }
 
     private void PlayIdleSound()
@@ -72,25 +89,43 @@ public class BossManager : MonoBehaviour
         }
     }
 
+    private Transform[] GetPuntiFaseCorrente()
+    {
+        switch (faseAttuale)
+        {
+            case 1:
+                return puntiPattugliaFase1;
+
+            case 2:
+                return puntiPattugliaFase2;
+
+            case 3:
+                return puntiPattugliaFase3;
+        }
+
+        return puntiPattugliaFase1;
+    }
+
     private void FixedUpdate()
     {
         if (isDead) return;
 
-        // LOGICA FASE 1 (Pattugliamento continuo sui 4 punti)
-        if (faseAttuale == 1 && puntiPattugliaFase1.Length > 0)
+        Transform[] puntiCorrenti = GetPuntiFaseCorrente();
+
+        if (puntiCorrenti != null && puntiCorrenti.Length > 0)
         {
             if (Vector2.Distance(transform.position, targetPos) < 0.2f)
             {
-                // Ruota il boss
                 transform.eulerAngles += rotazioneAlPunto;
-                
-                // Passa al punto successivo
+
                 indicePuntoAttuale++;
-                if (indicePuntoAttuale >= puntiPattugliaFase1.Length) 
+
+                if (indicePuntoAttuale >= puntiCorrenti.Length)
                 {
                     indicePuntoAttuale = 0;
                 }
-                targetPos = puntiPattugliaFase1[indicePuntoAttuale].position;
+
+                targetPos = puntiCorrenti[indicePuntoAttuale].position;
             }
         }
 
@@ -134,32 +169,100 @@ public class BossManager : MonoBehaviour
 
     private IEnumerator CambioFase(int nuovaFase)
     {
-        yield return new WaitForSeconds(0.5f);
-        
+        isInvulnerable = true;
+
+        velocitaSpostamento = 0f;
+
+        if (anim != null)
+            anim.SetTrigger("Hit");
+
+        yield return new WaitForSeconds(tempoPrimaScomparsa);
+
+        // PARTICELLE SPARIZIONE
+        if (teleportDisappearParticle != null)
+        {
+            Instantiate(
+                teleportDisappearParticle,
+                transform.position,
+                Quaternion.identity
+            ).Play();
+        }
+
+        SpriteRenderer sr = GetComponent<SpriteRenderer>();
+
+        if (sr != null)
+            sr.enabled = false;
+
+        Collider2D[] colliders = GetComponentsInChildren<Collider2D>();
+
+        foreach (Collider2D c in colliders)
+            c.enabled = false;
+
         faseAttuale = nuovaFase;
 
-        if (faseAttuale == 2) 
+        indicePuntoAttuale = 0;
+
+        // TELETRASPORTO
+        if (faseAttuale == 2)
         {
-            // Imposta la destinazione al Piano 2
-            if (puntoFase2 != null) targetPos = puntoFase2.position;
-            
-            // Accende gli spawner
+            if (puntoFase2 != null)
+            {
+                transform.position = puntoFase2.position;
+                transform.rotation = Quaternion.identity;
+            }
+
+            if (puntiPattugliaFase2.Length > 0)
+            {
+                targetPos = puntiPattugliaFase2[0].position;
+            }
+
             foreach (var spawner in spawnerFaseDue)
             {
-                if (spawner != null) spawner.gameObject.SetActive(true);
+                if (spawner != null)
+                    spawner.gameObject.SetActive(true);
             }
         }
-        else if (faseAttuale == 3) 
+        else if (faseAttuale == 3)
         {
-            // Imposta la destinazione al Piano 3
-            if (puntoFase3 != null) targetPos = puntoFase3.position;
-            
-            // Spegne gli spawner
+            if (puntoFase3 != null)
+            {
+                transform.position = puntoFase3.position;
+                transform.rotation = Quaternion.identity;
+            }
+
+            if (puntiPattugliaFase3.Length > 0)
+            {
+                targetPos = puntiPattugliaFase3[0].position;
+            }
+
             foreach (var spawner in spawnerFaseDue)
             {
-                if (spawner != null) spawner.gameObject.SetActive(false);
+                if (spawner != null)
+                    spawner.gameObject.SetActive(false);
             }
         }
+
+        // TEMPO NASCOSTO
+        yield return new WaitForSeconds(tempoPrimaRicomparsa);
+
+        // PARTICELLE RICOMPARSA
+        if (teleportAppearParticle != null)
+        {
+            Instantiate(
+                teleportAppearParticle,
+                transform.position,
+                Quaternion.identity
+            ).Play();
+        }
+
+        // RICOMPARSA
+        if (sr != null)
+            sr.enabled = true;
+
+        foreach (Collider2D c in colliders)
+            c.enabled = true;
+
+        velocitaSpostamento = velocitaOriginale;
 
         isInvulnerable = false;
     }
