@@ -219,6 +219,12 @@ public class PlayerRespawn : MonoBehaviour
             p.ResetPlatform();
         }
 
+        BossCameraTrigger[] triggerCamere = FindObjectsByType<BossCameraTrigger>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        foreach (BossCameraTrigger t in triggerCamere)
+        {
+            t.ResetCamera();
+        }
+
         StartCoroutine(SceneController.Instance.FadeIn(SceneController.Instance.fadeDuration));
 
         if (animator != null)
