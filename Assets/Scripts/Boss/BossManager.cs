@@ -29,8 +29,11 @@ public class BossManager : MonoBehaviour
     
     public float velocitaSpostamento = 5f;
 
-    [Header("Spawner Fase 2 (Nemici Bianchi)")]
-    public ContinuousSlimeSpawner[] spawnerFaseDue; 
+    [Header("Spawn Minions Fase 2")]
+    [SerializeField] private GameObject minionPrefab;
+    [SerializeField] private Transform[] spawnPoints;
+    [SerializeField] private float spawnInterval = 3f;
+    [SerializeField] private bool spawnActive = false;
 
     [SerializeField] private Vector2 turnCheckOffset = new Vector2(0f, -1.5f);
 
@@ -80,6 +83,8 @@ public class BossManager : MonoBehaviour
     private Vector3 targetPos;
     private int indicePuntoAttuale = 0;
     private int faseAttuale = 1; // Controlla in che fase siamo (1, 2 o 3)
+    private int hitIndex = 0;
+    private bool isTransitioning = false;
 
     private float velocitaOriginale;
 
@@ -200,29 +205,19 @@ public class BossManager : MonoBehaviour
 
     public void PrendiDanno()
     {
-        if (isInvulnerable || hp <= 0 || isDead) return;
+        if (isInvulnerable || hp <= 0 || isDead || isTransitioning) return;
 
         hp--;
         isInvulnerable = true;
 
         if (anim != null) anim.SetTrigger("Hit");
-        
-        if (audioSource != null && hitSound != null) 
+
+        if (audioSource != null && hitSound != null)
             audioSource.PlayOneShot(hitSound);
 
-        if (hp == 2)
-        {
-            SpawnRewardParticles(firstHitRewards);
+        StartCoroutine(HitCycleRoutine());
 
-            StartCoroutine(CambioFase(2));
-        }
-        else if (hp == 1)
-        {
-            SpawnRewardParticles(secondHitRewards);
-
-            StartCoroutine(CambioFase(3));
-        }
-        else if (hp <= 0)
+        if (hp <= 0)
         {
             Muori();
         }
@@ -298,11 +293,8 @@ public class BossManager : MonoBehaviour
                 targetPos = puntiPattugliaFase2[0].position;
             }
 
-            foreach (var spawner in spawnerFaseDue)
-            {
-                if (spawner != null)
-                    spawner.gameObject.SetActive(true);
-            }
+            fspawnActive = true;
+            StartCoroutine(SpawnMinionsLoop());
         }
         else if (faseAttuale == 3)
         {
@@ -456,6 +448,22 @@ public class BossManager : MonoBehaviour
         SetDissolveAmount(end);
     }
 
+
+    private IEnumerator SpawnMinionsLoop()
+    {
+        while (spawnActive)
+        {
+            if (minionPrefab != null && spawnPoints.Length > 0)
+            {
+                Transform point = spawnPoints[Random.Range(0, spawnPoints.Length)];
+
+                Instantiate(minionPrefab, point.position, Quaternion.identity);
+            }
+
+            yield return new WaitForSeconds(spawnInterval);
+        }
+    }
+
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
@@ -466,5 +474,61 @@ public class BossManager : MonoBehaviour
         Gizmos.DrawSphere(checkPosition, 0.15f);
 
         Gizmos.DrawLine(transform.position, checkPosition);
+    }
+
+    private IEnumerator HitCycleRoutine()
+    {
+        isTransitioning = true;
+
+        // 🔊 SCOMPARE
+        if (teleportDisappearParticle != null)
+            Instantiate(teleportDisappearParticle, transform.position, Quaternion.identity).Play();
+
+        yield return StartCoroutine(DissolveRoutine(0f, 1.1f));
+
+        // 👾 SPAWN MINION (fase hit)
+        SpawnMinionsHit();
+
+        // ✨ reward particles
+        if (hitIndex == 0)
+            SpawnRewardParticles(firstHitRewards);
+        else
+            SpawnRewardParticles(secondHitRewards);
+
+        yield return new WaitForSeconds(0.8f);
+
+        // 👀 RIAPPARE
+        if (teleportAppearParticle != null)
+            Instantiate(teleportAppearParticle, transform.position, Quaternion.identity).Play();
+
+        yield return StartCoroutine(DissolveRoutine(1.1f, 0f));
+
+        // 👾 SPAWN DOPO RITORNO
+        SpawnMinionsReturn();
+
+        hitIndex++;
+
+        isInvulnerable = false;
+        isTransitioning = false;
+    }
+
+    private void SpawnMinionsHit()
+    {
+        for (int i = 0; i < 2; i++)
+            SpawnRandomMinion();
+    }
+
+    private void SpawnMinionsReturn()
+    {
+        for (int i = 0; i < 3; i++)
+            SpawnRandomMinion();
+    }
+
+    private void SpawnRandomMinion()
+    {
+        if (minionPrefab == null || spawnPoints.Length == 0) return;
+
+        Transform point = spawnPoints[Random.Range(0, spawnPoints.Length)];
+        Instantiate(minionPrefab, point.position, Quaternion.identity);
     }
 }
