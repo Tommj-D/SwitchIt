@@ -146,15 +146,17 @@ public class BossManager : MonoBehaviour
 
         Transform[] puntiCorrenti = GetPuntiFaseCorrente();
 
+        // 1. Calcoliamo SUBITO l'altezza attuale e la destinazione corretta
+        float altezzaAttuale = rb != null ? rb.position.y : transform.position.y;
+        Vector2 destinazioneCorretta = new Vector2(targetPos.x, altezzaAttuale);
+
         if (puntiCorrenti != null && puntiCorrenti.Length > 0)
         {
             // Punto basso del boss
-            Vector2 checkPosition =
-                (Vector2)transform.position + turnCheckOffset;
+            Vector2 checkPosition = (Vector2)transform.position + turnCheckOffset;
 
-            // Punto target confrontato alla stessa altezza
-            Vector2 targetCheckPosition =
-                (Vector2)targetPos + turnCheckOffset;
+            // Usiamo la destinazioneCorretta per il controllo, così ignora l'altezza sballata!
+            Vector2 targetCheckPosition = destinazioneCorretta + turnCheckOffset;
 
             // Quando arriva al punto cambia direzione
             if (Vector2.Distance(checkPosition, targetCheckPosition) < 0.2f)
@@ -169,15 +171,18 @@ public class BossManager : MonoBehaviour
                 }
 
                 targetPos = puntiCorrenti[indicePuntoAttuale].position;
+                
+                // Aggiorniamo subito la destinazione per non fargli perdere frame
+                destinazioneCorretta = new Vector2(targetPos.x, altezzaAttuale);
             }
         }
 
-        // Movimento normale
+        // Movimento orizzontale perfetto
         if (rb != null)
         {
             Vector2 nuovaPos = Vector2.MoveTowards(
                 rb.position,
-                targetPos,
+                destinazioneCorretta,
                 velocitaSpostamento * Time.fixedDeltaTime
             );
 
@@ -187,7 +192,7 @@ public class BossManager : MonoBehaviour
         {
             transform.position = Vector3.MoveTowards(
                 transform.position,
-                targetPos,
+                destinazioneCorretta,
                 velocitaSpostamento * Time.fixedDeltaTime
             );
         }
