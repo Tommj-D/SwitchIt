@@ -1,8 +1,8 @@
 using UnityEngine;
 
 [System.Serializable]
-public class BossRewardSpawner : MonoBehaviour
+public class BossRewardSpawner
 {
-    [Header("Oggetti Da Rivelare")]
-    public RewardRevealObject[] revealObjects;
+    [Header("Target Da Rivelare")]
+    public RewardTarget[] rewardTargets;
 }

@@ -6,15 +6,15 @@ public class FlyingRewardParticle : MonoBehaviour
     [SerializeField] private float speed = 6f;
 
     private Transform target;
-    private RewardRevealObject revealObject;
+    private RewardTarget rewardTarget;
 
     public void Setup(
         Transform newTarget,
-        RewardRevealObject newRevealObject
+        RewardTarget newRewardTarget
     )
     {
         target = newTarget;
-        revealObject = newRevealObject;
+        rewardTarget = newRewardTarget;
     }
 
     private void Update()
@@ -38,9 +38,9 @@ public class FlyingRewardParticle : MonoBehaviour
 
         if (distance < 0.15f)
         {
-            if (revealObject != null)
+            if (rewardTarget != null)
             {
-                revealObject.Reveal();
+                rewardTarget.Reveal();
             }
 
             Destroy(gameObject);
