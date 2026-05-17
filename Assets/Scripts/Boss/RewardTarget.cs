@@ -2,25 +2,31 @@ using UnityEngine;
 
 public class RewardTarget : MonoBehaviour
 {
-    [Header("Oggetto Da Mostrare")]
-    [SerializeField] private GameObject objectToReveal;
+    [Header("Visuale Da Mostrare")]
+    [SerializeField] private GameObject visualObject;
 
-    [Header("Effetti")]
+    [Header("Effetto Burst")]
     [SerializeField] private ParticleSystem revealBurst;
 
-    private void Awake()
+    private bool revealed = false;
+
+    private void Start()
     {
-        if (objectToReveal != null)
+        if (visualObject != null)
         {
-            objectToReveal.SetActive(false);
+            visualObject.SetActive(false);
         }
     }
 
     public void Reveal()
     {
-        if (objectToReveal != null)
+        if (revealed) return;
+
+        revealed = true;
+
+        if (visualObject != null)
         {
-            objectToReveal.SetActive(true);
+            visualObject.SetActive(true);
         }
 
         if (revealBurst != null)

@@ -3,7 +3,9 @@ using UnityEngine;
 public class FlyingRewardParticle : MonoBehaviour
 {
     [Header("Movimento")]
-    [SerializeField] private float speed = 6f;
+    [SerializeField] private float speed = 8f;
+
+    [SerializeField] private float arriveDistance = 0.15f;
 
     private Transform target;
     private RewardTarget rewardTarget;
@@ -36,7 +38,7 @@ public class FlyingRewardParticle : MonoBehaviour
             target.position
         );
 
-        if (distance < 0.15f)
+        if (distance <= arriveDistance)
         {
             if (rewardTarget != null)
             {
