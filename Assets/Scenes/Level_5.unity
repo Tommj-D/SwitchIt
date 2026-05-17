@@ -313053,6 +313053,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 489523755}
     - target: {fileID: 6553910918367281011, guid: e7dfd3381e53d4619a8598b8830ec0a5, type: 3}
+      propertyPath: portalFXPrefab
+      value: 
+      objectReference: {fileID: 781622597913654072, guid: 963aa0e8b2ae84c8884bd67198384d1c, type: 3}
+    - target: {fileID: 6553910918367281011, guid: e7dfd3381e53d4619a8598b8830ec0a5, type: 3}
       propertyPath: spawnLoopDestra
       value: 
       objectReference: {fileID: 1433077102}
@@ -313076,6 +313080,10 @@ PrefabInstance:
       propertyPath: puntoMinionSinistra
       value: 
       objectReference: {fileID: 1833580487}
+    - target: {fileID: 6553910918367281011, guid: e7dfd3381e53d4619a8598b8830ec0a5, type: 3}
+      propertyPath: hitShockWaveDuration
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 6553910918367281011, guid: e7dfd3381e53d4619a8598b8830ec0a5, type: 3}
       propertyPath: 'puntiPattugliaFase1.Array.data[0]'
       value: 

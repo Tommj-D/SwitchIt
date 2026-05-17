@@ -49,6 +49,12 @@ public class BossManager : MonoBehaviour
 
     private Coroutine spawnLoopCoroutine;
 
+    [Header("Portal FX")]
+    [SerializeField] private ParticleSystem portalFXPrefab;
+
+    private ParticleSystem portalLeftInstance;
+    private ParticleSystem portalRightInstance;
+
     //==================================================
     // ⚡ DASH FASE 3
     //==================================================
@@ -74,6 +80,18 @@ public class BossManager : MonoBehaviour
     [SerializeField] private ParticleSystem teleportDisappearParticle;
     [SerializeField] private ParticleSystem teleportAppearParticle;
 
+    //==================================================
+    // 💥 HIT SHOCKWAVE
+    //==================================================
+    [Header("Hit ShockWave")]
+    [SerializeField] private bool useHitShockWave = true;
+
+    [SerializeField] private float hitShockWaveDuration = 1f;
+
+    [Range(-5f, 5f)]
+    [SerializeField] private float hitShockWaveStrength = -0.1f;
+
+    [SerializeField] private float hitShockWaveXSizeRatio = 1f;
     //==================================================
     // ⏱ TIMING TELEPORT
     //==================================================
@@ -232,6 +250,20 @@ public class BossManager : MonoBehaviour
         if (anim != null) anim.SetTrigger("Hit");
         if (audioSource != null && hitSound != null) audioSource.PlayOneShot(hitSound);
 
+        if (useHitShockWave && ShockWaveManager.Instance != null)
+        {
+            ShockWaveManager.Instance.material.SetFloat(
+                "_XSizeRatio",
+                hitShockWaveXSizeRatio
+            );
+
+            ShockWaveManager.Instance.CallShockWave(
+                transform.position,
+                hitShockWaveStrength,
+                hitShockWaveDuration
+            );
+        }
+
         // --- INIZIO LOGICA KNOCKBACK ---
         if (player != null)
         {
@@ -318,6 +350,9 @@ public class BossManager : MonoBehaviour
             {
                 spawnLoopCoroutine = StartCoroutine(SpawnMinionLoopRoutine());
             }
+
+            SpawnPortalFX();
+
             if (usaDashFase3 && dashRoutine == null)
             {
                 dashRoutine = StartCoroutine(DashRoutine());
@@ -391,6 +426,29 @@ public class BossManager : MonoBehaviour
         }
     }
 
+    private void SpawnPortalFX()
+    {
+        if (portalFXPrefab == null) return;
+
+        if (spawnLoopSinistra != null)
+        {
+            portalLeftInstance = Instantiate(
+                portalFXPrefab,
+                spawnLoopSinistra.position,
+                Quaternion.identity
+            );
+        }
+
+        if (spawnLoopDestra != null)
+        {
+            portalRightInstance = Instantiate(
+                portalFXPrefab,
+                spawnLoopDestra.position,
+                Quaternion.identity
+            );
+        }
+    }
+
     private IEnumerator DashRoutine()
     {
         while (!isDead)
@@ -460,6 +518,12 @@ public class BossManager : MonoBehaviour
         {
             Destroy(m);
         }
+
+        if (portalLeftInstance != null)
+            Destroy(portalLeftInstance.gameObject);
+
+        if (portalRightInstance != null)
+            Destroy(portalRightInstance.gameObject);
 
         Destroy(gameObject, 3f);
     }
