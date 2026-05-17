@@ -981,7 +981,7 @@ ParticleSystem:
       countCurve:
         serializedVersion: 2
         minMaxState: 0
-        scalar: 30
+        scalar: 20
         minScalar: 30
         maxCurve:
           serializedVersion: 2
@@ -3999,8 +3999,8 @@ ParticleSystem:
     lifetime:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 0.3
-      minScalar: 0.1
+      scalar: 0.2
+      minScalar: 0.05
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -4908,7 +4908,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e816c6ab22fa4abb802322e11f6c8be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FlyingMinionParticle
-  speed: 8
-  arriveDistance: 0.15
+  velocitaParticelle: 8
+  distanzaArrivo: 0.3
   burstParticle: {fileID: 8709751902655928383, guid: 861d068cb33fa40a68986320b1b157d5, type: 3}
   minionPrefab: {fileID: 1228656691620093762, guid: e32cd93c624e1443b846f4883fb5fcff, type: 3}
