@@ -37,7 +37,8 @@ public class BossManager : MonoBehaviour
     //==================================================
     [Header("Spawn Minions")]
     [SerializeField] private GameObject minionPrefab;
-    [SerializeField] private Transform[] spawnPoints;
+    [SerializeField] private Transform[] spawnPoints; // Usato per lo spawn generale se serve
+    [SerializeField] private float distanzaMinionLato = 1.5f; // Distanza per lo spawn a destra/sinistra
     [SerializeField] private float spawnInterval = 3f;
     [SerializeField] private bool spawnActive = false;
 
@@ -89,6 +90,8 @@ public class BossManager : MonoBehaviour
     //==================================================
     // ❤️ STATS BOSS
     //==================================================
+    [Header("Knockback Settings")]
+    public float forzaKnockback = 10f; // Quanto viene sbalzato lontano il player
     private int hp = 3;
     private bool isInvulnerable = false;
     private bool isDead = false;
@@ -160,7 +163,8 @@ public class BossManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (isDead) return;
+        // Se il boss è morto o si sta teletrasportando (isTransitioning), NON si muove.
+        if (isDead || isTransitioning) return;
 
         Transform[] punti = GetPuntiFaseCorrente();
 
@@ -198,7 +202,8 @@ public class BossManager : MonoBehaviour
     //==================================================
     // DAMAGE / HIT SYSTEM
     //==================================================
-    public void PrendiDanno()
+    // Ora passiamo il GameObject del player quando chiamiamo la funzione
+    public void PrendiDanno(GameObject player) 
     {
         if (isInvulnerable || hp <= 0 || isDead || isTransitioning) return;
 
@@ -208,41 +213,96 @@ public class BossManager : MonoBehaviour
         if (anim != null) anim.SetTrigger("Hit");
         if (audioSource != null && hitSound != null) audioSource.PlayOneShot(hitSound);
 
-        StartCoroutine(HitCycleRoutine());
+        // --- INIZIO LOGICA KNOCKBACK ---
+        if (player != null)
+        {
+            Rigidbody2D playerRb = player.GetComponent<Rigidbody2D>();
+            if (playerRb != null)
+            {
+                // Calcoliamo la direzione dal boss verso il player
+                Vector2 direzioneSpinta = (player.transform.position - transform.position).normalized;
+                
+                // Aggiungiamo una piccola spinta verso l'alto per un effetto più bello
+                direzioneSpinta.y = 0.5f; 
+
+                // Azzeriamo la velocità attuale per un knockback più pulito, poi spingiamo
+                playerRb.linearVelocity = Vector2.zero; 
+                playerRb.AddForce(direzioneSpinta * forzaKnockback, ForceMode2D.Impulse);
+            }
+        }
+        // --- FINE LOGICA KNOCKBACK ---
 
         if (hp <= 0)
+        {
             Muori();
+            return; 
+        }
+
+        StartCoroutine(HitCycleRoutine());
     }
 
     private IEnumerator HitCycleRoutine()
     {
-        isTransitioning = true;
+        isTransitioning = true; // Questo ora ferma anche il movimento nel FixedUpdate
 
         if (teleportDisappearParticle != null)
             Instantiate(teleportDisappearParticle, transform.position, Quaternion.identity).Play();
 
+        // Il boss si dissolve
         yield return StartCoroutine(DissolveRoutine(0f, 1.1f));
 
+        // Spawna i minion a destra e sinistra del boss
         SpawnMinionsHit();
 
+        // Spawna le particelle per gli oggetti nascosti
         if (hitIndex == 0)
             SpawnRewardParticles(firstHitRewards);
         else
             SpawnRewardParticles(secondHitRewards);
 
-        yield return new WaitForSeconds(0.8f);
+        // Attende il tempo prima di ricomparire
+        yield return new WaitForSeconds(tempoPrimaRicomparsa);
+
+        // --- INIZIO LOGICA DI TELETRASPORTO ---
+        if (hitIndex == 0) // Dal primo colpo passa alla fase 2
+        {
+            faseAttuale = 2;
+            transform.position = puntoFase2.position;
+            transform.rotation = puntoFase2.rotation; // <-- QUESTA RIGA SISTEMA LA ROTAZIONE
+            
+            if (puntiPattugliaFase2.Length > 0)
+            {
+                targetPos = puntiPattugliaFase2[0].position;
+                indicePuntoAttuale = 0;
+            }
+        }
+        else if (hitIndex == 1) // Dal secondo colpo passa alla fase 3
+        {
+            faseAttuale = 3;
+            transform.position = puntoFase3.position;
+            transform.rotation = puntoFase3.rotation; // <-- QUESTA RIGA SISTEMA LA ROTAZIONE
+            
+            if (puntiPattugliaFase3.Length > 0)
+            {
+                targetPos = puntiPattugliaFase3[0].position;
+                indicePuntoAttuale = 0;
+            }
+        }
+        // --- FINE LOGICA DI TELETRASPORTO ---
 
         if (teleportAppearParticle != null)
             Instantiate(teleportAppearParticle, transform.position, Quaternion.identity).Play();
 
+        // Il boss riappare fisicamente nella nuova posizione
         yield return StartCoroutine(DissolveRoutine(1.1f, 0f));
 
+        // Spawna altri 2 minion insieme a lui
         SpawnMinionsReturn();
 
         hitIndex++;
 
         isInvulnerable = false;
-        isTransitioning = false;
+        isTransitioning = false; // Il boss ricomincia a muoversi
     }
 
     //==================================================
@@ -250,12 +310,22 @@ public class BossManager : MonoBehaviour
     //==================================================
     private void SpawnMinionsHit()
     {
-        for (int i = 0; i < 2; i++) SpawnRandomMinion();
+        if (minionPrefab == null) return;
+
+        // Uno leggermente a sinistra
+        Vector3 leftPos = transform.position + (Vector3.left * distanzaMinionLato);
+        Instantiate(minionPrefab, leftPos, Quaternion.identity);
+
+        // Uno leggermente a destra
+        Vector3 rightPos = transform.position + (Vector3.right * distanzaMinionLato);
+        Instantiate(minionPrefab, rightPos, Quaternion.identity);
     }
 
     private void SpawnMinionsReturn()
     {
-        for (int i = 0; i < 3; i++) SpawnRandomMinion();
+        // Spawna 2 minion (anziché 3) in posizioni casuali tra gli spawnPoints generali
+        // (Se li vuoi sempre a destra e sinistra del boss anche qui, puoi richiamare SpawnMinionsHit!)
+        for (int i = 0; i < 2; i++) SpawnRandomMinion();
     }
 
     private void SpawnRandomMinion()

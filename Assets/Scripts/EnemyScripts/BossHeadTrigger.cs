@@ -15,7 +15,7 @@ public class BossHeadTrigger : MonoBehaviour
         // 1. Boss prende danno
         if (bossManager != null)
         {
-            bossManager.PrendiDanno();
+            bossManager.PrendiDanno(gameObject);
         }
 
         // 2. Player bounce
