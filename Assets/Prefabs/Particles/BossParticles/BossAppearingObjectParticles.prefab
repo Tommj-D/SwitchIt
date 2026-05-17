@@ -4908,5 +4908,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc70f78ccee324f73978c9ede644e245, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FlyingRewardParticle
-  speed: 6
-  arriveDistance: 0.15
+  velocitaParticelle: 4
+  distanzaArrivo: 0.3
