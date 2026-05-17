@@ -98,7 +98,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.04608707, y: 0.24315417}
+  m_Offset: {x: -0.044225097, y: 0.17736971}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -108,7 +108,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.70638025, y: 0.12838489}
+  m_Size: {x: 0.6659138, y: 0.101908326}
   m_EdgeRadius: 0
 --- !u!114 &1374563655558168154
 MonoBehaviour:
@@ -310,7 +310,7 @@ Transform:
   m_GameObject: {fileID: 3753598709196558888}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: -0.57510084, w: 0.8180825}
-  m_LocalPosition: {x: 0.09486978, y: -0.00000009997381, z: 0}
+  m_LocalPosition: {x: 0.13460936, y: 0.23843262, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -397,11 +397,11 @@ GameObject:
   - component: {fileID: 6553910918367281011}
   m_Layer: 0
   m_Name: Boss
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &6351026432811060720
 Transform:
   m_ObjectHideFlags: 0
@@ -469,7 +469,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -496185305
   m_SortingLayer: 2
-  m_SortingOrder: 0
+  m_SortingOrder: 99
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 7706d37dde9ee30439b8b5db08933b2f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -542,7 +542,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.07062775, y: -0.13915634}
+  m_Offset: {x: -0.06877142, y: -0.19248527}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -552,7 +552,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.82761526, y: 0.74294376}
+  m_Size: {x: 0.78715, y: 0.6362859}
   m_EdgeRadius: 0
 --- !u!114 &224381946665172458
 MonoBehaviour:
@@ -747,24 +747,30 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   velocitaSpostamento: 5
-  spawnerFaseDue:
-  - {fileID: 0}
   turnCheckOffset: {x: 0, y: -2.7}
+  minionPrefab: {fileID: 1228656691620093762, guid: e32cd93c624e1443b846f4883fb5fcff, type: 3}
+  spawnPoints: []
+  spawnInterval: 3
+  spawnActive: 0
+  flyingMinionPrefab: {fileID: -8389419052066332428, guid: a518a8736d9c344b795d5ebea15877ec, type: 3}
+  puntoMinionSinistra: {fileID: 0}
+  puntoMinionDestra: {fileID: 0}
   audioSource: {fileID: 9078423636030372810}
-  idleSound: {fileID: 8300000, guid: 9fbb4632f6c18d4429afb7121b485a3d, type: 3}
-  hitSound: {fileID: 0}
+  idleSound: {fileID: 0}
+  hitSound: {fileID: 8300000, guid: bdc94772d261d4dfabbf0aea17ec0bee, type: 3}
   deathSound: {fileID: 8300000, guid: 80f19e8aabfaf9b4fa8b1a04dc78968d, type: 3}
   deathParticle: {fileID: 3196417285052570513}
   teleportDisappearParticle: {fileID: 1171275158391380269, guid: e46b4e69d0d324bd9968c36c87ce99ef, type: 3}
   teleportAppearParticle: {fileID: 1171275158391380269, guid: e46b4e69d0d324bd9968c36c87ce99ef, type: 3}
-  tempoPrimaScomparsa: 0.4
-  tempoPrimaRicomparsa: 1
+  tempoPrimaScomparsa: 1.2
+  tempoPrimaRicomparsa: 5
   dissolveTime: 0.6
   useVerticalDissolve: 0
   outlineThickness: 0.05
   dissolveScale: 35
   outlineColor: {r: 0, g: 0, b: 23.968628, a: 1}
   spiralStrength: 5
+  forzaKnockback: 10
 --- !u!1 &6519754029243499685
 GameObject:
   m_ObjectHideFlags: 0
@@ -932,41 +938,9 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6351026432811060720}
     m_Modifications:
-    - target: {fileID: 217440542243888201, guid: a59e8eaa63bb7cf43bbdde6710554db1, type: 3}
-      propertyPath: m_SortingLayer
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 217440542243888201, guid: a59e8eaa63bb7cf43bbdde6710554db1, type: 3}
-      propertyPath: m_SortingLayerID
-      value: -1739752973
-      objectReference: {fileID: 0}
-    - target: {fileID: 218641436563849796, guid: a59e8eaa63bb7cf43bbdde6710554db1, type: 3}
-      propertyPath: m_SortingLayer
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 218641436563849796, guid: a59e8eaa63bb7cf43bbdde6710554db1, type: 3}
-      propertyPath: m_SortingLayerID
-      value: -1739752973
-      objectReference: {fileID: 0}
-    - target: {fileID: 4927599761965102733, guid: a59e8eaa63bb7cf43bbdde6710554db1, type: 3}
-      propertyPath: m_SortingLayer
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4927599761965102733, guid: a59e8eaa63bb7cf43bbdde6710554db1, type: 3}
-      propertyPath: m_SortingLayerID
-      value: -1739752973
-      objectReference: {fileID: 0}
     - target: {fileID: 5220071264055085988, guid: a59e8eaa63bb7cf43bbdde6710554db1, type: 3}
       propertyPath: m_Name
       value: death particle Patrolling Built-in
-      objectReference: {fileID: 0}
-    - target: {fileID: 7324234396232806681, guid: a59e8eaa63bb7cf43bbdde6710554db1, type: 3}
-      propertyPath: m_SortingLayer
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7324234396232806681, guid: a59e8eaa63bb7cf43bbdde6710554db1, type: 3}
-      propertyPath: m_SortingLayerID
-      value: -1739752973
       objectReference: {fileID: 0}
     - target: {fileID: 8440171760632619150, guid: a59e8eaa63bb7cf43bbdde6710554db1, type: 3}
       propertyPath: m_LocalPosition.x

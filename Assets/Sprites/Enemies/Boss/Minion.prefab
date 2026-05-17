@@ -506,8 +506,8 @@ MonoBehaviour:
   player: {fileID: 0}
   hoverAmplitude: 0.5
   hoverFrequency: 2
-  dashSpeed: 10
-  dashCooldown: 3
+  dashSpeed: 14
+  dashCooldown: 4
   chargeTime: 0.7
   dashDuration: 0.25
   deathSound: {fileID: 8300000, guid: 80f19e8aabfaf9b4fa8b1a04dc78968d, type: 3}

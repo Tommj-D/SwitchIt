@@ -2,6 +2,9 @@ using UnityEngine;
 
 public class BossCameraTrigger : MonoBehaviour
 {
+    //==================================================
+    // 🎥 IMPOSTAZIONI INQUADRATURA
+    //==================================================
     [Header("Impostazioni Inquadratura")]
     public Transform puntoCentrale;
 
@@ -10,14 +13,25 @@ public class BossCameraTrigger : MonoBehaviour
 
     public float velocitaTransizione = 3f;
 
+    //==================================================
+    // 🧱 BLOCCO ARENA (DUE MURI)
+    //==================================================
     [Header("Blocco Arena")]
-    public GameObject muroDietro;
+    // Abbiamo diviso il vecchio 'muroDietro' in due slot separati per l'arena
+    public GameObject muroSinistro;
+    public GameObject muroDestro;
 
+    //==================================================
+    // 🧠 STATO INTERNO E COMPONENTI
+    //==================================================
     private Camera cam;
     private Behaviour cinemachineBrain;
 
     private bool isBossFightActive = false;
 
+    //==================================================
+    // INIZIALIZZAZIONE
+    //==================================================
     private void Start()
     {
         cam = Camera.main;
@@ -27,29 +41,43 @@ public class BossCameraTrigger : MonoBehaviour
             cinemachineBrain = cam.GetComponent("CinemachineBrain") as Behaviour;
         }
 
-        // Assicura che il muro sia spento all'inizio
-        if (muroDietro != null)
-            muroDietro.SetActive(false);
+        // Assicura che ENTRAMBI i muri siano spenti all'inizio del livello
+        if (muroSinistro != null)
+            muroSinistro.SetActive(false);
+
+        if (muroDestro != null)
+            muroDestro.SetActive(false);
     }
 
+    //==================================================
+    // RILEVAMENTO ENTRATA GIOCATORE
+    //==================================================
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        // Controlla se l'oggetto entrato ha il tag "Player" e se la boss fight non è già attiva
         if (collision.CompareTag("Player") && !isBossFightActive)
         {
             isBossFightActive = true;
 
-            // Attiva il muro
-            if (muroDietro != null)
-                muroDietro.SetActive(true);
+            // ATTIVAZIONE MURI: Chiudiamo il giocatore dentro l'arena
+            if (muroSinistro != null)
+                muroSinistro.SetActive(true);
 
-            // Spegne Cinemachine
+            if (muroDestro != null)
+                muroDestro.SetActive(true);
+
+            // Spegne temporaneamente Cinemachine per dare il controllo del movimento a questo script
             if (cinemachineBrain != null)
                 cinemachineBrain.enabled = false;
         }
     }
 
+    //==================================================
+    // MOVIMENTO CAMERA (LATE UPDATE)
+    //==================================================
     private void LateUpdate()
     {
+        // Se la boss fight è attiva, sposta la telecamera verso il centro dell'arena
         if (isBossFightActive && cam != null)
         {
             Vector3 targetPos = new Vector3(
@@ -58,6 +86,7 @@ public class BossCameraTrigger : MonoBehaviour
                 distanzaZ
             );
 
+            // Spostamento fluido usando la funzione Lerp
             cam.transform.position = Vector3.Lerp(
                 cam.transform.position,
                 targetPos,
@@ -66,14 +95,21 @@ public class BossCameraTrigger : MonoBehaviour
         }
     }
 
+    //==================================================
+    // RESET SISTEMA (CHIAMATA IN CASO DI MORTE/RESET)
+    //==================================================
     public void ResetCamera()
     {
         isBossFightActive = false;
 
-        // Spegne il muro quando muori/resetti
-        if (muroDietro != null)
-            muroDietro.SetActive(false);
+        // Spegne ENTRAMBI i muri quando il giocatore muore o la partita resetta
+        if (muroSinistro != null)
+            muroSinistro.SetActive(false);
 
+        if (muroDestro != null)
+            muroDestro.SetActive(false);
+
+        // Riattiva Cinemachine per far seguire nuovamente il giocatore
         if (cinemachineBrain != null)
             cinemachineBrain.enabled = true;
     }
