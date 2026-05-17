@@ -169,6 +169,7 @@ GameObject:
   - component: {fileID: 7431484373142143987}
   - component: {fileID: 1549291279894567589}
   - component: {fileID: 1084590554387102165}
+  - component: {fileID: 4202094336121432924}
   m_Layer: 0
   m_Name: Minion
   m_TagString: Enemy
@@ -513,6 +514,24 @@ MonoBehaviour:
   chaseSound: {fileID: 0}
   audioSource: {fileID: 1549291279894567589}
   deathParticle: {fileID: 1112542445304150955}
+--- !u!114 &4202094336121432924
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1228656691620093762}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0eb925133f2847b9a39d9e423a470d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MinionAppear
+  tempoDiComparsa: 0.7
+  useVerticalDissolve: 0
+  outlineThickness: 0.03
+  dissolveScale: 35
+  outlineColor: {r: 11.984314, g: 11.231373, b: 1.882353, a: 1}
+  spiralStrength: 10
 --- !u!1 &1497056118472623125
 GameObject:
   m_ObjectHideFlags: 0
