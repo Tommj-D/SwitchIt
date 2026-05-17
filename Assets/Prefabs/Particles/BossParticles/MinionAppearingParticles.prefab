@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 2831955398230848001}
   - component: {fileID: 781622597913654072}
   - component: {fileID: 6885932529784574573}
-  - component: {fileID: 8631302849044483615}
+  - component: {fileID: -8389419052066332428}
   m_Layer: 0
-  m_Name: BossAppearingObjectParticles
+  m_Name: MinionAppearingParticles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -224,7 +224,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 2
       minColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-      maxColor: {r: 0, g: 0, b: 0.8039216, a: 1}
+      maxColor: {r: 1, g: 1, b: 1, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -4896,7 +4896,7 @@ ParticleSystemRenderer:
   m_MeshWeighting1: 1
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
---- !u!114 &8631302849044483615
+--- !u!114 &-8389419052066332428
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4905,8 +4905,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 8064218052116811632}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fc70f78ccee324f73978c9ede644e245, type: 3}
+  m_Script: {fileID: 11500000, guid: 7e816c6ab22fa4abb802322e11f6c8be, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::FlyingRewardParticle
-  speed: 6
+  m_EditorClassIdentifier: Assembly-CSharp::FlyingMinionParticle
+  speed: 8
   arriveDistance: 0.15
+  burstParticle: {fileID: 8709751902655928383, guid: 861d068cb33fa40a68986320b1b157d5, type: 3}
+  minionPrefab: {fileID: 1228656691620093762, guid: e32cd93c624e1443b846f4883fb5fcff, type: 3}

@@ -38,9 +38,12 @@ public class BossManager : MonoBehaviour
     [Header("Spawn Minions")]
     [SerializeField] private GameObject minionPrefab;
     [SerializeField] private Transform[] spawnPoints; // Usato per lo spawn generale se serve
-    [SerializeField] private float distanzaMinionLato = 1.5f; // Distanza per lo spawn a destra/sinistra
     [SerializeField] private float spawnInterval = 3f;
     [SerializeField] private bool spawnActive = false;
+    [Header("Spawn Minions via Particles")]
+    [SerializeField] private FlyingMinionParticle flyingMinionPrefab;
+    [SerializeField] private Transform puntoMinionSinistra;
+    [SerializeField] private Transform puntoMinionDestra;
 
     //==================================================
     // 🎧 AUDIO + FX
@@ -243,32 +246,40 @@ public class BossManager : MonoBehaviour
 
     private IEnumerator HitCycleRoutine()
     {
-        isTransitioning = true; // Questo ora ferma anche il movimento nel FixedUpdate
+        isTransitioning = true; 
 
+        // --- DISATTIVAZIONE DI TUTTI I COLLIDER (Anche della testa) ---
+        Collider2D[] tuttiIColliders = GetComponentsInChildren<Collider2D>();
+        foreach (Collider2D col in tuttiIColliders)
+        {
+            col.enabled = false;
+        }
+
+        // --- NUOVO: ATTESA PRIMA DI SCOMPARIRE ---
+        // Usiamo la tua variabile per far aspettare il boss prima che si dissolva
+        yield return new WaitForSeconds(tempoPrimaScomparsa);
+
+        // Ora parte l'effetto visivo di scomparsa
         if (teleportDisappearParticle != null)
             Instantiate(teleportDisappearParticle, transform.position, Quaternion.identity).Play();
 
-        // Il boss si dissolve
         yield return StartCoroutine(DissolveRoutine(0f, 1.1f));
 
-        // Spawna i minion a destra e sinistra del boss
+        // Spawna i minion usando il nuovo sistema di particelle volanti
         SpawnMinionsHit();
 
-        // Spawna le particelle per gli oggetti nascosti
         if (hitIndex == 0)
             SpawnRewardParticles(firstHitRewards);
         else
             SpawnRewardParticles(secondHitRewards);
 
-        // Attende il tempo prima di ricomparire
         yield return new WaitForSeconds(tempoPrimaRicomparsa);
 
-        // --- INIZIO LOGICA DI TELETRASPORTO ---
-        if (hitIndex == 0) // Dal primo colpo passa alla fase 2
+        if (hitIndex == 0) 
         {
             faseAttuale = 2;
             transform.position = puntoFase2.position;
-            transform.rotation = puntoFase2.rotation; // <-- QUESTA RIGA SISTEMA LA ROTAZIONE
+            transform.rotation = puntoFase2.rotation; 
             
             if (puntiPattugliaFase2.Length > 0)
             {
@@ -276,11 +287,11 @@ public class BossManager : MonoBehaviour
                 indicePuntoAttuale = 0;
             }
         }
-        else if (hitIndex == 1) // Dal secondo colpo passa alla fase 3
+        else if (hitIndex == 1) 
         {
             faseAttuale = 3;
             transform.position = puntoFase3.position;
-            transform.rotation = puntoFase3.rotation; // <-- QUESTA RIGA SISTEMA LA ROTAZIONE
+            transform.rotation = puntoFase3.rotation; 
             
             if (puntiPattugliaFase3.Length > 0)
             {
@@ -288,21 +299,25 @@ public class BossManager : MonoBehaviour
                 indicePuntoAttuale = 0;
             }
         }
-        // --- FINE LOGICA DI TELETRASPORTO ---
 
         if (teleportAppearParticle != null)
             Instantiate(teleportAppearParticle, transform.position, Quaternion.identity).Play();
 
-        // Il boss riappare fisicamente nella nuova posizione
         yield return StartCoroutine(DissolveRoutine(1.1f, 0f));
 
-        // Spawna altri 2 minion insieme a lui
-        SpawnMinionsReturn();
+        // Riattiviamo lo spawn anche al ritorno
+        SpawnMinionsHit();
 
         hitIndex++;
 
+        // --- RIATTIVAZIONE DI TUTTI I COLLIDER ---
+        foreach (Collider2D col in tuttiIColliders)
+        {
+            col.enabled = true;
+        }
+
         isInvulnerable = false;
-        isTransitioning = false; // Il boss ricomincia a muoversi
+        isTransitioning = false;
     }
 
     //==================================================
@@ -310,15 +325,21 @@ public class BossManager : MonoBehaviour
     //==================================================
     private void SpawnMinionsHit()
     {
-        if (minionPrefab == null) return;
+        if (flyingMinionPrefab == null) return;
 
-        // Uno leggermente a sinistra
-        Vector3 leftPos = transform.position + (Vector3.left * distanzaMinionLato);
-        Instantiate(minionPrefab, leftPos, Quaternion.identity);
+        // Spawna la prima particella e dille di andare a sinistra
+        if (puntoMinionSinistra != null)
+        {
+            FlyingMinionParticle particellaSx = Instantiate(flyingMinionPrefab, transform.position, Quaternion.identity);
+            particellaSx.Setup(puntoMinionSinistra);
+        }
 
-        // Uno leggermente a destra
-        Vector3 rightPos = transform.position + (Vector3.right * distanzaMinionLato);
-        Instantiate(minionPrefab, rightPos, Quaternion.identity);
+        // Spawna la seconda particella e dille di andare a destra
+        if (puntoMinionDestra != null)
+        {
+            FlyingMinionParticle particellaDx = Instantiate(flyingMinionPrefab, transform.position, Quaternion.identity);
+            particellaDx.Setup(puntoMinionDestra);
+        }
     }
 
     private void SpawnMinionsReturn()
@@ -356,7 +377,13 @@ public class BossManager : MonoBehaviour
         {
             if (r == null) continue;
 
+            // 1. Creiamo l'istanza della particella volante
             ParticleSystem p = Instantiate(flyingRewardParticlePrefab, transform.position, Quaternion.identity);
+            
+            // 2. FORZIAMO IL PLAY: Diciamo esplicitamente al Particle System di attivarsi e mostrare i dettagli visivi
+            p.Play();
+
+            // 3. Colleghiamo i componenti per il movimento verso l'obiettivo
             FlyingRewardParticle mover = p.GetComponent<FlyingRewardParticle>();
 
             if (mover != null)
