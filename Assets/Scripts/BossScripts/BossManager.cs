@@ -45,6 +45,13 @@ public class BossManager : MonoBehaviour
     [SerializeField] private Transform puntoMinionSinistra;
     [SerializeField] private Transform puntoMinionDestra;
 
+    [Header("Infinite Minion Spawn")]
+    [SerializeField] private Transform spawnLoopSinistra;
+    [SerializeField] private Transform spawnLoopDestra;
+    [SerializeField] private float spawnLoopInterval = 3f;
+
+    private Coroutine spawnLoopCoroutine;
+
     //==================================================
     // 🎧 AUDIO + FX
     //==================================================
@@ -298,6 +305,10 @@ public class BossManager : MonoBehaviour
                 targetPos = puntiPattugliaFase3[0].position;
                 indicePuntoAttuale = 0;
             }
+            if (spawnLoopCoroutine == null)
+            {
+                spawnLoopCoroutine = StartCoroutine(SpawnMinionLoopRoutine());
+            }
         }
 
         if (teleportAppearParticle != null)
@@ -339,6 +350,31 @@ public class BossManager : MonoBehaviour
         {
             FlyingMinionParticle particellaDx = Instantiate(flyingMinionPrefab, transform.position, Quaternion.identity);
             particellaDx.Setup(puntoMinionDestra);
+        }
+    }
+
+    private IEnumerator SpawnMinionLoopRoutine()
+    {
+        while (!isDead)
+        {
+            SpawnLoopMinions();
+
+            yield return new WaitForSeconds(spawnLoopInterval);
+        }
+    }
+
+    private void SpawnLoopMinions()
+    {
+        if (minionPrefab == null) return;
+
+        if (spawnLoopSinistra != null)
+        {
+            Instantiate(minionPrefab, spawnLoopSinistra.position, Quaternion.identity);
+        }
+
+        if (spawnLoopDestra != null)
+        {
+            Instantiate(minionPrefab, spawnLoopDestra.position, Quaternion.identity);
         }
     }
 
@@ -406,6 +442,13 @@ public class BossManager : MonoBehaviour
 
         Collider2D[] c = GetComponentsInChildren<Collider2D>();
         foreach (var col in c) col.enabled = false;
+
+        GameObject[] minions = GameObject.FindGameObjectsWithTag("Minion");
+
+        foreach (GameObject m in minions)
+        {
+            Destroy(m);
+        }
 
         Destroy(gameObject, 3f);
     }

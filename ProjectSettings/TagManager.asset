@@ -12,6 +12,7 @@ TagManager:
   - Hidden
   - Obstacle
   - Spike
+  - Minion
   layers:
   - Default
   - TransparentFX

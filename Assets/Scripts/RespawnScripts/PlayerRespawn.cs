@@ -88,7 +88,7 @@ public class PlayerRespawn : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (!isDying && (collision.gameObject.CompareTag("Enemy")) || collision.gameObject.CompareTag("Spike"))
+        if (!isDying && (collision.gameObject.CompareTag("Enemy")) || collision.gameObject.CompareTag("Spike") || collision.gameObject.CompareTag("Minion"))
         {   
             StartCoroutine(DeathSequence());
         }
