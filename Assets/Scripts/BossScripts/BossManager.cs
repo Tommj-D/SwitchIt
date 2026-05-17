@@ -37,9 +37,6 @@ public class BossManager : MonoBehaviour
     //==================================================
     [Header("Spawn Minions")]
     [SerializeField] private GameObject minionPrefab;
-    [SerializeField] private Transform[] spawnPoints; // Usato per lo spawn generale se serve
-    [SerializeField] private float spawnInterval = 3f;
-    [SerializeField] private bool spawnActive = false;
     [Header("Spawn Minions via Particles")]
     [SerializeField] private FlyingMinionParticle flyingMinionPrefab;
     [SerializeField] private Transform puntoMinionSinistra;
@@ -51,6 +48,18 @@ public class BossManager : MonoBehaviour
     [SerializeField] private float spawnLoopInterval = 3f;
 
     private Coroutine spawnLoopCoroutine;
+
+    //==================================================
+    // ⚡ DASH FASE 3
+    //==================================================
+    [Header("Dash Fase 3")]
+    [SerializeField] private bool usaDashFase3 = true;
+    [SerializeField] private float tempoAttesaDash = 2f;
+    [SerializeField] private float velocitaDash = 20f;
+    [SerializeField] private float durataDash = 0.35f;
+
+    private bool isDashing = false;
+    private Coroutine dashRoutine;
 
     //==================================================
     // 🎧 AUDIO + FX
@@ -174,7 +183,7 @@ public class BossManager : MonoBehaviour
     private void FixedUpdate()
     {
         // Se il boss è morto o si sta teletrasportando (isTransitioning), NON si muove.
-        if (isDead || isTransitioning) return;
+        if (isDead || isTransitioning || isDashing) return;
 
         Transform[] punti = GetPuntiFaseCorrente();
 
@@ -309,6 +318,10 @@ public class BossManager : MonoBehaviour
             {
                 spawnLoopCoroutine = StartCoroutine(SpawnMinionLoopRoutine());
             }
+            if (usaDashFase3 && dashRoutine == null)
+            {
+                dashRoutine = StartCoroutine(DashRoutine());
+            }
         }
 
         if (teleportAppearParticle != null)
@@ -378,27 +391,25 @@ public class BossManager : MonoBehaviour
         }
     }
 
-    private void SpawnMinionsReturn()
+    private IEnumerator DashRoutine()
     {
-        // Spawna 2 minion (anziché 3) in posizioni casuali tra gli spawnPoints generali
-        // (Se li vuoi sempre a destra e sinistra del boss anche qui, puoi richiamare SpawnMinionsHit!)
-        for (int i = 0; i < 2; i++) SpawnRandomMinion();
-    }
-
-    private void SpawnRandomMinion()
-    {
-        if (minionPrefab == null || spawnPoints.Length == 0) return;
-
-        Transform p = spawnPoints[Random.Range(0, spawnPoints.Length)];
-        Instantiate(minionPrefab, p.position, Quaternion.identity);
-    }
-
-    private IEnumerator SpawnMinionsLoop()
-    {
-        while (spawnActive)
+        while (!isDead)
         {
-            SpawnRandomMinion();
-            yield return new WaitForSeconds(spawnInterval);
+            yield return new WaitForSeconds(tempoAttesaDash);
+
+            if (isDead || isTransitioning)
+                yield break;
+
+            isDashing = true;
+
+            float velocitaNormale = velocitaSpostamento;
+            velocitaSpostamento = velocitaDash;
+
+            yield return new WaitForSeconds(durataDash);
+
+            velocitaSpostamento = velocitaNormale;
+
+            isDashing = false;
         }
     }
 
