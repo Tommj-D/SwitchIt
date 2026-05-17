@@ -25,6 +25,8 @@ public class BossManager : MonoBehaviour
     [Header("Spawner Fase 2 (Nemici Bianchi)")]
     public ContinuousSlimeSpawner[] spawnerFaseDue; 
 
+    [SerializeField] private Vector2 turnCheckOffset = new Vector2(0f, -1.5f);
+
     [Header("Effetti Audio e Visivi")]
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip idleSound; 
@@ -38,6 +40,28 @@ public class BossManager : MonoBehaviour
     [Header("Tempi Teletrasporto")]
     [SerializeField] private float tempoPrimaScomparsa = 0.4f;
     [SerializeField] private float tempoPrimaRicomparsa = 1f;
+
+    [Header("Dissolve Shader")]
+    [SerializeField] private float dissolveTime = 0.5f;
+    [SerializeField] private bool useVerticalDissolve = false;
+
+    [Header("Shader Settings")]
+    [SerializeField] private float outlineThickness = 0.1f;
+    [SerializeField] private float dissolveScale = 30f;
+
+    [ColorUsage(true, true)]
+    [SerializeField] private Color outlineColor = Color.white;
+
+    [SerializeField] private float spiralStrength = 5f;
+
+    private Material[] dissolveMaterials;
+
+    private int dissolveAmountID = Shader.PropertyToID("_DissolveAmount");
+    private int verticalDissolveID = Shader.PropertyToID("_VerticalDissolve");
+    private int outlineThicknessID = Shader.PropertyToID("_OutlineThickness");
+    private int outlineColorID = Shader.PropertyToID("_OutlineColor");
+    private int spiralStrengthID = Shader.PropertyToID("_SpiralStrength");
+    private int dissolveScaleID = Shader.PropertyToID("_DissolveScale");
 
     [Header("Statistiche")]
     private int hp = 3;
@@ -58,10 +82,13 @@ public class BossManager : MonoBehaviour
     private void Awake()
     {
         anim = GetComponent<Animator>();
-        if (audioSource == null) audioSource = GetComponent<AudioSource>();
-        
-        // Colleghiamo il Rigidbody all'avvio
-        rb = GetComponent<Rigidbody2D>(); 
+
+        if (audioSource == null)
+            audioSource = GetComponent<AudioSource>();
+
+        rb = GetComponent<Rigidbody2D>();
+
+        SetupDissolveMaterials();
     }
 
     private void Start()
@@ -114,7 +141,16 @@ public class BossManager : MonoBehaviour
 
         if (puntiCorrenti != null && puntiCorrenti.Length > 0)
         {
-            if (Vector2.Distance(transform.position, targetPos) < 0.2f)
+            // Punto basso del boss
+            Vector2 checkPosition =
+                (Vector2)transform.position + turnCheckOffset;
+
+            // Punto target confrontato alla stessa altezza
+            Vector2 targetCheckPosition =
+                (Vector2)targetPos + turnCheckOffset;
+
+            // Quando arriva al punto cambia direzione
+            if (Vector2.Distance(checkPosition, targetCheckPosition) < 0.2f)
             {
                 transform.eulerAngles += rotazioneAlPunto;
 
@@ -129,15 +165,24 @@ public class BossManager : MonoBehaviour
             }
         }
 
-        // MUOVE IL BOSS USANDO LA FISICA, ELIMINANDO GLI SCATTI
+        // Movimento normale
         if (rb != null)
         {
-            Vector2 nuovaPos = Vector2.MoveTowards(rb.position, targetPos, velocitaSpostamento * Time.fixedDeltaTime);
+            Vector2 nuovaPos = Vector2.MoveTowards(
+                rb.position,
+                targetPos,
+                velocitaSpostamento * Time.fixedDeltaTime
+            );
+
             rb.MovePosition(nuovaPos);
         }
         else
         {
-            transform.position = Vector3.MoveTowards(transform.position, targetPos, velocitaSpostamento * Time.fixedDeltaTime);
+            transform.position = Vector3.MoveTowards(
+                transform.position,
+                targetPos,
+                velocitaSpostamento * Time.fixedDeltaTime
+            );
         }
     }
 
@@ -171,14 +216,15 @@ public class BossManager : MonoBehaviour
     {
         isInvulnerable = true;
 
-        velocitaSpostamento = 0f;
+        Collider2D[] colliders = GetComponentsInChildren<Collider2D>();
 
-        if (anim != null)
-            anim.SetTrigger("Hit");
+        foreach (Collider2D c in colliders)
+            c.enabled = false;
+
+        velocitaSpostamento = 0f;
 
         yield return new WaitForSeconds(tempoPrimaScomparsa);
 
-        // PARTICELLE SPARIZIONE
         if (teleportDisappearParticle != null)
         {
             Instantiate(
@@ -188,15 +234,7 @@ public class BossManager : MonoBehaviour
             ).Play();
         }
 
-        SpriteRenderer sr = GetComponent<SpriteRenderer>();
-
-        if (sr != null)
-            sr.enabled = false;
-
-        Collider2D[] colliders = GetComponentsInChildren<Collider2D>();
-
-        foreach (Collider2D c in colliders)
-            c.enabled = false;
+        yield return StartCoroutine(DissolveRoutine(0f, 1.1f));
 
         faseAttuale = nuovaFase;
 
@@ -245,7 +283,8 @@ public class BossManager : MonoBehaviour
         // TEMPO NASCOSTO
         yield return new WaitForSeconds(tempoPrimaRicomparsa);
 
-        // PARTICELLE RICOMPARSA
+        SetDissolveAmount(1.1f);
+
         if (teleportAppearParticle != null)
         {
             Instantiate(
@@ -255,9 +294,7 @@ public class BossManager : MonoBehaviour
             ).Play();
         }
 
-        // RICOMPARSA
-        if (sr != null)
-            sr.enabled = true;
+        yield return StartCoroutine(DissolveRoutine(1.1f, 0f));
 
         foreach (Collider2D c in colliders)
             c.enabled = true;
@@ -293,5 +330,97 @@ public class BossManager : MonoBehaviour
 
         Debug.Log("IL BOSS È STATO SCONFITTO!");
         Destroy(gameObject, 3f);
+    }
+
+   private void SetupDissolveMaterials()
+    {
+        SpriteRenderer[] renderers = GetComponentsInChildren<SpriteRenderer>(true);
+
+        dissolveMaterials = new Material[renderers.Length];
+
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            dissolveMaterials[i] = new Material(renderers[i].material);
+
+            renderers[i].material = dissolveMaterials[i];
+        }
+
+        ApplyShaderSettings();
+
+        SetDissolveAmount(0f);
+    }
+
+    private void ApplyShaderSettings()
+    {
+        if (dissolveMaterials == null) return;
+
+        foreach (Material mat in dissolveMaterials)
+        {
+            if (mat.HasProperty(outlineThicknessID))
+                mat.SetFloat(outlineThicknessID, outlineThickness);
+
+            if (mat.HasProperty(outlineColorID))
+                mat.SetColor(outlineColorID, outlineColor);
+
+            if (mat.HasProperty(spiralStrengthID))
+                mat.SetFloat(spiralStrengthID, spiralStrength);
+
+            if (mat.HasProperty(dissolveScaleID))
+                mat.SetFloat(dissolveScaleID, dissolveScale);
+        }
+    }
+
+    private void OnValidate()
+    {
+        ApplyShaderSettings();
+    }
+
+    private void SetDissolveAmount(float value)
+    {
+        if (dissolveMaterials == null) return;
+
+        foreach (Material mat in dissolveMaterials)
+        {
+            if (mat.HasProperty(dissolveAmountID))
+                mat.SetFloat(dissolveAmountID, value);
+
+            if (mat.HasProperty(verticalDissolveID))
+            {
+                mat.SetFloat(
+                    verticalDissolveID,
+                    useVerticalDissolve ? value : 0f
+                );
+            }
+        }
+    }
+
+    private IEnumerator DissolveRoutine(float start, float end)
+    {
+        float elapsed = 0f;
+
+        while (elapsed < dissolveTime)
+        {
+            elapsed += Time.deltaTime;
+
+            float value = Mathf.Lerp(start, end, elapsed / dissolveTime);
+
+            SetDissolveAmount(value);
+
+            yield return null;
+        }
+
+        SetDissolveAmount(end);
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+
+        Vector3 checkPosition =
+            transform.position + (Vector3)turnCheckOffset;
+
+        Gizmos.DrawSphere(checkPosition, 0.15f);
+
+        Gizmos.DrawLine(transform.position, checkPosition);
     }
 }
