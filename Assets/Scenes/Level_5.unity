@@ -109184,6 +109184,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c959e260faf19b4c91f0781bc33f5f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  rewardSpawner: {fileID: 0}
   puntiPattugliaFase1:
   - {fileID: 155328830}
   - {fileID: 1238937963}

@@ -4,11 +4,11 @@ using System.Collections;
 public class BossManager : MonoBehaviour
 {   
     [Header("Reward Particles")]
-    [SerializeField] private ParticleSystem flyingParticlePrefab;
+[SerializeField] private ParticleSystem flyingRewardParticlePrefab;
 
-    [SerializeField] private BossRewardPhase firstHitRewards;
+[SerializeField] private BossRewardSpawner firstHitRewards;
 
-    [SerializeField] private BossRewardPhase secondHitRewards;
+[SerializeField] private BossRewardSpawner secondHitRewards;
 
     [Header("Fase 1: Pattugliamento (Piano 1)")]
     [Tooltip("Trascina qui i punti in cui si muoverà all'inizio")]
@@ -223,23 +223,23 @@ public class BossManager : MonoBehaviour
         }
     }
 
-    private void SpawnRewardParticles(BossRewardPhase phase)
+    private void SpawnRewardParticles(BossRewardSpawner rewards)
     {
-        if (phase == null) return;
+        if (rewards == null) return;
 
-        foreach (RewardRevealObject reward in phase.revealObjects)
+        foreach (RewardTarget reward in rewards.rewardTargets)
         {
             if (reward == null) continue;
 
             ParticleSystem particle =
                 Instantiate(
-                    flyingParticlePrefab,
+                    flyingRewardParticlePrefab,
                     transform.position,
                     Quaternion.identity
                 );
 
-            FlyingParticleToTarget mover =
-                particle.GetComponent<FlyingParticleToTarget>();
+            FlyingRewardParticle mover =
+                particle.GetComponent<FlyingRewardParticle>();
 
             if (mover != null)
             {
