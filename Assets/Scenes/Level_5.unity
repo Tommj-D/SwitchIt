@@ -313085,6 +313085,10 @@ PrefabInstance:
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6553910918367281011, guid: e7dfd3381e53d4619a8598b8830ec0a5, type: 3}
+      propertyPath: hitShockWaveStrength
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6553910918367281011, guid: e7dfd3381e53d4619a8598b8830ec0a5, type: 3}
       propertyPath: 'puntiPattugliaFase1.Array.data[0]'
       value: 
       objectReference: {fileID: 155328830}

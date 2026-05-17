@@ -249,13 +249,10 @@ public class BossManager : MonoBehaviour
 
         if (anim != null) anim.SetTrigger("Hit");
         if (audioSource != null && hitSound != null) audioSource.PlayOneShot(hitSound);
-
-        if (useHitShockWave && ShockWaveManager.Instance != null)
+        
+         if (useHitShockWave && ShockWaveManager.Instance != null)
         {
-            ShockWaveManager.Instance.material.SetFloat(
-                "_XSizeRatio",
-                hitShockWaveXSizeRatio
-            );
+            ShockWaveManager.Instance.SetXSizeRatio(hitShockWaveXSizeRatio);
 
             ShockWaveManager.Instance.CallShockWave(
                 transform.position,
@@ -598,6 +595,7 @@ public class BossManager : MonoBehaviour
 
         SetDissolveAmount(end);
     }
+    
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;

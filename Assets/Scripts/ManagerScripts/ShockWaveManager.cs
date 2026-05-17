@@ -104,4 +104,9 @@ public class ShockWaveManager : MonoBehaviour
             1f
         );
     }
+
+    public void SetXSizeRatio(float value)
+    {
+        _material.SetFloat("_XSizeRatio", value);
+    }
 }
