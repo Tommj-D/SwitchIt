@@ -2,55 +2,68 @@ using UnityEngine;
 using System.Collections;
 
 public class BossManager : MonoBehaviour
-{   
+{
+    //==================================================
+    // 🎁 REWARD / PARTICELLE PROGRESSIONE
+    //==================================================
     [Header("Reward Particles")]
-[SerializeField] private ParticleSystem flyingRewardParticlePrefab;
+    [SerializeField] private ParticleSystem flyingRewardParticlePrefab;
+    [SerializeField] private BossRewardSpawner firstHitRewards;
+    [SerializeField] private BossRewardSpawner secondHitRewards;
 
-[SerializeField] private BossRewardSpawner firstHitRewards;
+    //==================================================
+    // 🧭 PERCORSI FASI BOSS
+    //==================================================
+    [Header("Fase 1: Pattugliamento")]
+    public Transform[] puntiPattugliaFase1;
+    public Vector3 rotazioneAlPunto = new Vector3(0f, 180f, 0f);
 
-[SerializeField] private BossRewardSpawner secondHitRewards;
-
-    [Header("Fase 1: Pattugliamento (Piano 1)")]
-    [Tooltip("Trascina qui i punti in cui si muoverà all'inizio")]
-    public Transform[] puntiPattugliaFase1; 
-    public Vector3 rotazioneAlPunto = new Vector3(0f, 180f, 0f); // Per farlo voltare
-
-    [Header("Fasi Successive")]
-    [Tooltip("Punto in cui scappa al Piano 2 (dopo la 1° hit)")]
-    public Transform puntoFase2; 
-    [Tooltip("Punto in cui scappa al Piano 3 (dopo la 2° hit)")]
-    public Transform puntoFase3; 
+    [Header("Fase 2 / 3 - Teleport Points")]
+    public Transform puntoFase2;
+    public Transform puntoFase3;
 
     [Header("Pattugliamento Fase 2")]
     public Transform[] puntiPattugliaFase2;
 
     [Header("Pattugliamento Fase 3")]
     public Transform[] puntiPattugliaFase3;
-    
+
     public float velocitaSpostamento = 5f;
 
-    [Header("Spawn Minions Fase 2")]
+    [SerializeField] private Vector2 turnCheckOffset = new Vector2(0f, -1.5f);
+
+    //==================================================
+    // 👾 SPAWN MINION SYSTEM
+    //==================================================
+    [Header("Spawn Minions")]
     [SerializeField] private GameObject minionPrefab;
     [SerializeField] private Transform[] spawnPoints;
     [SerializeField] private float spawnInterval = 3f;
     [SerializeField] private bool spawnActive = false;
 
-    [SerializeField] private Vector2 turnCheckOffset = new Vector2(0f, -1.5f);
-
-    [Header("Effetti Audio e Visivi")]
+    //==================================================
+    // 🎧 AUDIO + FX
+    //==================================================
+    [Header("Audio & VFX")]
     [SerializeField] private AudioSource audioSource;
-    [SerializeField] private AudioClip idleSound; 
-    [SerializeField] private AudioClip hitSound;  
-    [SerializeField] private AudioClip deathSound; 
-    [SerializeField] private ParticleSystem deathParticle;
+    [SerializeField] private AudioClip idleSound;
+    [SerializeField] private AudioClip hitSound;
+    [SerializeField] private AudioClip deathSound;
 
+    [SerializeField] private ParticleSystem deathParticle;
     [SerializeField] private ParticleSystem teleportDisappearParticle;
     [SerializeField] private ParticleSystem teleportAppearParticle;
 
-    [Header("Tempi Teletrasporto")]
+    //==================================================
+    // ⏱ TIMING TELEPORT
+    //==================================================
+    [Header("Teleport Timing")]
     [SerializeField] private float tempoPrimaScomparsa = 0.4f;
     [SerializeField] private float tempoPrimaRicomparsa = 1f;
 
+    //==================================================
+    // 🌫 DISSOLVE SHADER
+    //==================================================
     [Header("Dissolve Shader")]
     [SerializeField] private float dissolveTime = 0.5f;
     [SerializeField] private bool useVerticalDissolve = false;
@@ -73,136 +86,118 @@ public class BossManager : MonoBehaviour
     private int spiralStrengthID = Shader.PropertyToID("_SpiralStrength");
     private int dissolveScaleID = Shader.PropertyToID("_DissolveScale");
 
-    [Header("Statistiche")]
+    //==================================================
+    // ❤️ STATS BOSS
+    //==================================================
     private int hp = 3;
     private bool isInvulnerable = false;
     private bool isDead = false;
 
-    // Variabili interne
+    //==================================================
+    // 🧠 STATE MACHINE INTERNA
+    //==================================================
     private Animator anim;
+    private Rigidbody2D rb;
+
     private Vector3 targetPos;
     private int indicePuntoAttuale = 0;
-    private int faseAttuale = 1; // Controlla in che fase siamo (1, 2 o 3)
+    private int faseAttuale = 1;
+
     private int hitIndex = 0;
     private bool isTransitioning = false;
 
     private float velocitaOriginale;
 
-    // Aggiungi questa riga in alto, vicino alle altre variabili "private"
-    private Rigidbody2D rb;
-
+    //==================================================
+    // START / AWAKE
+    //==================================================
     private void Awake()
     {
         anim = GetComponent<Animator>();
+        rb = GetComponent<Rigidbody2D>();
 
         if (audioSource == null)
             audioSource = GetComponent<AudioSource>();
-
-        rb = GetComponent<Rigidbody2D>();
 
         SetupDissolveMaterials();
     }
 
     private void Start()
     {
-        // Il boss parte immediatamente dal primo punto di pattuglia
-        if (puntiPattugliaFase1.Length > 0 && puntiPattugliaFase1[0] != null)
+        if (puntiPattugliaFase1.Length > 0)
         {
             targetPos = puntiPattugliaFase1[0].position;
             transform.position = targetPos;
         }
 
         if (idleSound != null)
-        {
-            InvokeRepeating("PlayIdleSound", 1f, 8f);
-        }
+            InvokeRepeating(nameof(PlayIdleSound), 1f, 8f);
 
         velocitaOriginale = velocitaSpostamento;
     }
 
+    //==================================================
+    // AUDIO LOOP
+    //==================================================
     private void PlayIdleSound()
     {
         if (!isDead && audioSource != null && idleSound != null)
-        {
             audioSource.PlayOneShot(idleSound);
-        }
     }
 
+    //==================================================
+    // MOVIMENTO BOSS
+    //==================================================
     private Transform[] GetPuntiFaseCorrente()
     {
         switch (faseAttuale)
         {
-            case 1:
-                return puntiPattugliaFase1;
-
-            case 2:
-                return puntiPattugliaFase2;
-
-            case 3:
-                return puntiPattugliaFase3;
+            case 2: return puntiPattugliaFase2;
+            case 3: return puntiPattugliaFase3;
+            default: return puntiPattugliaFase1;
         }
-
-        return puntiPattugliaFase1;
     }
 
     private void FixedUpdate()
     {
         if (isDead) return;
 
-        Transform[] puntiCorrenti = GetPuntiFaseCorrente();
+        Transform[] punti = GetPuntiFaseCorrente();
 
-        // 1. Calcoliamo SUBITO l'altezza attuale e la destinazione corretta
-        float altezzaAttuale = rb != null ? rb.position.y : transform.position.y;
-        Vector2 destinazioneCorretta = new Vector2(targetPos.x, altezzaAttuale);
+        float y = rb != null ? rb.position.y : transform.position.y;
+        Vector2 target = new Vector2(targetPos.x, y);
 
-        if (puntiCorrenti != null && puntiCorrenti.Length > 0)
+        if (punti != null && punti.Length > 0)
         {
-            // Punto basso del boss
-            Vector2 checkPosition = (Vector2)transform.position + turnCheckOffset;
+            Vector2 check = (Vector2)transform.position + turnCheckOffset;
+            Vector2 targetCheck = target + turnCheckOffset;
 
-            // Usiamo la destinazioneCorretta per il controllo, così ignora l'altezza sballata!
-            Vector2 targetCheckPosition = destinazioneCorretta + turnCheckOffset;
-
-            // Quando arriva al punto cambia direzione
-            if (Vector2.Distance(checkPosition, targetCheckPosition) < 0.2f)
+            if (Vector2.Distance(check, targetCheck) < 0.2f)
             {
                 transform.eulerAngles += rotazioneAlPunto;
 
                 indicePuntoAttuale++;
-
-                if (indicePuntoAttuale >= puntiCorrenti.Length)
-                {
+                if (indicePuntoAttuale >= punti.Length)
                     indicePuntoAttuale = 0;
-                }
 
-                targetPos = puntiCorrenti[indicePuntoAttuale].position;
-                
-                // Aggiorniamo subito la destinazione per non fargli perdere frame
-                destinazioneCorretta = new Vector2(targetPos.x, altezzaAttuale);
+                targetPos = punti[indicePuntoAttuale].position;
             }
         }
 
-        // Movimento orizzontale perfetto
         if (rb != null)
         {
-            Vector2 nuovaPos = Vector2.MoveTowards(
-                rb.position,
-                destinazioneCorretta,
-                velocitaSpostamento * Time.fixedDeltaTime
-            );
-
-            rb.MovePosition(nuovaPos);
+            Vector2 newPos = Vector2.MoveTowards(rb.position, target, velocitaSpostamento * Time.fixedDeltaTime);
+            rb.MovePosition(newPos);
         }
         else
         {
-            transform.position = Vector3.MoveTowards(
-                transform.position,
-                destinazioneCorretta,
-                velocitaSpostamento * Time.fixedDeltaTime
-            );
+            transform.position = Vector3.MoveTowards(transform.position, target, velocitaSpostamento * Time.fixedDeltaTime);
         }
     }
 
+    //==================================================
+    // DAMAGE / HIT SYSTEM
+    //==================================================
     public void PrendiDanno()
     {
         if (isInvulnerable || hp <= 0 || isDead || isTransitioning) return;
@@ -211,164 +206,117 @@ public class BossManager : MonoBehaviour
         isInvulnerable = true;
 
         if (anim != null) anim.SetTrigger("Hit");
-
-        if (audioSource != null && hitSound != null)
-            audioSource.PlayOneShot(hitSound);
+        if (audioSource != null && hitSound != null) audioSource.PlayOneShot(hitSound);
 
         StartCoroutine(HitCycleRoutine());
 
         if (hp <= 0)
-        {
             Muori();
+    }
+
+    private IEnumerator HitCycleRoutine()
+    {
+        isTransitioning = true;
+
+        if (teleportDisappearParticle != null)
+            Instantiate(teleportDisappearParticle, transform.position, Quaternion.identity).Play();
+
+        yield return StartCoroutine(DissolveRoutine(0f, 1.1f));
+
+        SpawnMinionsHit();
+
+        if (hitIndex == 0)
+            SpawnRewardParticles(firstHitRewards);
+        else
+            SpawnRewardParticles(secondHitRewards);
+
+        yield return new WaitForSeconds(0.8f);
+
+        if (teleportAppearParticle != null)
+            Instantiate(teleportAppearParticle, transform.position, Quaternion.identity).Play();
+
+        yield return StartCoroutine(DissolveRoutine(1.1f, 0f));
+
+        SpawnMinionsReturn();
+
+        hitIndex++;
+
+        isInvulnerable = false;
+        isTransitioning = false;
+    }
+
+    //==================================================
+    // SPAWN MINION
+    //==================================================
+    private void SpawnMinionsHit()
+    {
+        for (int i = 0; i < 2; i++) SpawnRandomMinion();
+    }
+
+    private void SpawnMinionsReturn()
+    {
+        for (int i = 0; i < 3; i++) SpawnRandomMinion();
+    }
+
+    private void SpawnRandomMinion()
+    {
+        if (minionPrefab == null || spawnPoints.Length == 0) return;
+
+        Transform p = spawnPoints[Random.Range(0, spawnPoints.Length)];
+        Instantiate(minionPrefab, p.position, Quaternion.identity);
+    }
+
+    private IEnumerator SpawnMinionsLoop()
+    {
+        while (spawnActive)
+        {
+            SpawnRandomMinion();
+            yield return new WaitForSeconds(spawnInterval);
         }
     }
 
+    //==================================================
+    // REWARD PARTICLE SYSTEM
+    //==================================================
     private void SpawnRewardParticles(BossRewardSpawner rewards)
     {
         if (rewards == null) return;
 
-        foreach (RewardTarget reward in rewards.rewardTargets)
+        foreach (RewardTarget r in rewards.rewardTargets)
         {
-            if (reward == null) continue;
+            if (r == null) continue;
 
-            ParticleSystem particle =
-                Instantiate(
-                    flyingRewardParticlePrefab,
-                    transform.position,
-                    Quaternion.identity
-                );
-
-            FlyingRewardParticle mover =
-                particle.GetComponent<FlyingRewardParticle>();
+            ParticleSystem p = Instantiate(flyingRewardParticlePrefab, transform.position, Quaternion.identity);
+            FlyingRewardParticle mover = p.GetComponent<FlyingRewardParticle>();
 
             if (mover != null)
-            {
-                mover.Setup(
-                    reward.transform,
-                    reward
-                );
-            }
+                mover.Setup(r.transform, r);
         }
     }
 
-    private IEnumerator CambioFase(int nuovaFase)
-    {
-        isInvulnerable = true;
-
-        Collider2D[] colliders = GetComponentsInChildren<Collider2D>();
-
-        foreach (Collider2D c in colliders)
-            c.enabled = false;
-
-        velocitaSpostamento = 0f;
-
-        yield return new WaitForSeconds(tempoPrimaScomparsa);
-
-        if (teleportDisappearParticle != null)
-        {
-            Instantiate(
-                teleportDisappearParticle,
-                transform.position,
-                Quaternion.identity
-            ).Play();
-        }
-
-        yield return StartCoroutine(DissolveRoutine(0f, 1.1f));
-
-        faseAttuale = nuovaFase;
-
-        indicePuntoAttuale = 0;
-
-        // TELETRASPORTO
-        if (faseAttuale == 2)
-        {
-            if (puntoFase2 != null)
-            {
-                transform.position = puntoFase2.position;
-                transform.rotation = Quaternion.identity;
-            }
-
-            if (puntiPattugliaFase2.Length > 0)
-            {
-                targetPos = puntiPattugliaFase2[0].position;
-            }
-
-            fspawnActive = true;
-            StartCoroutine(SpawnMinionsLoop());
-        }
-        else if (faseAttuale == 3)
-        {
-            if (puntoFase3 != null)
-            {
-                transform.position = puntoFase3.position;
-                transform.rotation = Quaternion.identity;
-            }
-
-            if (puntiPattugliaFase3.Length > 0)
-            {
-                targetPos = puntiPattugliaFase3[0].position;
-            }
-
-            foreach (var spawner in spawnerFaseDue)
-            {
-                if (spawner != null)
-                    spawner.gameObject.SetActive(false);
-            }
-        }
-
-        // TEMPO NASCOSTO
-        yield return new WaitForSeconds(tempoPrimaRicomparsa);
-
-        SetDissolveAmount(1.1f);
-
-        if (teleportAppearParticle != null)
-        {
-            Instantiate(
-                teleportAppearParticle,
-                transform.position,
-                Quaternion.identity
-            ).Play();
-        }
-
-        yield return StartCoroutine(DissolveRoutine(1.1f, 0f));
-
-        foreach (Collider2D c in colliders)
-            c.enabled = true;
-
-        velocitaSpostamento = velocitaOriginale;
-
-        isInvulnerable = false;
-    }
-
+    //==================================================
+    // DEATH
+    //==================================================
     private void Muori()
     {
         isDead = true;
 
-        foreach (var spawner in spawnerFaseDue)
-        {
-            if (spawner != null) spawner.gameObject.SetActive(false);
-        }
-
         if (audioSource != null && deathSound != null)
-        {
             audioSource.PlayOneShot(deathSound);
-        }
 
-        if (anim != null) anim.SetTrigger("Die");
-        
         if (deathParticle != null)
-        {
             Instantiate(deathParticle, transform.position, transform.rotation).Play();
-        }
 
-        Collider2D[] colliders = GetComponentsInChildren<Collider2D>();
-        foreach (Collider2D c in colliders) c.enabled = false;
+        Collider2D[] c = GetComponentsInChildren<Collider2D>();
+        foreach (var col in c) col.enabled = false;
 
-        Debug.Log("IL BOSS È STATO SCONFITTO!");
         Destroy(gameObject, 3f);
     }
 
-   private void SetupDissolveMaterials()
+    //==================================================
+    // 🌫 SHADER SYSTEM
+    //==================================================
+    private void SetupDissolveMaterials()
     {
         SpriteRenderer[] renderers = GetComponentsInChildren<SpriteRenderer>(true);
 
@@ -377,12 +325,10 @@ public class BossManager : MonoBehaviour
         for (int i = 0; i < renderers.Length; i++)
         {
             dissolveMaterials[i] = new Material(renderers[i].material);
-
             renderers[i].material = dissolveMaterials[i];
         }
 
         ApplyShaderSettings();
-
         SetDissolveAmount(0f);
     }
 
@@ -406,11 +352,6 @@ public class BossManager : MonoBehaviour
         }
     }
 
-    private void OnValidate()
-    {
-        ApplyShaderSettings();
-    }
-
     private void SetDissolveAmount(float value)
     {
         if (dissolveMaterials == null) return;
@@ -421,12 +362,7 @@ public class BossManager : MonoBehaviour
                 mat.SetFloat(dissolveAmountID, value);
 
             if (mat.HasProperty(verticalDissolveID))
-            {
-                mat.SetFloat(
-                    verticalDissolveID,
-                    useVerticalDissolve ? value : 0f
-                );
-            }
+                mat.SetFloat(verticalDissolveID, useVerticalDissolve ? value : 0f);
         }
     }
 
@@ -438,97 +374,18 @@ public class BossManager : MonoBehaviour
         {
             elapsed += Time.deltaTime;
 
-            float value = Mathf.Lerp(start, end, elapsed / dissolveTime);
+            float t = elapsed / dissolveTime;
+            float value = Mathf.Lerp(start, end, t);
 
             SetDissolveAmount(value);
-
             yield return null;
         }
 
         SetDissolveAmount(end);
     }
-
-
-    private IEnumerator SpawnMinionsLoop()
-    {
-        while (spawnActive)
-        {
-            if (minionPrefab != null && spawnPoints.Length > 0)
-            {
-                Transform point = spawnPoints[Random.Range(0, spawnPoints.Length)];
-
-                Instantiate(minionPrefab, point.position, Quaternion.identity);
-            }
-
-            yield return new WaitForSeconds(spawnInterval);
-        }
-    }
-
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
-
-        Vector3 checkPosition =
-            transform.position + (Vector3)turnCheckOffset;
-
-        Gizmos.DrawSphere(checkPosition, 0.15f);
-
-        Gizmos.DrawLine(transform.position, checkPosition);
-    }
-
-    private IEnumerator HitCycleRoutine()
-    {
-        isTransitioning = true;
-
-        // 🔊 SCOMPARE
-        if (teleportDisappearParticle != null)
-            Instantiate(teleportDisappearParticle, transform.position, Quaternion.identity).Play();
-
-        yield return StartCoroutine(DissolveRoutine(0f, 1.1f));
-
-        // 👾 SPAWN MINION (fase hit)
-        SpawnMinionsHit();
-
-        // ✨ reward particles
-        if (hitIndex == 0)
-            SpawnRewardParticles(firstHitRewards);
-        else
-            SpawnRewardParticles(secondHitRewards);
-
-        yield return new WaitForSeconds(0.8f);
-
-        // 👀 RIAPPARE
-        if (teleportAppearParticle != null)
-            Instantiate(teleportAppearParticle, transform.position, Quaternion.identity).Play();
-
-        yield return StartCoroutine(DissolveRoutine(1.1f, 0f));
-
-        // 👾 SPAWN DOPO RITORNO
-        SpawnMinionsReturn();
-
-        hitIndex++;
-
-        isInvulnerable = false;
-        isTransitioning = false;
-    }
-
-    private void SpawnMinionsHit()
-    {
-        for (int i = 0; i < 2; i++)
-            SpawnRandomMinion();
-    }
-
-    private void SpawnMinionsReturn()
-    {
-        for (int i = 0; i < 3; i++)
-            SpawnRandomMinion();
-    }
-
-    private void SpawnRandomMinion()
-    {
-        if (minionPrefab == null || spawnPoints.Length == 0) return;
-
-        Transform point = spawnPoints[Random.Range(0, spawnPoints.Length)];
-        Instantiate(minionPrefab, point.position, Quaternion.identity);
+        Gizmos.DrawSphere(transform.position + (Vector3)turnCheckOffset, 0.15f);
     }
 }
