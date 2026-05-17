@@ -2,7 +2,14 @@ using UnityEngine;
 using System.Collections;
 
 public class BossManager : MonoBehaviour
-{
+{   
+    [Header("Reward Particles")]
+    [SerializeField] private ParticleSystem flyingParticlePrefab;
+
+    [SerializeField] private BossRewardPhase firstHitRewards;
+
+    [SerializeField] private BossRewardPhase secondHitRewards;
+
     [Header("Fase 1: Pattugliamento (Piano 1)")]
     [Tooltip("Trascina qui i punti in cui si muoverà all'inizio")]
     public Transform[] puntiPattugliaFase1; 
@@ -200,15 +207,47 @@ public class BossManager : MonoBehaviour
 
         if (hp == 2)
         {
-            StartCoroutine(CambioFase(2)); // Passa alla Fase 2
+            SpawnRewardParticles(firstHitRewards);
+
+            StartCoroutine(CambioFase(2));
         }
         else if (hp == 1)
         {
-            StartCoroutine(CambioFase(3)); // Passa alla Fase 3
+            SpawnRewardParticles(secondHitRewards);
+
+            StartCoroutine(CambioFase(3));
         }
         else if (hp <= 0)
         {
             Muori();
+        }
+    }
+
+    private void SpawnRewardParticles(BossRewardPhase phase)
+    {
+        if (phase == null) return;
+
+        foreach (RewardRevealObject reward in phase.revealObjects)
+        {
+            if (reward == null) continue;
+
+            ParticleSystem particle =
+                Instantiate(
+                    flyingParticlePrefab,
+                    transform.position,
+                    Quaternion.identity
+                );
+
+            FlyingParticleToTarget mover =
+                particle.GetComponent<FlyingParticleToTarget>();
+
+            if (mover != null)
+            {
+                mover.Setup(
+                    reward.transform,
+                    reward
+                );
+            }
         }
     }
 
