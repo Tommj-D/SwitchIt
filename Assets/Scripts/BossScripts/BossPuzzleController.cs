@@ -32,9 +32,7 @@ public class BossPuzzleController : MonoBehaviour, IButtonPuzzle
 
     [SerializeField] private bool useVerticalDissolve = false;
 
-    [Header("Audio")]
-    [SerializeField] private AudioSource audioSource;
-    [SerializeField] private AudioClip completedSound;
+    private int arrivedParticles = 0;
 
     private int dissolveAmountID = Shader.PropertyToID("_DissolveAmount");
     private int verticalDissolveID = Shader.PropertyToID("_VerticalDissolve");
@@ -48,11 +46,6 @@ public class BossPuzzleController : MonoBehaviour, IButtonPuzzle
         pressedButtons++;
 
         SpawnFlyingParticle(buttonTransform, targetCircleIndex);
-
-        if (pressedButtons >= totalButtons)
-        {
-            CompletePuzzle();
-        }
     }
 
     private void SpawnFlyingParticle(Transform startPoint, int targetIndex)
@@ -65,22 +58,57 @@ public class BossPuzzleController : MonoBehaviour, IButtonPuzzle
             Instantiate(flyingParticlePrefab, startPoint.position, Quaternion.identity);
 
         particle.Setup(circleTargets[targetIndex], null);
+
+        StartCoroutine(WaitParticleArrival(particle));
+    }
+
+    private IEnumerator WaitParticleArrival(FlyingRewardParticle particle)
+    {
+        if (particle == null)
+            yield break;
+
+        Transform target = particle.transform;
+
+        while (particle != null)
+        {
+            yield return null;
+        }
+
+        arrivedParticles++;
+
+        // Suono arrivo particella
+        if (AudioManager.Instance.glowingSound != null)
+        {
+            AudioManager.Instance.sfxSource.PlayOneShot(AudioManager.Instance.glowingSound);
+        }
+
+        // Quando arriva l'ultima particella
+        if (arrivedParticles >= totalButtons)
+        {
+            CompletePuzzle();
+        }
     }
 
     private void CompletePuzzle()
     {
-        if (audioSource != null && completedSound != null)
+        if (AudioManager.Instance.wallDisappearingSound != null)
         {
-            audioSource.PlayOneShot(completedSound);
+            AudioManager.Instance.sfxSource.PlayOneShot(AudioManager.Instance.wallDisappearingSound);
         }
 
         foreach (GameObject block in blocksToRemove)
         {
             if (block == null) continue;
 
+            // Se il blocco è già disattivato
+            // lo lasciamo stare
+            if (!block.activeSelf)
+                continue;
+
             TilemapRenderer tilemapRenderer = block.GetComponent<TilemapRenderer>();
 
-            if (tilemapRenderer == null) continue;
+            if (tilemapRenderer == null)
+                continue;
 
             Material mat = tilemapRenderer.material;
 

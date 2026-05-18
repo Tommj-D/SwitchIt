@@ -620,8 +620,18 @@ public class BossManager : MonoBehaviour
         {
             if (block == null) continue;
 
-            block.SetActive(true);
+            bool wasAlreadyActive = block.activeSelf;
 
+            // Se era disattivato (dimensione opposta)
+            // lo attiviamo istantaneamente SENZA dissolve
+            if (!wasAlreadyActive)
+            {
+                block.SetActive(true);
+                continue;
+            }
+
+            // Se era già attivo nel mondo corrente,
+            // facciamo il dissolve normale
             TilemapRenderer tilemapRenderer = block.GetComponent<TilemapRenderer>();
 
             if (tilemapRenderer == null)
