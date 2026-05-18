@@ -188,12 +188,16 @@ public class BossManager : MonoBehaviour
 
     private void Start()
     {
-        posizioneDiPartenza = transform.position; // Salva la posizione iniziale
+        posizioneDiPartenza = transform.position; 
 
         if (puntiPattugliaFase1.Length > 0 && puntiPattugliaFase1[0] != null)
         {
             targetPos = puntiPattugliaFase1[0].position;
         }
+
+        // 🌟 AGGIUNGI QUESTA RIGA QUI SOTTO:
+        // Forza il boss a guardare a sinistra (Y = 180) all'inizio della scena, mentre aspetta il player
+        transform.eulerAngles = new Vector3(0f, 180f, 0f);
 
         if (idleSound != null)
             InvokeRepeating(nameof(PlayIdleSound), 1f, 8f);
@@ -302,13 +306,23 @@ public void ResetInizio()
 
             if (Vector2.Distance(check, targetCheck) < 0.2f)
             {
-                transform.eulerAngles += rotazioneAlPunto;
-
                 indicePuntoAttuale++;
                 if (indicePuntoAttuale >= punti.Length)
                     indicePuntoAttuale = 0;
 
                 targetPos = punti[indicePuntoAttuale].position;
+
+                // 🌟 SOSTITUISCI LA ROTAZIONE VECCHIA CON QUESTA LOGICA INTELLIGENTE:
+                // Se il prossimo punto è a destra rispetto al boss, guarda a destra (0)
+                if (targetPos.x > transform.position.x)
+                {
+                    transform.eulerAngles = new Vector3(0f, 0f, 0f);
+                }
+                // Se il prossimo punto è a sinistra rispetto al boss, guarda a sinistra (180)
+                else if (targetPos.x < transform.position.x)
+                {
+                    transform.eulerAngles = new Vector3(0f, 180f, 0f);
+                }
             }
         }
 
