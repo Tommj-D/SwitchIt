@@ -86,23 +86,24 @@ public class PlayerRespawn : MonoBehaviour
         }
     }
 
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (!isDying && (collision.gameObject.CompareTag("Enemy")) || collision.gameObject.CompareTag("Spike") || collision.gameObject.CompareTag("Minion"))
+        // Controlla i tuoi tag classici OPPURE verifica se l'oggetto ha lo script BossManager
+        if (!isDying && (collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("Spike") || collision.gameObject.CompareTag("Minion") || collision.gameObject.GetComponent<BossManager>() != null))
         {   
             StartCoroutine(DeathSequence());
         }
     }
 
-
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (!isDying && other.gameObject.CompareTag("Death"))
+        // Stessa cosa qui per i trigger
+        if (!isDying && (other.gameObject.CompareTag("Death") || other.gameObject.CompareTag("Enemy") || other.gameObject.CompareTag("Minion") || other.gameObject.GetComponent<BossManager>() != null))
         {
             StartCoroutine(DeathSequence());
         }
     }
-
 
     private IEnumerator DeathSequence()
     {
@@ -187,6 +188,12 @@ public class PlayerRespawn : MonoBehaviour
             RespawnManager.Instance.ResetAll();
         if(WorldSwitch.Instance!=null && WorldSwitch.Instance.isFantasyWorldActive) 
             WorldSwitch.Instance.SwitchWorldWithoutAnimation();
+
+        GameObject[] looseMinions = GameObject.FindGameObjectsWithTag("Minion");
+        foreach (GameObject m in looseMinions)
+        {
+            Destroy(m);
+        }
 
         Slime_Blue_Big[] blueSlimes = FindObjectsByType<Slime_Blue_Big>(FindObjectsInactive.Include, FindObjectsSortMode.None);
         foreach (Slime_Blue_Big slime in blueSlimes)

@@ -221,12 +221,39 @@ public class BossManager : MonoBehaviour
         isFightStarted = true; // Dà il via libera al movimento!
     }
 
-    public void ResetInizio()
+public void ResetInizio()
     {
-        isFightStarted = false; // Blocca il boss
-        transform.position = posizioneDiPartenza; // Lo rimette al suo posto
+        // 1. Ferma il boss e resetta le statistiche
+        isFightStarted = false; 
+        hp = 3; 
+        faseAttuale = 1;
+        hitIndex = 0;
+        isInvulnerable = false;
+        isDead = false;
+
+        // 2. Ferma le abilità della fase 3 (Dash e Minion continui)
+        if (spawnLoopCoroutine != null) StopCoroutine(spawnLoopCoroutine);
+        if (dashRoutine != null) StopCoroutine(dashRoutine);
+        spawnLoopCoroutine = null;
+        dashRoutine = null;
+
+        // 3. Distrugge i portali visivi se esistono
+        if (portalLeftInstance != null) Destroy(portalLeftInstance.gameObject);
+        if (portalRightInstance != null) Destroy(portalRightInstance.gameObject);
+
+        // 4. Ripristina l'aspetto (rimuove il dissolve)
+        SetDissolveAmount(0f);
         
-        // Lo fa ri-puntare al primo punto di pattuglia per la prossima volta
+        // 5. Riattiva i collider (in caso fossi morto mentre il boss si stava teletrasportando)
+        Collider2D[] tuttiIColliders = GetComponentsInChildren<Collider2D>();
+        foreach (Collider2D col in tuttiIColliders)
+        {
+            col.enabled = true;
+        }
+
+        // 6. Lo rimette fisicamente al suo posto
+        transform.position = posizioneDiPartenza; 
+        
         if (puntiPattugliaFase1.Length > 0 && puntiPattugliaFase1[0] != null)
         {
             targetPos = puntiPattugliaFase1[0].position;
