@@ -20,6 +20,15 @@ public class BossPuzzleController : MonoBehaviour, IButtonPuzzle
 
     [SerializeField] private float dissolveTime = 1f;
 
+    [Header("Audio")]
+    [SerializeField] private bool playSFX = true;
+
+    [Range(0f, 1f)]
+    [SerializeField] private float dissolveVolume = 1f;
+
+    [Range(0.1f, 3f)]
+    [SerializeField] private float dissolvePitch = 1f;
+
     [Header("Shader Settings")]
     [SerializeField] private float outlineThickness = 0.1f;
 
@@ -91,27 +100,31 @@ public class BossPuzzleController : MonoBehaviour, IButtonPuzzle
 
     private void CompletePuzzle()
     {
-        if (AudioManager.Instance.wallDisappearingSound != null)
-        {
-            AudioManager.Instance.sfxSource.PlayOneShot(AudioManager.Instance.wallDisappearingSound);
-        }
+        bool fantasyWorld = WorldSwitch.Instance.isFantasyWorldActive;
 
         foreach (GameObject block in blocksToRemove)
         {
-            if (block == null) continue;
-
-            // Se il blocco è già disattivato
-            // lo lasciamo stare
-            if (!block.activeSelf)
+            if (block == null)
                 continue;
+
+            // Se il blocco NON è nel mondo corrente
+            // skip totale
+            if (!block.activeInHierarchy)
+            {
+                block.SetActive(false);
+                continue;
+            }
 
             TilemapRenderer tilemapRenderer = block.GetComponent<TilemapRenderer>();
 
             if (tilemapRenderer == null)
                 continue;
 
-            Material mat = tilemapRenderer.material;
+            // MATERIAL INSTANCE
+            Material mat = new Material(tilemapRenderer.material);
+            tilemapRenderer.material = mat;
 
+            // SHADER SETTINGS
             if (mat.HasProperty(outlineThicknessID))
                 mat.SetFloat(outlineThicknessID, outlineThickness);
 
@@ -125,7 +138,17 @@ public class BossPuzzleController : MonoBehaviour, IButtonPuzzle
                 mat.SetFloat(dissolveScaleID, dissolveScale);
 
             if (mat.HasProperty(verticalDissolveID))
-                mat.SetFloat(verticalDissolveID, useVerticalDissolve ? 0f : 0f);
+                mat.SetFloat(verticalDissolveID, useVerticalDissolve ? 1.1f : 0f);
+
+            // SUONO
+            if (playSFX && AudioManager.Instance.wallDisappearingSound != null)
+            {
+                AudioManager.Instance.PlaySFX(
+                    AudioManager.Instance.wallDisappearingSound,
+                    dissolveVolume,
+                    dissolvePitch
+                );
+            }
 
             StartCoroutine(DissolveBlock(mat, 0f, 1.1f, block));
         }
