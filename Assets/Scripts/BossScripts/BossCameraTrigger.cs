@@ -79,27 +79,48 @@ public class BossCameraTrigger : MonoBehaviour
     }
 
     //==================================================
-    // SEQUENZA INTRO (NUOVO)
+    // SEQUENZA INTRO (PRECISIONE ASSOLUTA)
     //==================================================
     private IEnumerator SequenzaInizioBoss()
     {
-        // 1. Ferma la musica esplorativa
+        // 1. Calcoliamo la posizione finale dove deve arrivare la telecamera
+        Vector3 destinazioneCamera = new Vector3(
+            puntoCentrale.position.x,
+            puntoCentrale.position.y,
+            distanzaZ
+        );
+
+        // 2. Mettiamo in pausa questo script finché la telecamera non è arrivata!
+        // HO CAMBIATO LA TOLLERANZA: da 1f (1 metro) a 0.1f (10 centimetri).
+        // Ora aspetta che la telecamera abbia completato visibilmente tutta la frenata.
+        while (cam != null && Vector3.Distance(cam.transform.position, destinazioneCamera) > 0.1f)
+        {
+            yield return null; 
+        }
+
+        // --- DA QUI IN POI LA TELECAMERA SI È FERMATA COMPLETAMENTE ---
+
+        // 3. ATTIVAZIONE MURI: Sbatte le porte e chiude il giocatore nell'arena
+        if (muroSinistro != null) muroSinistro.SetActive(true);
+        if (muroDestro != null) muroDestro.SetActive(true);
+
+        // 4. Ferma la musica esplorativa
         if (musicaLivello != null) musicaLivello.Stop();
 
-        // 2. Fai ruggire il boss e ottieni la durata del suono
+        // 5. Fai ruggire il boss e ottieni la durata del suono
         float tempoAttesa = 1f; 
         if (bossManager != null)
         {
             tempoAttesa = bossManager.EmettiRuggito();
         }
 
-        // 3. Pausa in silenzio mentre il mostro urla
+        // 6. Pausa in silenzio mentre il mostro urla
         yield return new WaitForSeconds(tempoAttesa);
 
-        // 4. Fai partire la colonna sonora del boss
+        // 7. Fai partire la colonna sonora del boss
         if (musicaBossFight != null) musicaBossFight.Play();
 
-        // 5. Scatena il boss!
+        // 8. Scatena il boss!
         if (bossManager != null) bossManager.IniziaCombattimento();
     }
 

@@ -261,6 +261,23 @@ public class PlayerRespawn : MonoBehaviour
         // Imposto posizione
         transform.position = respawnPoint.position;
 
+        // ========================================================
+        // 🚀 FIX TELECAMERA: SNAP ISTANTANEO
+        // ========================================================
+        Camera mainCam = Camera.main;
+        if (mainCam != null)
+        {
+            Behaviour brain = mainCam.GetComponent("CinemachineBrain") as Behaviour;
+            
+            if (brain != null) brain.enabled = false; // Spegniamo la fluidità
+            
+            // Teletrasportiamo fisicamente la telecamera esattamente sopra il player
+            mainCam.transform.position = new Vector3(transform.position.x, transform.position.y, mainCam.transform.position.z);
+            
+            if (brain != null) brain.enabled = true; // Riaccendiamo il cervello (Forza il taglio netto!)
+        }
+        // ========================================================
+
         //Setto layer e sorting in base al punto di respawn
         int targetLayer = GetCurrentPlayerLayer();
         string targetSortingLayer = GetCurrentSortingLayer();

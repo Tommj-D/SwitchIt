@@ -138,7 +138,7 @@ public class SlimeSpawnerButton : MonoBehaviour
     }
 
     // ==========================================
-    // NUOVA FUNZIONE: Da chiamare quando il giocatore muore
+    // FUNZIONE RESET: Da chiamare quando il giocatore muore
     // ==========================================
     public void ResetSpawner()
     {
@@ -146,8 +146,8 @@ public class SlimeSpawnerButton : MonoBehaviour
         StopAllCoroutines();
         canPress = true;
 
-        // 2. Forza l'animazione a tornare normale (se c'è)
-        if (animator != null && isAnimated)
+        // 2. Forza l'animazione a tornare normale (se c'è e se il GameObject è attivo!)
+        if (animator != null && isAnimated && gameObject.activeInHierarchy)
         {
             animator.Play("Idle"); // Usa Play per forzarlo istantaneamente
         }

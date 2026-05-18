@@ -35,19 +35,25 @@ public class MovingPlatform : MonoBehaviour
     
     // NUOVO: Memoria per la posizione di partenza
     private Vector3 posizioneIniziale;
+    private bool isInitialized = false;
 
     void Start()
     {
         // Salviamo la posizione in cui si trova la piattaforma appena inizia il livello
         posizioneIniziale = transform.position; 
         
-        targetPos = posB.position;
+        // Evitiamo errori se posB non è stato assegnato per sbaglio
+        if (posB != null) targetPos = posB.position;
+
         rb = GetComponent<Rigidbody2D>();
         rb.bodyType = RigidbodyType2D.Kinematic;
         rb.interpolation = RigidbodyInterpolation2D.Interpolate;
 
         spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
         UpdateColor();
+
+        // Segnamo che la piattaforma è "sveglia" e ha caricato tutti i componenti
+        isInitialized = true;
     }
 
     void Update() { UpdateColor(); }
@@ -154,17 +160,27 @@ public class MovingPlatform : MonoBehaviour
     // ==========================================
     public void ResetPlatform()
     {
-        // 1. Dimentica di essere stata attivata (torna a dormire se la spunta è attiva)
+        // Se la piattaforma era spenta e non ha mai fatto lo Start, 
+        // non c'è nulla da resettare, quindi fermiamo la funzione per evitare crash!
+        if (!isInitialized) return;
+
+        // 1. Dimentica di essere stata attivata
         hasBeenSteppedOn = false;
 
         // 2. Torna istantaneamente alla posizione iniziale
         transform.position = posizioneIniziale;
-        rb.position = posizioneIniziale;
+        if (rb != null) 
+        {
+            rb.position = posizioneIniziale;
+        }
 
-        // 3. Reimposta la direzione iniziale verso la posB
-        targetPos = posB.position;
+        // 3. Reimposta la direzione iniziale verso la posB (se esiste)
+        if (posB != null) 
+        {
+            targetPos = posB.position;
+        }
 
-        // 4. Svuota la lista di eventuali passeggeri morti o rimasti incastrati
+        // 4. Svuota la lista di eventuali passeggeri
         passeggeri.Clear();
     }
 }
