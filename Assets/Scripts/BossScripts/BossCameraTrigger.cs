@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections; // Necessario per le Coroutine
 
 public class BossCameraTrigger : MonoBehaviour
 {
@@ -17,9 +18,20 @@ public class BossCameraTrigger : MonoBehaviour
     // 🧱 BLOCCO ARENA (DUE MURI)
     //==================================================
     [Header("Blocco Arena")]
-    // Abbiamo diviso il vecchio 'muroDietro' in due slot separati per l'arena
     public GameObject muroSinistro;
     public GameObject muroDestro;
+
+    //==================================================
+    // 🎬 REGIA E MUSICA (NUOVO)
+    //==================================================
+    [Header("Regia e Musica")]
+    public BossManager bossManager;
+    
+    [Tooltip("L'AudioSource che suona la musica del livello (da spegnere)")]
+    public AudioSource musicaLivello;
+    
+    [Tooltip("L'AudioSource che suona la musica del Boss (da accendere)")]
+    public AudioSource musicaBossFight;
 
     //==================================================
     // 🧠 STATO INTERNO E COMPONENTI
@@ -41,12 +53,8 @@ public class BossCameraTrigger : MonoBehaviour
             cinemachineBrain = cam.GetComponent("CinemachineBrain") as Behaviour;
         }
 
-        // Assicura che ENTRAMBI i muri siano spenti all'inizio del livello
-        if (muroSinistro != null)
-            muroSinistro.SetActive(false);
-
-        if (muroDestro != null)
-            muroDestro.SetActive(false);
+        if (muroSinistro != null) muroSinistro.SetActive(false);
+        if (muroDestro != null) muroDestro.SetActive(false);
     }
 
     //==================================================
@@ -54,22 +62,45 @@ public class BossCameraTrigger : MonoBehaviour
     //==================================================
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // Controlla se l'oggetto entrato ha il tag "Player" e se la boss fight non è già attiva
         if (collision.CompareTag("Player") && !isBossFightActive)
         {
             isBossFightActive = true;
 
             // ATTIVAZIONE MURI: Chiudiamo il giocatore dentro l'arena
-            if (muroSinistro != null)
-                muroSinistro.SetActive(true);
+            if (muroSinistro != null) muroSinistro.SetActive(true);
+            if (muroDestro != null) muroDestro.SetActive(true);
 
-            if (muroDestro != null)
-                muroDestro.SetActive(true);
+            // Spegne temporaneamente Cinemachine
+            if (cinemachineBrain != null) cinemachineBrain.enabled = false;
 
-            // Spegne temporaneamente Cinemachine per dare il controllo del movimento a questo script
-            if (cinemachineBrain != null)
-                cinemachineBrain.enabled = false;
+            // 🎬 INIZIA LA SEQUENZA CINEMATOGRAFICA!
+            StartCoroutine(SequenzaInizioBoss());
         }
+    }
+
+    //==================================================
+    // SEQUENZA INTRO (NUOVO)
+    //==================================================
+    private IEnumerator SequenzaInizioBoss()
+    {
+        // 1. Ferma la musica esplorativa
+        if (musicaLivello != null) musicaLivello.Stop();
+
+        // 2. Fai ruggire il boss e ottieni la durata del suono
+        float tempoAttesa = 1f; 
+        if (bossManager != null)
+        {
+            tempoAttesa = bossManager.EmettiRuggito();
+        }
+
+        // 3. Pausa in silenzio mentre il mostro urla
+        yield return new WaitForSeconds(tempoAttesa);
+
+        // 4. Fai partire la colonna sonora del boss
+        if (musicaBossFight != null) musicaBossFight.Play();
+
+        // 5. Scatena il boss!
+        if (bossManager != null) bossManager.IniziaCombattimento();
     }
 
     //==================================================
@@ -77,7 +108,6 @@ public class BossCameraTrigger : MonoBehaviour
     //==================================================
     private void LateUpdate()
     {
-        // Se la boss fight è attiva, sposta la telecamera verso il centro dell'arena
         if (isBossFightActive && cam != null)
         {
             Vector3 targetPos = new Vector3(
@@ -86,7 +116,6 @@ public class BossCameraTrigger : MonoBehaviour
                 distanzaZ
             );
 
-            // Spostamento fluido usando la funzione Lerp
             cam.transform.position = Vector3.Lerp(
                 cam.transform.position,
                 targetPos,
@@ -102,15 +131,16 @@ public class BossCameraTrigger : MonoBehaviour
     {
         isBossFightActive = false;
 
-        // Spegne ENTRAMBI i muri quando il giocatore muore o la partita resetta
-        if (muroSinistro != null)
-            muroSinistro.SetActive(false);
+        if (muroSinistro != null) muroSinistro.SetActive(false);
+        if (muroDestro != null) muroDestro.SetActive(false);
 
-        if (muroDestro != null)
-            muroDestro.SetActive(false);
+        if (cinemachineBrain != null) cinemachineBrain.enabled = true;
 
-        // Riattiva Cinemachine per far seguire nuovamente il giocatore
-        if (cinemachineBrain != null)
-            cinemachineBrain.enabled = true;
+        // Ripristino Audio
+        if (musicaBossFight != null) musicaBossFight.Stop();
+        if (musicaLivello != null) musicaLivello.Play();
+
+        // Rimette il boss al suo posto
+        if (bossManager != null) bossManager.ResetInizio();
     }
 }

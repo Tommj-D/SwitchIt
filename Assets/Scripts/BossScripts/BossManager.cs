@@ -75,6 +75,9 @@ public class BossManager : MonoBehaviour
     [SerializeField] private AudioClip idleSound;
     [SerializeField] private AudioClip hitSound;
     [SerializeField] private AudioClip deathSound;
+    
+    [Tooltip("Il ruggito che fa il boss prima di iniziare a muoversi")]
+    [SerializeField] private AudioClip roarSound; // NUOVO
 
     [SerializeField] private ParticleSystem deathParticle;
     [SerializeField] private ParticleSystem teleportDisappearParticle;
@@ -85,13 +88,11 @@ public class BossManager : MonoBehaviour
     //==================================================
     [Header("Hit ShockWave")]
     [SerializeField] private bool useHitShockWave = true;
-
     [SerializeField] private float hitShockWaveDuration = 1f;
-
     [Range(-5f, 5f)]
     [SerializeField] private float hitShockWaveStrength = -0.1f;
-
     [SerializeField] private float hitShockWaveXSizeRatio = 1f;
+    
     //==================================================
     // ⏱ TIMING TELEPORT
     //==================================================
@@ -112,7 +113,6 @@ public class BossManager : MonoBehaviour
 
     [ColorUsage(true, true)]
     [SerializeField] private Color outlineColor = Color.white;
-
     [SerializeField] private float spiralStrength = 5f;
 
     private Material[] dissolveMaterials;
@@ -128,7 +128,7 @@ public class BossManager : MonoBehaviour
     // ❤️ STATS BOSS
     //==================================================
     [Header("Knockback Settings")]
-    public float forzaKnockback = 10f; // Quanto viene sbalzato lontano il player
+    public float forzaKnockback = 10f; 
     private int hp = 3;
     private bool isInvulnerable = false;
     private bool isDead = false;
@@ -145,8 +145,11 @@ public class BossManager : MonoBehaviour
 
     private int hitIndex = 0;
     private bool isTransitioning = false;
-
     private float velocitaOriginale;
+
+    // --- NUOVE VARIABILI REGIA ---
+    private bool isFightStarted = false; // Ferma il boss finché non urla
+    private Vector3 posizioneDiPartenza; // Dove riposizionarlo se muori
 
     //==================================================
     // START / AWAKE
@@ -164,10 +167,11 @@ public class BossManager : MonoBehaviour
 
     private void Start()
     {
-        if (puntiPattugliaFase1.Length > 0)
+        posizioneDiPartenza = transform.position; // Salva la posizione iniziale
+
+        if (puntiPattugliaFase1.Length > 0 && puntiPattugliaFase1[0] != null)
         {
             targetPos = puntiPattugliaFase1[0].position;
-            transform.position = targetPos;
         }
 
         if (idleSound != null)
@@ -177,11 +181,46 @@ public class BossManager : MonoBehaviour
     }
 
     //==================================================
+    // 🎬 METODI PER LA REGIA E L'INTRO (NUOVO)
+    //==================================================
+    public float EmettiRuggito()
+    {
+        // Se hai un'animazione di ruggito, puoi scommentare qui:
+        // if (anim != null) anim.SetTrigger("Roar"); 
+
+        if (audioSource != null && roarSound != null)
+        {
+            audioSource.PlayOneShot(roarSound);
+            return roarSound.length; // Calcola quanto dura l'urlo
+        }
+        return 1.5f; // Fallback di 1.5 secondi se manca il file audio
+    }
+
+    public void IniziaCombattimento()
+    {
+        isFightStarted = true; // Dà il via libera al movimento!
+    }
+
+    public void ResetInizio()
+    {
+        isFightStarted = false; // Blocca il boss
+        transform.position = posizioneDiPartenza; // Lo rimette al suo posto
+        
+        // Lo fa ri-puntare al primo punto di pattuglia per la prossima volta
+        if (puntiPattugliaFase1.Length > 0 && puntiPattugliaFase1[0] != null)
+        {
+            targetPos = puntiPattugliaFase1[0].position;
+            indicePuntoAttuale = 0;
+        }
+    }
+
+    //==================================================
     // AUDIO LOOP
     //==================================================
     private void PlayIdleSound()
     {
-        if (!isDead && audioSource != null && idleSound != null)
+        // Il suono in idle ora parte solo SE la battaglia è iniziata
+        if (!isDead && isFightStarted && audioSource != null && idleSound != null)
             audioSource.PlayOneShot(idleSound);
     }
 
@@ -200,8 +239,8 @@ public class BossManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-        // Se il boss è morto o si sta teletrasportando (isTransitioning), NON si muove.
-        if (isDead || isTransitioning || isDashing) return;
+        // SE LA FIGHT NON È INIZIATA, IL BOSS STA FERMO!
+        if (isDead || isTransitioning || isDashing || !isFightStarted) return;
 
         Transform[] punti = GetPuntiFaseCorrente();
 
@@ -239,10 +278,9 @@ public class BossManager : MonoBehaviour
     //==================================================
     // DAMAGE / HIT SYSTEM
     //==================================================
-    // Ora passiamo il GameObject del player quando chiamiamo la funzione
     public void PrendiDanno(GameObject player) 
     {
-        if (isInvulnerable || hp <= 0 || isDead || isTransitioning) return;
+        if (isInvulnerable || hp <= 0 || isDead || isTransitioning || !isFightStarted) return;
 
         hp--;
         isInvulnerable = true;
@@ -267,13 +305,9 @@ public class BossManager : MonoBehaviour
             Rigidbody2D playerRb = player.GetComponent<Rigidbody2D>();
             if (playerRb != null)
             {
-                // Calcoliamo la direzione dal boss verso il player
                 Vector2 direzioneSpinta = (player.transform.position - transform.position).normalized;
-                
-                // Aggiungiamo una piccola spinta verso l'alto per un effetto più bello
                 direzioneSpinta.y = 0.5f; 
 
-                // Azzeriamo la velocità attuale per un knockback più pulito, poi spingiamo
                 playerRb.linearVelocity = Vector2.zero; 
                 playerRb.AddForce(direzioneSpinta * forzaKnockback, ForceMode2D.Impulse);
             }
@@ -293,24 +327,19 @@ public class BossManager : MonoBehaviour
     {
         isTransitioning = true; 
 
-        // --- DISATTIVAZIONE DI TUTTI I COLLIDER (Anche della testa) ---
         Collider2D[] tuttiIColliders = GetComponentsInChildren<Collider2D>();
         foreach (Collider2D col in tuttiIColliders)
         {
             col.enabled = false;
         }
 
-        // --- NUOVO: ATTESA PRIMA DI SCOMPARIRE ---
-        // Usiamo la tua variabile per far aspettare il boss prima che si dissolva
         yield return new WaitForSeconds(tempoPrimaScomparsa);
 
-        // Ora parte l'effetto visivo di scomparsa
         if (teleportDisappearParticle != null)
             Instantiate(teleportDisappearParticle, transform.position, Quaternion.identity).Play();
 
         yield return StartCoroutine(DissolveRoutine(0f, 1.1f));
 
-        // Spawna i minion usando il nuovo sistema di particelle volanti
         SpawnMinionsHit();
 
         if (hitIndex == 0)
@@ -361,12 +390,10 @@ public class BossManager : MonoBehaviour
 
         yield return StartCoroutine(DissolveRoutine(1.1f, 0f));
 
-        // Riattiviamo lo spawn anche al ritorno
         SpawnMinionsHit();
 
         hitIndex++;
 
-        // --- RIATTIVAZIONE DI TUTTI I COLLIDER ---
         foreach (Collider2D col in tuttiIColliders)
         {
             col.enabled = true;
@@ -383,14 +410,12 @@ public class BossManager : MonoBehaviour
     {
         if (flyingMinionPrefab == null) return;
 
-        // Spawna la prima particella e dille di andare a sinistra
         if (puntoMinionSinistra != null)
         {
             FlyingMinionParticle particellaSx = Instantiate(flyingMinionPrefab, transform.position, Quaternion.identity);
             particellaSx.Setup(puntoMinionSinistra);
         }
 
-        // Spawna la seconda particella e dille di andare a destra
         if (puntoMinionDestra != null)
         {
             FlyingMinionParticle particellaDx = Instantiate(flyingMinionPrefab, transform.position, Quaternion.identity);
@@ -403,7 +428,6 @@ public class BossManager : MonoBehaviour
         while (!isDead)
         {
             SpawnLoopMinions();
-
             yield return new WaitForSeconds(spawnLoopInterval);
         }
     }
@@ -413,14 +437,10 @@ public class BossManager : MonoBehaviour
         if (minionPrefab == null) return;
 
         if (spawnLoopSinistra != null)
-        {
             Instantiate(minionPrefab, spawnLoopSinistra.position, Quaternion.identity);
-        }
 
         if (spawnLoopDestra != null)
-        {
             Instantiate(minionPrefab, spawnLoopDestra.position, Quaternion.identity);
-        }
     }
 
     private void SpawnPortalFX()
@@ -429,20 +449,12 @@ public class BossManager : MonoBehaviour
 
         if (spawnLoopSinistra != null)
         {
-            portalLeftInstance = Instantiate(
-                portalFXPrefab,
-                spawnLoopSinistra.position,
-                Quaternion.identity
-            );
+            portalLeftInstance = Instantiate(portalFXPrefab, spawnLoopSinistra.position, Quaternion.identity);
         }
 
         if (spawnLoopDestra != null)
         {
-            portalRightInstance = Instantiate(
-                portalFXPrefab,
-                spawnLoopDestra.position,
-                Quaternion.identity
-            );
+            portalRightInstance = Instantiate(portalFXPrefab, spawnLoopDestra.position, Quaternion.identity);
         }
     }
 
@@ -479,15 +491,10 @@ public class BossManager : MonoBehaviour
         {
             if (r == null) continue;
 
-            // 1. Creiamo l'istanza della particella volante
             ParticleSystem p = Instantiate(flyingRewardParticlePrefab, transform.position, Quaternion.identity);
-            
-            // 2. FORZIAMO IL PLAY: Diciamo esplicitamente al Particle System di attivarsi e mostrare i dettagli visivi
             p.Play();
 
-            // 3. Colleghiamo i componenti per il movimento verso l'obiettivo
             FlyingRewardParticle mover = p.GetComponent<FlyingRewardParticle>();
-
             if (mover != null)
                 mover.Setup(r.transform, r);
         }
@@ -510,17 +517,13 @@ public class BossManager : MonoBehaviour
         foreach (var col in c) col.enabled = false;
 
         GameObject[] minions = GameObject.FindGameObjectsWithTag("Minion");
-
         foreach (GameObject m in minions)
         {
             Destroy(m);
         }
 
-        if (portalLeftInstance != null)
-            Destroy(portalLeftInstance.gameObject);
-
-        if (portalRightInstance != null)
-            Destroy(portalRightInstance.gameObject);
+        if (portalLeftInstance != null) Destroy(portalLeftInstance.gameObject);
+        if (portalRightInstance != null) Destroy(portalRightInstance.gameObject);
 
         Destroy(gameObject, 3f);
     }
@@ -531,7 +534,6 @@ public class BossManager : MonoBehaviour
     private void SetupDissolveMaterials()
     {
         SpriteRenderer[] renderers = GetComponentsInChildren<SpriteRenderer>(true);
-
         dissolveMaterials = new Material[renderers.Length];
 
         for (int i = 0; i < renderers.Length; i++)
@@ -550,17 +552,10 @@ public class BossManager : MonoBehaviour
 
         foreach (Material mat in dissolveMaterials)
         {
-            if (mat.HasProperty(outlineThicknessID))
-                mat.SetFloat(outlineThicknessID, outlineThickness);
-
-            if (mat.HasProperty(outlineColorID))
-                mat.SetColor(outlineColorID, outlineColor);
-
-            if (mat.HasProperty(spiralStrengthID))
-                mat.SetFloat(spiralStrengthID, spiralStrength);
-
-            if (mat.HasProperty(dissolveScaleID))
-                mat.SetFloat(dissolveScaleID, dissolveScale);
+            if (mat.HasProperty(outlineThicknessID)) mat.SetFloat(outlineThicknessID, outlineThickness);
+            if (mat.HasProperty(outlineColorID)) mat.SetColor(outlineColorID, outlineColor);
+            if (mat.HasProperty(spiralStrengthID)) mat.SetFloat(spiralStrengthID, spiralStrength);
+            if (mat.HasProperty(dissolveScaleID)) mat.SetFloat(dissolveScaleID, dissolveScale);
         }
     }
 
@@ -570,29 +565,23 @@ public class BossManager : MonoBehaviour
 
         foreach (Material mat in dissolveMaterials)
         {
-            if (mat.HasProperty(dissolveAmountID))
-                mat.SetFloat(dissolveAmountID, value);
-
-            if (mat.HasProperty(verticalDissolveID))
-                mat.SetFloat(verticalDissolveID, useVerticalDissolve ? value : 0f);
+            if (mat.HasProperty(dissolveAmountID)) mat.SetFloat(dissolveAmountID, value);
+            if (mat.HasProperty(verticalDissolveID)) mat.SetFloat(verticalDissolveID, useVerticalDissolve ? value : 0f);
         }
     }
 
     private IEnumerator DissolveRoutine(float start, float end)
     {
         float elapsed = 0f;
-
         while (elapsed < dissolveTime)
         {
             elapsed += Time.deltaTime;
-
             float t = elapsed / dissolveTime;
             float value = Mathf.Lerp(start, end, t);
 
             SetDissolveAmount(value);
             yield return null;
         }
-
         SetDissolveAmount(end);
     }
     
