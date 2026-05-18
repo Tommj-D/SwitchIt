@@ -129,7 +129,8 @@ public class BossManager : MonoBehaviour
     // 🧱 BLOCCHI SECONDO HIT
     //==================================================
     [Header("Second Hit Blocks")]
-    [SerializeField] private GameObject[] secondHitBlocks;
+    [SerializeField] private GameObject realWorldBlock;
+    [SerializeField] private GameObject fantasyWorldBlock;
 
     [SerializeField] private float secondHitBlockDissolveTime = 0.35f;
 
@@ -311,7 +312,6 @@ public class BossManager : MonoBehaviour
             ActivateSecondHitBlocks();
         }
     
-        if (anim != null) anim.SetTrigger("Hit");
         if (audioSource != null && hitSound != null) audioSource.PlayOneShot(hitSound);
         
          if (useHitShockWave && ShockWaveManager.Instance != null)
@@ -613,56 +613,70 @@ public class BossManager : MonoBehaviour
 
     private void ActivateSecondHitBlocks()
     {
-        if (secondHitBlocks == null || secondHitBlocks.Length == 0)
-            return;
+        bool playerInFantasyWorld = WorldSwitch.Instance.isFantasyWorldActive;
 
-        foreach (GameObject block in secondHitBlocks)
+        //========================================
+        // REAL WORLD
+        //========================================
+        if (realWorldBlock != null)
         {
-            if (block == null) continue;
+            realWorldBlock.SetActive(true);
 
-            bool wasAlreadyActive = block.activeSelf;
-
-            // Se era disattivato (dimensione opposta)
-            // lo attiviamo istantaneamente SENZA dissolve
-            if (!wasAlreadyActive)
+            if (!playerInFantasyWorld)
             {
-                block.SetActive(true);
-                continue;
+                StartBlockDissolve(realWorldBlock);
             }
+        }
 
-            // Se era già attivo nel mondo corrente,
-            // facciamo il dissolve normale
-            TilemapRenderer tilemapRenderer = block.GetComponent<TilemapRenderer>();
+        //========================================
+        // FANTASY WORLD
+        //========================================
+        if (fantasyWorldBlock != null)
+        {
+            fantasyWorldBlock.SetActive(true);
 
-            if (tilemapRenderer == null)
-                continue;
-
-            Material mat = tilemapRenderer.material;
-
-            if (mat.HasProperty(outlineThicknessID))
-                mat.SetFloat(outlineThicknessID, blockOutlineThickness);
-
-            if (mat.HasProperty(outlineColorID))
-                mat.SetColor(outlineColorID, blockOutlineColor);
-
-            if (mat.HasProperty(spiralStrengthID))
-                mat.SetFloat(spiralStrengthID, blockSpiralStrength);
-
-            if (mat.HasProperty(dissolveScaleID))
-                mat.SetFloat(dissolveScaleID, blockDissolveScale);
-
-            if (mat.HasProperty(verticalDissolveID))
-                mat.SetFloat(verticalDissolveID, blockUseVerticalDissolve ? 1.1f : 0f);
-
-            if (mat.HasProperty("_DissolveAmount"))
+            if (playerInFantasyWorld)
             {
-                mat.SetFloat("_DissolveAmount", 1.1f);
-
-                StartCoroutine(BlockDissolveRoutine(mat, 1.1f, 0f));
+                StartBlockDissolve(fantasyWorldBlock);
             }
         }
     }
 
+    private void StartBlockDissolve(GameObject block)
+    {
+        TilemapRenderer tilemapRenderer = block.GetComponent<TilemapRenderer>();
+
+        if (tilemapRenderer == null)
+            return;
+
+        // MATERIAL INSTANCE
+        Material mat = new Material(tilemapRenderer.material);
+        tilemapRenderer.material = mat;
+
+        // SHADER SETTINGS
+        if (mat.HasProperty(outlineThicknessID))
+            mat.SetFloat(outlineThicknessID, blockOutlineThickness);
+
+        if (mat.HasProperty(outlineColorID))
+            mat.SetColor(outlineColorID, blockOutlineColor);
+
+        if (mat.HasProperty(spiralStrengthID))
+            mat.SetFloat(spiralStrengthID, blockSpiralStrength);
+
+        if (mat.HasProperty(dissolveScaleID))
+            mat.SetFloat(dissolveScaleID, blockDissolveScale);
+
+        if (mat.HasProperty(verticalDissolveID))
+            mat.SetFloat(verticalDissolveID, blockUseVerticalDissolve ? 1.1f : 0f);
+
+        // START DISSOLVE
+        if (mat.HasProperty(dissolveAmountID))
+        {
+            mat.SetFloat(dissolveAmountID, 1.1f);
+
+            StartCoroutine(BlockDissolveRoutine(mat, 1.1f, 0f));
+        }
+    }
     private IEnumerator BlockDissolveRoutine(Material mat, float start, float end)
     {
         float elapsed = 0f;
