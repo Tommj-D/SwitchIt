@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.Tilemaps;
 
 public class BossManager : MonoBehaviour
 {
@@ -125,6 +126,25 @@ public class BossManager : MonoBehaviour
     private int dissolveScaleID = Shader.PropertyToID("_DissolveScale");
 
     //==================================================
+    // 🧱 BLOCCHI SECONDO HIT
+    //==================================================
+    [Header("Second Hit Blocks")]
+    [SerializeField] private GameObject[] secondHitBlocks;
+
+    [SerializeField] private float secondHitBlockDissolveTime = 0.35f;
+
+    [Header("Second Hit Block Shader")]
+    [SerializeField] private float blockOutlineThickness = 0.1f;
+    [SerializeField] private float blockDissolveScale = 30f;
+
+    [ColorUsage(true, true)]
+    [SerializeField] private Color blockOutlineColor = Color.white;
+
+    [SerializeField] private float blockSpiralStrength = 5f;
+
+    [SerializeField] private bool blockUseVerticalDissolve = false;
+    
+    //==================================================
     // ❤️ STATS BOSS
     //==================================================
     [Header("Knockback Settings")]
@@ -247,6 +267,12 @@ public class BossManager : MonoBehaviour
         hp--;
         isInvulnerable = true;
 
+        // ATTIVA I BLOCCHI AL SECONDO HIT
+        if (hitIndex == 1)
+        {
+            ActivateSecondHitBlocks();
+        }
+    
         if (anim != null) anim.SetTrigger("Hit");
         if (audioSource != null && hitSound != null) audioSource.PlayOneShot(hitSound);
         
@@ -594,6 +620,68 @@ public class BossManager : MonoBehaviour
         }
 
         SetDissolveAmount(end);
+    }
+
+    private void ActivateSecondHitBlocks()
+    {
+        if (secondHitBlocks == null || secondHitBlocks.Length == 0)
+            return;
+
+        foreach (GameObject block in secondHitBlocks)
+        {
+            if (block == null) continue;
+
+            block.SetActive(true);
+
+            TilemapRenderer tilemapRenderer = block.GetComponent<TilemapRenderer>();
+
+            if (tilemapRenderer == null)
+                continue;
+
+            Material mat = tilemapRenderer.material;
+
+            if (mat.HasProperty(outlineThicknessID))
+                mat.SetFloat(outlineThicknessID, blockOutlineThickness);
+
+            if (mat.HasProperty(outlineColorID))
+                mat.SetColor(outlineColorID, blockOutlineColor);
+
+            if (mat.HasProperty(spiralStrengthID))
+                mat.SetFloat(spiralStrengthID, blockSpiralStrength);
+
+            if (mat.HasProperty(dissolveScaleID))
+                mat.SetFloat(dissolveScaleID, blockDissolveScale);
+
+            if (mat.HasProperty(verticalDissolveID))
+                mat.SetFloat(verticalDissolveID, blockUseVerticalDissolve ? 1.1f : 0f);
+
+            if (mat.HasProperty("_DissolveAmount"))
+            {
+                mat.SetFloat("_DissolveAmount", 1.1f);
+
+                StartCoroutine(BlockDissolveRoutine(mat, 1.1f, 0f));
+            }
+        }
+    }
+
+    private IEnumerator BlockDissolveRoutine(Material mat, float start, float end)
+    {
+        float elapsed = 0f;
+
+        while (elapsed < secondHitBlockDissolveTime)
+        {
+            elapsed += Time.deltaTime;
+
+            float t = elapsed / secondHitBlockDissolveTime;
+
+            float value = Mathf.Lerp(start, end, t);
+
+            mat.SetFloat("_DissolveAmount", value);
+
+            yield return null;
+        }
+
+        mat.SetFloat("_DissolveAmount", end);
     }
     
     private void OnDrawGizmosSelected()
