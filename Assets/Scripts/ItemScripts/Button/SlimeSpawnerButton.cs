@@ -66,26 +66,37 @@ public class SlimeSpawnerButton : MonoBehaviour
         {
             GameObject particle = Instantiate(particlePrefab, transform.position, Quaternion.identity);
 
-            ParticleSystemToTarget p = particle.GetComponent<ParticleSystemToTarget>();
+            // ==============================
+            // 1) ParticleSystemToTarget
+            // ==============================
+            ParticleSystemToTarget pTarget = particle.GetComponent<ParticleSystemToTarget>();
 
-            p.Init(targetPos, () =>
+            if (pTarget != null)
             {
-                GameObject slime = Instantiate(slimePrefab, targetPos, Quaternion.identity);
-                spawnedSlimes.Add(slime);
-            });
-
-            if (i == 0)
-            {
-                p.Init(targetPos, () =>
+                pTarget.Init(targetPos, () =>
                 {
                     GameObject slime = Instantiate(slimePrefab, targetPos, Quaternion.identity);
                     spawnedSlimes.Add(slime);
                 });
+
+                continue;
             }
-            else
+
+            // ==============================
+            // 2) FlyingMinionParticle
+            // ==============================
+            FlyingMinionParticle fMinion = particle.GetComponent<FlyingMinionParticle>();
+
+            if (fMinion != null)
             {
-                p.Init(targetPos, null);
+                fMinion.Setup(CreateTempTarget(targetPos));
+                continue;
             }
+
+            // ==============================
+            // ERRORE
+            // ==============================
+            Debug.LogError("Particle prefab senza script valido!");
         }
     }
 
@@ -163,5 +174,13 @@ public class SlimeSpawnerButton : MonoBehaviour
         
         // 4. Pulisce la memoria per il prossimo tentativo
         spawnedSlimes.Clear();
+    }
+
+    private Transform CreateTempTarget(Vector3 pos)
+    {
+        GameObject temp = new GameObject("TempTarget");
+        temp.transform.position = pos;
+        Destroy(temp, 2f);
+        return temp.transform;
     }
 }

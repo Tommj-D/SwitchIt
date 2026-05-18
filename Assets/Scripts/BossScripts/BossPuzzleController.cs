@@ -20,6 +20,15 @@ public class BossPuzzleController : MonoBehaviour, IButtonPuzzle
 
     [SerializeField] private float dissolveTime = 1f;
 
+    [Header("Audio")]
+    [SerializeField] private bool playSFX = true;
+
+    [Range(0f, 1f)]
+    [SerializeField] private float dissolveVolume = 1f;
+
+    [Range(0.1f, 3f)]
+    [SerializeField] private float dissolvePitch = 1f;
+
     [Header("Shader Settings")]
     [SerializeField] private float outlineThickness = 0.1f;
 
@@ -32,9 +41,7 @@ public class BossPuzzleController : MonoBehaviour, IButtonPuzzle
 
     [SerializeField] private bool useVerticalDissolve = false;
 
-    [Header("Audio")]
-    [SerializeField] private AudioSource audioSource;
-    [SerializeField] private AudioClip completedSound;
+    private int arrivedParticles = 0;
 
     private int dissolveAmountID = Shader.PropertyToID("_DissolveAmount");
     private int verticalDissolveID = Shader.PropertyToID("_VerticalDissolve");
@@ -48,11 +55,6 @@ public class BossPuzzleController : MonoBehaviour, IButtonPuzzle
         pressedButtons++;
 
         SpawnFlyingParticle(buttonTransform, targetCircleIndex);
-
-        if (pressedButtons >= totalButtons)
-        {
-            CompletePuzzle();
-        }
     }
 
     private void SpawnFlyingParticle(Transform startPoint, int targetIndex)
@@ -65,25 +67,64 @@ public class BossPuzzleController : MonoBehaviour, IButtonPuzzle
             Instantiate(flyingParticlePrefab, startPoint.position, Quaternion.identity);
 
         particle.Setup(circleTargets[targetIndex], null);
+
+        StartCoroutine(WaitParticleArrival(particle));
+    }
+
+    private IEnumerator WaitParticleArrival(FlyingRewardParticle particle)
+    {
+        if (particle == null)
+            yield break;
+
+        Transform target = particle.transform;
+
+        while (particle != null)
+        {
+            yield return null;
+        }
+
+        arrivedParticles++;
+
+        // Suono arrivo particella
+        if (AudioManager.Instance.glowingSound != null)
+        {
+            AudioManager.Instance.sfxSource.PlayOneShot(AudioManager.Instance.glowingSound);
+        }
+
+        // Quando arriva l'ultima particella
+        if (arrivedParticles >= totalButtons)
+        {
+            CompletePuzzle();
+        }
     }
 
     private void CompletePuzzle()
     {
-        if (audioSource != null && completedSound != null)
-        {
-            audioSource.PlayOneShot(completedSound);
-        }
+        bool fantasyWorld = WorldSwitch.Instance.isFantasyWorldActive;
 
         foreach (GameObject block in blocksToRemove)
         {
-            if (block == null) continue;
+            if (block == null)
+                continue;
+
+            // Se il blocco NON è nel mondo corrente
+            // skip totale
+            if (!block.activeInHierarchy)
+            {
+                block.SetActive(false);
+                continue;
+            }
 
             TilemapRenderer tilemapRenderer = block.GetComponent<TilemapRenderer>();
 
-            if (tilemapRenderer == null) continue;
+            if (tilemapRenderer == null)
+                continue;
 
-            Material mat = tilemapRenderer.material;
+            // MATERIAL INSTANCE
+            Material mat = new Material(tilemapRenderer.material);
+            tilemapRenderer.material = mat;
 
+            // SHADER SETTINGS
             if (mat.HasProperty(outlineThicknessID))
                 mat.SetFloat(outlineThicknessID, outlineThickness);
 
@@ -97,7 +138,17 @@ public class BossPuzzleController : MonoBehaviour, IButtonPuzzle
                 mat.SetFloat(dissolveScaleID, dissolveScale);
 
             if (mat.HasProperty(verticalDissolveID))
-                mat.SetFloat(verticalDissolveID, useVerticalDissolve ? 0f : 0f);
+                mat.SetFloat(verticalDissolveID, useVerticalDissolve ? 1.1f : 0f);
+
+            // SUONO
+            if (playSFX && AudioManager.Instance.wallDisappearingSound != null)
+            {
+                AudioManager.Instance.PlaySFX(
+                    AudioManager.Instance.wallDisappearingSound,
+                    dissolveVolume,
+                    dissolvePitch
+                );
+            }
 
             StartCoroutine(DissolveBlock(mat, 0f, 1.1f, block));
         }
