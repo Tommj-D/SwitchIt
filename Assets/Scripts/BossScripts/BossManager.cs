@@ -257,6 +257,9 @@ public class BossManager : MonoBehaviour
             targetPos = puntiPattugliaFase1[0].position;
             indicePuntoAttuale = 0;
         }
+
+        if (realWorldBlock != null) realWorldBlock.SetActive(false);
+        if (fantasyWorldBlock != null) fantasyWorldBlock.SetActive(false);
     }
 
     private void PlayIdleSound()
