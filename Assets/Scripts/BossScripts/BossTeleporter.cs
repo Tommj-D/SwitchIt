@@ -12,13 +12,13 @@ public class BossTeleporter : MonoBehaviour
     [SerializeField] private Collider2D nuovoConfiner;
 
     [Header("Effetto Uscita")]
-    [SerializeField] private float tempoCamminataForzata = 0.4f;
     [SerializeField] private float velocitaUscita = 8f;
-    [SerializeField] private float direzioneUscita = 1f;
 
-    [Header("Light Fade")]
-    [SerializeField] private float fadeLightDuration = 0.5f;
-
+    [Header("Entrata Cinematica")]
+    [SerializeField] private GameObject movementBlocker;
+    [SerializeField] private float durataTransizione = 1.2f;
+    [SerializeField] private float distanzaMinimaPerControllo = 4f;
+    
     private bool isTeleporting = false;
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -87,7 +87,7 @@ public class BossTeleporter : MonoBehaviour
         //==================================================
 
         yield return StartCoroutine(
-            FadeLight(0f, fadeLightDuration)
+            FadeLight(0f, durataTransizione)
         );
 
         //==================================================
@@ -95,6 +95,12 @@ public class BossTeleporter : MonoBehaviour
         //==================================================
 
         player.transform.position = puntoDiArrivo.position;
+
+        player.transform.localScale = new Vector3(
+            Mathf.Abs(player.transform.localScale.x),
+            player.transform.localScale.y,
+            player.transform.localScale.z
+        );
 
         //==================================================
         // CAMBIO CONFINER
@@ -139,23 +145,24 @@ public class BossTeleporter : MonoBehaviour
         //==================================================
 
         yield return StartCoroutine(
-            FadeLight(1f, fadeLightDuration)
+            FadeLight(1f, durataTransizione)
         );
 
         //==================================================
         // CAMMINATA AUTOMATICA
         //==================================================
 
-        float timer = 0f;
+        Vector3 startPos = player.transform.position;
 
-        while (timer < tempoCamminataForzata)
+        while (
+            player.transform.position.x <
+            startPos.x + distanzaMinimaPerControllo
+        )
         {
-            timer += Time.deltaTime;
-
             if (rb != null)
             {
                 rb.linearVelocity = new Vector2(
-                    velocitaUscita * direzioneUscita,
+                    velocitaUscita,
                     rb.linearVelocity.y
                 );
             }
@@ -166,6 +173,11 @@ public class BossTeleporter : MonoBehaviour
         //==================================================
         // RIDÀ CONTROLLI
         //==================================================
+
+        if (movementBlocker != null)
+        {
+            movementBlocker.SetActive(true);
+        }
 
         if (rb != null)
         {
@@ -182,6 +194,7 @@ public class BossTeleporter : MonoBehaviour
             input.enabled = true;
 
         isTeleporting = false;
+
     }
 
     /// <summary>
