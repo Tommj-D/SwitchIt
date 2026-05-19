@@ -78,7 +78,7 @@ public class BossManager : MonoBehaviour
     [SerializeField] private AudioClip deathSound;
     
     [Tooltip("Il ruggito che fa il boss prima di iniziare a muoversi")]
-    [SerializeField] private AudioClip roarSound; // NUOVO
+    [SerializeField] private AudioClip roarSound; 
 
     [SerializeField] private ParticleSystem deathParticle;
     [SerializeField] private ParticleSystem teleportDisappearParticle;
@@ -146,10 +146,15 @@ public class BossManager : MonoBehaviour
     [SerializeField] private bool blockUseVerticalDissolve = false;
     
     //==================================================
-    // ❤️ STATS BOSS
+    // ❤️ STATS BOSS E REGIA FINE LIVELLO
     //==================================================
     [Header("Knockback Settings")]
     public float forzaKnockback = 10f; 
+    
+    // 🌟 AGGIUNTO: Riferimento per sbloccare la porta
+    [Header("Fine Livello")]
+    public SecretDoorReveal muroSegretoFineLivello;
+
     private int hp = 3;
     private bool isInvulnerable = false;
     private bool isDead = false;
@@ -168,9 +173,8 @@ public class BossManager : MonoBehaviour
     private bool isTransitioning = false;
     private float velocitaOriginale;
 
-    // --- NUOVE VARIABILI REGIA ---
-    private bool isFightStarted = false; // Ferma il boss finché non urla
-    private Vector3 posizioneDiPartenza; // Dove riposizionarlo se muori
+    private bool isFightStarted = false; 
+    private Vector3 posizioneDiPartenza; 
 
     //==================================================
     // START / AWAKE
@@ -195,8 +199,6 @@ public class BossManager : MonoBehaviour
             targetPos = puntiPattugliaFase1[0].position;
         }
 
-        // 🌟 AGGIUNGI QUESTA RIGA QUI SOTTO:
-        // Forza il boss a guardare a sinistra (Y = 180) all'inizio della scena, mentre aspetta il player
         transform.eulerAngles = new Vector3(0f, 180f, 0f);
 
         if (idleSound != null)
@@ -206,29 +208,25 @@ public class BossManager : MonoBehaviour
     }
 
     //==================================================
-    // 🎬 METODI PER LA REGIA E L'INTRO (NUOVO)
+    // 🎬 METODI PER LA REGIA E L'INTRO
     //==================================================
     public float EmettiRuggito()
     {
-        // Se hai un'animazione di ruggito, puoi scommentare qui:
-        // if (anim != null) anim.SetTrigger("Roar"); 
-
         if (audioSource != null && roarSound != null)
         {
             audioSource.PlayOneShot(roarSound);
-            return roarSound.length; // Calcola quanto dura l'urlo
+            return roarSound.length; 
         }
-        return 1.5f; // Fallback di 1.5 secondi se manca il file audio
+        return 1.5f; 
     }
 
     public void IniziaCombattimento()
     {
-        isFightStarted = true; // Dà il via libera al movimento!
+        isFightStarted = true; 
     }
 
-public void ResetInizio()
+    public void ResetInizio()
     {
-        // 1. Ferma il boss e resetta le statistiche
         isFightStarted = false; 
         hp = 3; 
         faseAttuale = 1;
@@ -236,27 +234,22 @@ public void ResetInizio()
         isInvulnerable = false;
         isDead = false;
 
-        // 2. Ferma le abilità della fase 3 (Dash e Minion continui)
         if (spawnLoopCoroutine != null) StopCoroutine(spawnLoopCoroutine);
         if (dashRoutine != null) StopCoroutine(dashRoutine);
         spawnLoopCoroutine = null;
         dashRoutine = null;
 
-        // 3. Distrugge i portali visivi se esistono
         if (portalLeftInstance != null) Destroy(portalLeftInstance.gameObject);
         if (portalRightInstance != null) Destroy(portalRightInstance.gameObject);
 
-        // 4. Ripristina l'aspetto (rimuove il dissolve)
         SetDissolveAmount(0f);
         
-        // 5. Riattiva i collider (in caso fossi morto mentre il boss si stava teletrasportando)
         Collider2D[] tuttiIColliders = GetComponentsInChildren<Collider2D>();
         foreach (Collider2D col in tuttiIColliders)
         {
             col.enabled = true;
         }
 
-        // 6. Lo rimette fisicamente al suo posto
         transform.position = posizioneDiPartenza; 
         
         if (puntiPattugliaFase1.Length > 0 && puntiPattugliaFase1[0] != null)
@@ -266,12 +259,8 @@ public void ResetInizio()
         }
     }
 
-    //==================================================
-    // AUDIO LOOP
-    //==================================================
     private void PlayIdleSound()
     {
-        // Il suono in idle ora parte solo SE la battaglia è iniziata
         if (!isDead && isFightStarted && audioSource != null && idleSound != null)
             audioSource.PlayOneShot(idleSound);
     }
@@ -291,7 +280,6 @@ public void ResetInizio()
 
     private void FixedUpdate()
     {
-        // SE LA FIGHT NON È INIZIATA, IL BOSS STA FERMO!
         if (isDead || isTransitioning || isDashing || !isFightStarted) return;
 
         Transform[] punti = GetPuntiFaseCorrente();
@@ -312,13 +300,10 @@ public void ResetInizio()
 
                 targetPos = punti[indicePuntoAttuale].position;
 
-                // 🌟 SOSTITUISCI LA ROTAZIONE VECCHIA CON QUESTA LOGICA INTELLIGENTE:
-                // Se il prossimo punto è a destra rispetto al boss, guarda a destra (0)
                 if (targetPos.x > transform.position.x)
                 {
                     transform.eulerAngles = new Vector3(0f, 0f, 0f);
                 }
-                // Se il prossimo punto è a sinistra rispetto al boss, guarda a sinistra (180)
                 else if (targetPos.x < transform.position.x)
                 {
                     transform.eulerAngles = new Vector3(0f, 180f, 0f);
@@ -347,7 +332,6 @@ public void ResetInizio()
         hp--;
         isInvulnerable = true;
 
-        // ATTIVA I BLOCCHI AL SECONDO HIT
         if (hitIndex == 1)
         {
             ActivateSecondHitBlocks();
@@ -366,7 +350,6 @@ public void ResetInizio()
             );
         }
 
-        // --- INIZIO LOGICA KNOCKBACK ---
         if (player != null)
         {
             Rigidbody2D playerRb = player.GetComponent<Rigidbody2D>();
@@ -379,7 +362,6 @@ public void ResetInizio()
                 playerRb.AddForce(direzioneSpinta * forzaKnockback, ForceMode2D.Impulse);
             }
         }
-        // --- FINE LOGICA KNOCKBACK ---
 
         if (hp <= 0)
         {
@@ -470,9 +452,6 @@ public void ResetInizio()
         isTransitioning = false;
     }
 
-    //==================================================
-    // SPAWN MINION
-    //==================================================
     private void SpawnMinionsHit()
     {
         if (flyingMinionPrefab == null) return;
@@ -547,9 +526,6 @@ public void ResetInizio()
         }
     }
 
-    //==================================================
-    // REWARD PARTICLE SYSTEM
-    //==================================================
     private void SpawnRewardParticles(BossRewardSpawner rewards)
     {
         if (rewards == null) return;
@@ -574,6 +550,12 @@ public void ResetInizio()
     {
         isDead = true;
 
+        // 🌟 AGGIUNTO: APRE LA PORTA
+        if (muroSegretoFineLivello != null)
+        {
+            muroSegretoFineLivello.ApriPassaggioSegreto();
+        }
+
         if (audioSource != null && deathSound != null)
             audioSource.PlayOneShot(deathSound);
 
@@ -596,7 +578,7 @@ public void ResetInizio()
     }
 
     //==================================================
-    // 🌫 SHADER SYSTEM
+    // 🌫 SHADER SYSTEM E BLOCCHI
     //==================================================
     private void SetupDissolveMaterials()
     {
@@ -656,85 +638,51 @@ public void ResetInizio()
     {
         bool playerInFantasyWorld = WorldSwitch.Instance.isFantasyWorldActive;
 
-        //========================================
-        // REAL WORLD
-        //========================================
         if (realWorldBlock != null)
         {
             realWorldBlock.SetActive(true);
-
-            if (!playerInFantasyWorld)
-            {
-                StartBlockDissolve(realWorldBlock);
-            }
+            if (!playerInFantasyWorld) StartBlockDissolve(realWorldBlock);
         }
 
-        //========================================
-        // FANTASY WORLD
-        //========================================
         if (fantasyWorldBlock != null)
         {
             fantasyWorldBlock.SetActive(true);
-
-            if (playerInFantasyWorld)
-            {
-                StartBlockDissolve(fantasyWorldBlock);
-            }
+            if (playerInFantasyWorld) StartBlockDissolve(fantasyWorldBlock);
         }
     }
 
     private void StartBlockDissolve(GameObject block)
     {
         TilemapRenderer tilemapRenderer = block.GetComponent<TilemapRenderer>();
+        if (tilemapRenderer == null) return;
 
-        if (tilemapRenderer == null)
-            return;
-
-        // MATERIAL INSTANCE
         Material mat = new Material(tilemapRenderer.material);
         tilemapRenderer.material = mat;
 
-        // SHADER SETTINGS
-        if (mat.HasProperty(outlineThicknessID))
-            mat.SetFloat(outlineThicknessID, blockOutlineThickness);
+        if (mat.HasProperty(outlineThicknessID)) mat.SetFloat(outlineThicknessID, blockOutlineThickness);
+        if (mat.HasProperty(outlineColorID)) mat.SetColor(outlineColorID, blockOutlineColor);
+        if (mat.HasProperty(spiralStrengthID)) mat.SetFloat(spiralStrengthID, blockSpiralStrength);
+        if (mat.HasProperty(dissolveScaleID)) mat.SetFloat(dissolveScaleID, blockDissolveScale);
+        if (mat.HasProperty(verticalDissolveID)) mat.SetFloat(verticalDissolveID, blockUseVerticalDissolve ? 1.1f : 0f);
 
-        if (mat.HasProperty(outlineColorID))
-            mat.SetColor(outlineColorID, blockOutlineColor);
-
-        if (mat.HasProperty(spiralStrengthID))
-            mat.SetFloat(spiralStrengthID, blockSpiralStrength);
-
-        if (mat.HasProperty(dissolveScaleID))
-            mat.SetFloat(dissolveScaleID, blockDissolveScale);
-
-        if (mat.HasProperty(verticalDissolveID))
-            mat.SetFloat(verticalDissolveID, blockUseVerticalDissolve ? 1.1f : 0f);
-
-        // START DISSOLVE
         if (mat.HasProperty(dissolveAmountID))
         {
             mat.SetFloat(dissolveAmountID, 1.1f);
-
             StartCoroutine(BlockDissolveRoutine(mat, 1.1f, 0f));
         }
     }
+    
     private IEnumerator BlockDissolveRoutine(Material mat, float start, float end)
     {
         float elapsed = 0f;
-
         while (elapsed < secondHitBlockDissolveTime)
         {
             elapsed += Time.deltaTime;
-
             float t = elapsed / secondHitBlockDissolveTime;
-
             float value = Mathf.Lerp(start, end, t);
-
             mat.SetFloat("_DissolveAmount", value);
-
             yield return null;
         }
-
         mat.SetFloat("_DissolveAmount", end);
     }
     
