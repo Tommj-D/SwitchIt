@@ -1,23 +1,20 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.InputSystem;
+using Unity.Cinemachine;
 
 public class BossTeleporter : MonoBehaviour
 {
     [Header("Destinazione")]
-    [Tooltip("L'oggetto vuoto nel nuovo corridoio dove deve apparire il player")]
-    public Transform puntoDiArrivo;
+    [SerializeField] private Transform puntoDiArrivo;
 
-    [Header("Nuova Telecamera (Opzionale)")]
-    [Tooltip("Trascina qui l'oggetto Virtual Camera della stanza del boss da accendere")]
-    public GameObject virtualCameraBoss;
-    [Tooltip("Trascina qui l'oggetto Virtual Camera del livello da spegnere")]
-    public GameObject virtualCameraLivello;
+    [Header("Cambio Confiner")]
+    [SerializeField] private Collider2D nuovoConfiner;
 
-    [Header("Effetto Uscita (Camminata Automatica)")]
-    public float tempoCamminataForzata = 0.4f;
-    public float velocitaUscita = 8f;
-    public float direzioneUscita = 1f;
+    [Header("Effetto Uscita")]
+    [SerializeField] private float tempoCamminataForzata = 0.4f;
+    [SerializeField] private float velocitaUscita = 8f;
+    [SerializeField] private float direzioneUscita = 1f;
 
     private bool isTeleporting = false;
 
@@ -33,50 +30,172 @@ public class BossTeleporter : MonoBehaviour
     {
         isTeleporting = true;
 
-        // 1. BLOCCA I CONTROLLI
+        //==================================================
+        // COMPONENTI PLAYER
+        //==================================================
+
         PlayerInput input = player.GetComponent<PlayerInput>();
         PlayerMovement movement = player.GetComponent<PlayerMovement>();
         Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
 
-        if (input != null) input.enabled = false;
-        if (movement != null) movement.enabled = false; 
-        if (rb != null) rb.linearVelocity = Vector2.zero; 
+        //==================================================
+        // BLOCCA CONTROLLI
+        //==================================================
 
-        // 2. SCHERMO NERO
-        if (SceneController.Instance != null)
-            yield return StartCoroutine(SceneController.Instance.FadeOut(SceneController.Instance.fadeDuration));
+        if (input != null)
+            input.enabled = false;
 
-        // 3. TELETRASPORTO
-        player.transform.position = puntoDiArrivo.position;
+        if (movement != null)
+            movement.enabled = false;
 
-        // 4. CAMBIO TELECAMERA (Se le hai assegnate)
-        if (virtualCameraBoss != null) virtualCameraBoss.SetActive(true);
-        if (virtualCameraLivello != null) virtualCameraLivello.SetActive(false);
+        if (rb != null)
+            rb.linearVelocity = Vector2.zero;
 
-        // Snap rapido della camera principale per evitare sfarfallii
-        Camera mainCam = Camera.main;
-        if (mainCam != null)
+        //==================================================
+        // ENTRATA CAVERNA TRANSIZIONE AUDIO
+        //==================================================
+
+        if (VolumeController.Instance != null)
         {
-            mainCam.transform.position = new Vector3(puntoDiArrivo.position.x, puntoDiArrivo.position.y, mainCam.transform.position.z);
+            VolumeController.Instance.FadeMixerParam(
+                VolumeController.Instance.masterMixer,
+                "MusicVol",
+                -40f,
+                2f
+            );
+
+            VolumeController.Instance.FadeMixerParam(
+                VolumeController.Instance.masterMixer,
+                "MusicLowpass",
+                800f,
+                0.6f
+            );
         }
 
-        // 5. RIAPRE LO SCHERMO
-        if (SceneController.Instance != null)
-            StartCoroutine(SceneController.Instance.FadeIn(SceneController.Instance.fadeDuration));
+        //==================================================
+        // SUONO PASSI 
+        //==================================================
 
-        // 6. CAMMINATA AUTOMATICA
+        if (AudioManager.Instance.enteringCaveFootstepSound != null)
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.enteringCaveFootstepSound);
+
+        //==================================================
+        // FADE OUT
+        //==================================================
+
+        if (SceneController.Instance != null)
+        {
+            yield return StartCoroutine(
+                SceneController.Instance.FadeOut(
+                    SceneController.Instance.fadeDuration
+                )
+            );
+        }
+
+        //==================================================
+        // TELETRASPORTO
+        //==================================================
+
+        player.transform.position = puntoDiArrivo.position;
+
+        //==================================================
+        // RESET LUCI CAVERNA
+        //==================================================
+
+        if (LightManager.Instance != null)
+        {
+            LightManager.Instance.ExitCave();
+        }
+
+        //==================================================
+        // CAMBIO CONFINER
+        //==================================================
+
+        if (nuovoConfiner != null)
+        {
+            CinemachineCamera activeCam =
+                FindFirstObjectByType<CinemachineCamera>();
+
+            if (activeCam != null)
+            {
+                CinemachineConfiner2D currentConfiner =
+                    activeCam.GetComponent<CinemachineConfiner2D>();
+
+                if (currentConfiner != null)
+                {
+                    currentConfiner.BoundingShape2D = nuovoConfiner;
+
+                    currentConfiner.InvalidateBoundingShapeCache();
+                }
+            }
+        }
+
+        //==================================================
+        // SNAP CAMERA
+        //==================================================
+
+        Camera mainCam = Camera.main;
+
+        if (mainCam != null)
+        {
+            mainCam.transform.position = new Vector3(
+                puntoDiArrivo.position.x,
+                puntoDiArrivo.position.y,
+                mainCam.transform.position.z
+            );
+        }
+
+        //==================================================
+        // FADE IN
+        //==================================================
+
+        if (SceneController.Instance != null)
+        {
+            yield return StartCoroutine(
+                SceneController.Instance.FadeIn(
+                    SceneController.Instance.fadeDuration
+                )
+            );
+        }
+
+        //==================================================
+        // CAMMINATA AUTOMATICA
+        //==================================================
+
         float timer = 0f;
+
         while (timer < tempoCamminataForzata)
         {
             timer += Time.deltaTime;
-            if (rb != null) rb.linearVelocity = new Vector2(velocitaUscita * direzioneUscita, rb.linearVelocity.y);
+
+            if (rb != null)
+            {
+                rb.linearVelocity = new Vector2(
+                    velocitaUscita * direzioneUscita,
+                    rb.linearVelocity.y
+                );
+            }
+
             yield return null;
         }
 
-        // 7. RIDÀ I CONTROLLI
-        if (rb != null) rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y); 
-        if (movement != null) movement.enabled = true;
-        if (input != null) input.enabled = true;
+        //==================================================
+        // RIDÀ CONTROLLI
+        //==================================================
+
+        if (rb != null)
+        {
+            rb.linearVelocity = new Vector2(
+                0f,
+                rb.linearVelocity.y
+            );
+        }
+
+        if (movement != null)
+            movement.enabled = true;
+
+        if (input != null)
+            input.enabled = true;
 
         isTeleporting = false;
     }

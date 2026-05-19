@@ -23,6 +23,10 @@ public class CaveController : MonoBehaviour
     public bool makeSoundEffect = true;
     public bool isCave = true;
 
+    [Header("Exit Settings")]
+    public bool resetAudioOnExit = true;
+    public bool resetLightOnExit = true;
+
     private Vector3 originalMaskScale;
     private Vector3 targetMaskScale;
 
@@ -96,7 +100,7 @@ public class CaveController : MonoBehaviour
             targetMaskPosition = originalMaskPosition + spriteMaskPosition;
         }
 
-        // Questo avvine solo se è una grotta
+        // Questo avvine solo se ï¿½ una grotta
         if (isCave)
         {
             VolumeController.Instance.FadeMixerParam(VolumeController.Instance.masterMixer, "MusicLowpass", 800f, 0.4f);
@@ -131,13 +135,22 @@ public class CaveController : MonoBehaviour
             spriteMask.transform.localPosition = originalMaskPosition;
         }
 
-        // Questo avvine solo se è una grotta
+        // Questo avvine solo se ï¿½ una grotta
         if (isCave)
         {
-            if (GameManager.Instance != null && !GameManager.Instance.isChangingLevel)
-                VolumeController.Instance.ResetGameplayVolumes(0.4f);
+            if (resetAudioOnExit)
+            {
+                if (GameManager.Instance != null &&
+                    !GameManager.Instance.isChangingLevel)
+                {
+                    VolumeController.Instance.ResetGameplayVolumes(0.4f);
+                }
+            }
 
-            LightManager.Instance.ExitCave();
+            if (resetLightOnExit)
+            {
+                LightManager.Instance.ExitCave();
+            }
         }
     }
 }

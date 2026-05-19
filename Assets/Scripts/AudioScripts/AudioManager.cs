@@ -41,6 +41,7 @@ public class AudioManager : MonoBehaviour
     public AudioClip glowingSound;
     public AudioClip wallDisappearingSound;
     public AudioClip particlesArrivalSound;
+    public AudioClip enteringCaveFootstepSound;
     
     [Header("Mixer Groups")]
     public AudioMixerGroup musicDefaultGroup;

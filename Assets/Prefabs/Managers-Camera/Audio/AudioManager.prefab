@@ -200,6 +200,7 @@ MonoBehaviour:
   glowingSound: {fileID: 8300000, guid: bd069b9237e5e459380f96f8362de242, type: 3}
   wallDisappearingSound: {fileID: 8300000, guid: 115b24de905ef497d9ddeecffa99472a, type: 3}
   particlesArrivalSound: {fileID: 8300000, guid: c25178f019cf5194f8070c9ae9c50cd6, type: 3}
+  enteringCaveFootstepSound: {fileID: 8300000, guid: 1b8f20f08666c4524acddd7064beff08, type: 3}
   musicDefaultGroup: {fileID: -1793385470781041295, guid: bd895b5153b2e204ca4b0ca8a56c023b, type: 2}
   musicTransitionGroup: {fileID: -1707065884832712539, guid: bd895b5153b2e204ca4b0ca8a56c023b, type: 2}
   sfxDefaultGroup: {fileID: -8022069700662271292, guid: bd895b5153b2e204ca4b0ca8a56c023b, type: 2}
