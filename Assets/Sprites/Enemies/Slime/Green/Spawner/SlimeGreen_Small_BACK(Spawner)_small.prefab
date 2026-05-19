@@ -92,7 +92,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHead
   enemy: {fileID: 4655368656703740291}
-  jumpingForce: 8
+  jumpingForce: 4
 --- !u!1 &9173688640470179172
 GameObject:
   m_ObjectHideFlags: 0

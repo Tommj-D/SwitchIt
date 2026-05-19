@@ -309,7 +309,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHead
   enemy: {fileID: 3307134228024518711}
-  jumpingForce: 8
+  jumpingForce: 4
 --- !u!61 &8348777870531197232
 BoxCollider2D:
   m_ObjectHideFlags: 0
