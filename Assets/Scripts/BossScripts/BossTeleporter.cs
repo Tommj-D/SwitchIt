@@ -16,6 +16,9 @@ public class BossTeleporter : MonoBehaviour
     [SerializeField] private float velocitaUscita = 8f;
     [SerializeField] private float direzioneUscita = 1f;
 
+    [Header("Light Fade")]
+    [SerializeField] private float fadeLightDuration = 0.5f;
+
     private bool isTeleporting = false;
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -83,29 +86,15 @@ public class BossTeleporter : MonoBehaviour
         // FADE OUT
         //==================================================
 
-        if (SceneController.Instance != null)
-        {
-            yield return StartCoroutine(
-                SceneController.Instance.FadeOut(
-                    SceneController.Instance.fadeDuration
-                )
-            );
-        }
+        yield return StartCoroutine(
+            FadeLight(0f, fadeLightDuration)
+        );
 
         //==================================================
         // TELETRASPORTO
         //==================================================
 
         player.transform.position = puntoDiArrivo.position;
-
-        //==================================================
-        // RESET LUCI CAVERNA
-        //==================================================
-
-        if (LightManager.Instance != null)
-        {
-            LightManager.Instance.ExitCave();
-        }
 
         //==================================================
         // CAMBIO CONFINER
@@ -149,14 +138,9 @@ public class BossTeleporter : MonoBehaviour
         // FADE IN
         //==================================================
 
-        if (SceneController.Instance != null)
-        {
-            yield return StartCoroutine(
-                SceneController.Instance.FadeIn(
-                    SceneController.Instance.fadeDuration
-                )
-            );
-        }
+        yield return StartCoroutine(
+            FadeLight(1f, fadeLightDuration)
+        );
 
         //==================================================
         // CAMMINATA AUTOMATICA
@@ -198,5 +182,40 @@ public class BossTeleporter : MonoBehaviour
             input.enabled = true;
 
         isTeleporting = false;
+    }
+
+    /// <summary>
+    /// Coroutine per sfumare l'intensità della luce. Può essere usata per creare un effetto di transizione più fluida quando il player entra o esce dalla caverna, o in qualsiasi altro momento in cui si desidera modificare l'illuminazione in modo graduale.
+    /// </summary>
+    /// <param name="targetIntensity"></param>
+    /// <param name="duration"></param>
+    /// <returns></returns>//
+    private IEnumerator FadeLight(float targetIntensity, float duration)
+    {
+        if (LightManager.Instance == null)
+            yield break;
+
+        float startIntensity = LightManager.Instance.globalLight.intensity;
+
+        float timer = 0f;
+
+        while (timer < duration)
+        {
+            timer += Time.deltaTime;
+
+            float t = timer / duration;
+
+            float intensity = Mathf.Lerp(
+                startIntensity,
+                targetIntensity,
+                t
+            );
+
+            LightManager.Instance.ForceIntensity(intensity);
+
+            yield return null;
+        }
+
+        LightManager.Instance.ForceIntensity(targetIntensity);
     }
 }
