@@ -86,6 +86,15 @@ public class BossManager : MonoBehaviour
     [Range(-5f, 5f)]
     [SerializeField] private float hitShockWaveStrength = -0.1f;
     [SerializeField] private float hitShockWaveXSizeRatio = 1f;
+    //==================================================
+    // ROAR SHOCKWAVE
+    //==================================================
+    [Header("Roar ShockWave")]
+    [SerializeField] private bool useRoarShockWave = true;
+    [SerializeField] private float roarShockWaveDuration = 1.5f;
+    [Range(-5f, 5f)]
+    [SerializeField] private float roarShockWaveStrength = 0.5f; 
+    [SerializeField] private float roarShockWaveXSizeRatio = 1f;
     
     //==================================================
     // TIMING TELEPORT
@@ -199,9 +208,24 @@ public class BossManager : MonoBehaviour
     //==================================================
     public float EmettiRuggito()
     {
-        if (bossAudio != null)
-            return bossAudio.PlayRoar();
 
+        //Facciamo partire la ShockWave dedicata al ruggito
+        if (useRoarShockWave && ShockWaveManager.Instance != null)
+        {
+            ShockWaveManager.Instance.SetXSizeRatio(roarShockWaveXSizeRatio);
+            ShockWaveManager.Instance.CallShockWave(
+                transform.position,
+                roarShockWaveStrength,
+                roarShockWaveDuration
+            );
+        }
+
+        // Facciamo partire l'audio
+        if (bossAudio != null)
+        {
+            return bossAudio.PlayRoar();
+        }
+    
         return 1.5f;
     }
 

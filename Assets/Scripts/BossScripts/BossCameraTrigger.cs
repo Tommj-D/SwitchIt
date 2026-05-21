@@ -1,167 +1,265 @@
 using UnityEngine;
-using System.Collections; // Necessario per le Coroutine
+using System.Collections;
+using Unity.Cinemachine;
+using UnityEngine.InputSystem;
+using UnityEngine.Tilemaps; 
 
 public class BossCameraTrigger : MonoBehaviour
 {
-    //==================================================
-    // 🎥 IMPOSTAZIONI INQUADRATURA
-    //==================================================
-    [Header("Impostazioni Inquadratura")]
-    public Transform puntoCentrale;
+    [Header("Boss Camera")]
+    [SerializeField] private CinemachineCamera bossCamera;
 
-    [Tooltip("Quanto deve indietreggiare la camera?")]
-    public float distanzaZ = -25f;
-
-    public float velocitaTransizione = 3f;
-
-    //==================================================
-    // 🧱 BLOCCO ARENA (DUE MURI)
-    //==================================================
-    [Header("Blocco Arena")]
-    public GameObject muroReal;
-    public GameObject muroFantasy;
-
-    //==================================================
-    // 🎬 REGIA E MUSICA (NUOVO)
-    //==================================================
-    [Header("Regia e Musica")]
-    public BossManager bossManager;
+    [Header("Arena Walls")]
+    [SerializeField] private GameObject muroReal;
+    [SerializeField] private GameObject muroFantasy;
     
-    [Tooltip("L'AudioSource che suona la musica del livello (da spegnere)")]
-    public AudioSource musicaLivello;
-    
-    [Tooltip("L'AudioSource che suona la musica del Boss (da accendere)")]
-    public AudioSource musicaBossFight;
+    [SerializeField] private float wallFadeDuration = 1f;
 
-    //==================================================
-    // 🧠 STATO INTERNO E COMPONENTI
-    //==================================================
-    private Camera cam;
-    private Behaviour cinemachineBrain;
+    // CAMBIATO: Da SpriteRenderer a Tilemap
+    private Tilemap[] muroRealTilemaps;
+    private Tilemap[] muroFantasyTilemaps;
 
-    private bool isBossFightActive = false;
+    [Header("Boss")]
+    [SerializeField] private BossManager bossManager;
 
-    //==================================================
-    // INIZIALIZZAZIONE
-    //==================================================
+    [Header("Audio")]
+    [SerializeField] private BossAudioController bossAudio;
+
+    [Header("Timing Cinematic")]
+    [SerializeField] private float waitBeforeRoar = 1f;
+    [SerializeField] private float waitAfterRoar = 0.5f;
+
+    [Header("Player Walk (Time Based)")]
+    [SerializeField] private float walkTime = 2f; 
+    [SerializeField] private float walkSpeed = 4f;
+    [Tooltip("1 per muoversi a destra, -1 per muoversi a sinistra")]
+    [SerializeField] private float walkDirection = 1f; 
+
+    private bool alreadyStarted;
+
     private void Start()
     {
-        cam = Camera.main;
-
-        if (cam != null)
+        // Recuperiamo le Tilemap invece degli SpriteRenderer
+        if (muroReal != null)
         {
-            cinemachineBrain = cam.GetComponent("CinemachineBrain") as Behaviour;
+            muroRealTilemaps = muroReal.GetComponentsInChildren<Tilemap>();
+            SetTilemapsAlpha(muroRealTilemaps, 0f);
+            muroReal.SetActive(false);
         }
 
-        if (muroReal != null) muroReal.SetActive(false);
-        if (muroFantasy != null) muroFantasy.SetActive(false);
+        if (muroFantasy != null)
+        {
+            muroFantasyTilemaps = muroFantasy.GetComponentsInChildren<Tilemap>();
+            SetTilemapsAlpha(muroFantasyTilemaps, 0f);
+            muroFantasy.SetActive(false);
+        }
+
+        if (bossCamera != null)
+            bossCamera.Priority = 0;
     }
 
-    //==================================================
-    // RILEVAMENTO ENTRATA GIOCATORE
-    //==================================================
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player") && !isBossFightActive)
-        {
-            isBossFightActive = true;
+        if (alreadyStarted)
+            return;
 
-            // ATTIVAZIONE MURI: Chiudiamo il giocatore dentro l'arena
-            if (muroReal != null) muroReal.SetActive(true);
-            if (muroFantasy != null) muroFantasy.SetActive(true);
+        if (!collision.CompareTag("Player"))
+            return;
 
-            // Spegne temporaneamente Cinemachine
-            if (cinemachineBrain != null) cinemachineBrain.enabled = false;
-
-            // 🎬 INIZIA LA SEQUENZA CINEMATOGRAFICA!
-            StartCoroutine(SequenzaInizioBoss());
-        }
+        alreadyStarted = true;
+        StartCoroutine(BossIntroRoutine(collision.gameObject));
     }
 
-    //==================================================
-    // SEQUENZA INTRO (PRECISIONE ASSOLUTA)
-    //==================================================
-    private IEnumerator SequenzaInizioBoss()
+    private IEnumerator BossIntroRoutine(GameObject player)
     {
-        // 1. Calcoliamo la posizione finale dove deve arrivare la telecamera
-        Vector3 destinazioneCamera = new Vector3(
-            puntoCentrale.position.x,
-            puntoCentrale.position.y,
-            distanzaZ
-        );
+        //==================================================
+        // PLAYER COMPONENTS
+        //==================================================
+        PlayerInput input = player.GetComponent<PlayerInput>();
+        PlayerMovement movement = player.GetComponent<PlayerMovement>();
+        Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
 
-        // 2. Mettiamo in pausa questo script finché la telecamera non è arrivata!
-        // HO CAMBIATO LA TOLLERANZA: da 1f (1 metro) a 0.1f (10 centimetri).
-        // Ora aspetta che la telecamera abbia completato visibilmente tutta la frenata.
-        while (cam != null && Vector3.Distance(cam.transform.position, destinazioneCamera) > 0.1f)
+        //==================================================
+        // BLOCCA CONTROLLI
+        //==================================================
+        if (input != null) input.enabled = false;
+        if (movement != null) movement.enabled = false;
+        
+        if (rb != null)
         {
-            yield return null; 
+            rb.linearVelocity = Vector2.zero;
+            rb.bodyType = RigidbodyType2D.Kinematic;
         }
 
-        // --- DA QUI IN POI LA TELECAMERA SI È FERMATA COMPLETAMENTE ---
+        //==================================================
+        // ATTIVA CAMERA BOSS
+        //==================================================
+        if (bossCamera != null)
+            bossCamera.Priority = 100;
 
-        // 3. ATTIVAZIONE MURI: Sbatte le porte e chiude il giocatore nell'arena
-        if (muroReal != null) muroReal.SetActive(true);
-        if (muroFantasy != null) muroFantasy.SetActive(true);
+        //==================================================
+        // AUTO WALK A TEMPO
+        //==================================================
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlaySFX(AudioManager.Instance.enteringCaveFootstepSound);
+        }
 
-        // 4. Ferma la musica esplorativa
-        if (musicaLivello != null) musicaLivello.Stop();
+        float timer = 0f;
 
-        // 5. Fai ruggire il boss e ottieni la durata del suono
-        float tempoAttesa = 1f; 
+        while (timer < walkTime)
+        {
+            timer += Time.deltaTime;
+            player.transform.position += new Vector3(walkDirection * walkSpeed * Time.deltaTime, 0f, 0f);
+            yield return null;
+        }
+
+        //==================================================
+        // STOP DEFINITIVO
+        //==================================================
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector2.zero;
+        }
+
+        Animator playerAnim = player.GetComponent<Animator>();
+        if (playerAnim != null)
+        {
+            playerAnim.SetFloat("Speed", 0f); 
+        }
+
+        //==================================================
+        // PAUSA PRE RUGGITO
+        //==================================================
+        yield return new WaitForSeconds(waitBeforeRoar);
+
+        //==================================================
+        // RUGGITO
+        //==================================================
+        float roarTime = 1.5f;
         if (bossManager != null)
         {
-            tempoAttesa = bossManager.EmettiRuggito();
+            roarTime = bossManager.EmettiRuggito();
         }
 
-        // 6. Pausa in silenzio mentre il mostro urla
-        yield return new WaitForSeconds(tempoAttesa);
-
-        // 7. Fai partire la colonna sonora del boss
-        if (musicaBossFight != null) musicaBossFight.Play();
-
-        // 8. Scatena il boss!
-        if (bossManager != null) bossManager.IniziaCombattimento();
-    }
-
-    //==================================================
-    // MOVIMENTO CAMERA (LATE UPDATE)
-    //==================================================
-    private void LateUpdate()
-    {
-        if (isBossFightActive && cam != null)
+        //==================================================
+        // CHIUSURA MURI CON FADE INTELLIGENTE
+        //==================================================
+        bool playerInFantasyWorld = false;
+        if (WorldSwitch.Instance != null)
         {
-            Vector3 targetPos = new Vector3(
-                puntoCentrale.position.x,
-                puntoCentrale.position.y,
-                distanzaZ
-            );
+            playerInFantasyWorld = WorldSwitch.Instance.isFantasyWorldActive;
+        }
 
-            cam.transform.position = Vector3.Lerp(
-                cam.transform.position,
-                targetPos,
-                Time.deltaTime * velocitaTransizione
+        if (muroReal != null)
+        {
+            muroReal.SetActive(true);
+            if (!playerInFantasyWorld) 
+            {
+                // Se siamo nel mondo reale, fa il fade in
+                StartCoroutine(FadeWall(muroRealTilemaps));
+            }
+            else 
+            {
+                // Altrimenti lo rende subito solido in background
+                SetTilemapsAlpha(muroRealTilemaps, 1f);
+            }
+        }
+
+        if (muroFantasy != null)
+        {
+            muroFantasy.SetActive(true);
+            if (playerInFantasyWorld) 
+            {
+                // Se siamo nel mondo fantasy, fa il fade in
+                StartCoroutine(FadeWall(muroFantasyTilemaps));
+            }
+            else 
+            {
+                // Altrimenti lo rende subito solido in background
+                SetTilemapsAlpha(muroFantasyTilemaps, 1f);
+            }
+        }
+
+        //==================================================
+        // ASPETTA FINE RUGGITO
+        //==================================================
+        yield return new WaitForSeconds(roarTime + waitAfterRoar);
+
+        //==================================================
+        // BOSS MUSIC
+        //==================================================
+        if (bossAudio != null)
+            bossAudio.StartBossMusic();
+
+        if (VolumeController.Instance != null)
+        {
+            VolumeController.Instance.FadeMixerParam(
+                VolumeController.Instance.masterMixer,
+                "MusicVol",
+                0f,
+                3f
             );
         }
+
+        //==================================================
+        // START FIGHT E RIDAI CONTROLLI
+        //==================================================
+        if (bossManager != null)
+            bossManager.IniziaCombattimento();
+
+        if (rb != null) rb.bodyType = RigidbodyType2D.Dynamic; 
+        if (movement != null) movement.enabled = true;
+        if (input != null) input.enabled = true;
     }
 
-    //==================================================
-    // RESET SISTEMA (CHIAMATA IN CASO DI MORTE/RESET)
-    //==================================================
     public void ResetCamera()
     {
-        isBossFightActive = false;
+        alreadyStarted = false;
+
+        SetTilemapsAlpha(muroRealTilemaps, 0f);
+        SetTilemapsAlpha(muroFantasyTilemaps, 0f);
 
         if (muroReal != null) muroReal.SetActive(false);
         if (muroFantasy != null) muroFantasy.SetActive(false);
 
-        if (cinemachineBrain != null) cinemachineBrain.enabled = true;
-
-        // Ripristino Audio
-        if (musicaBossFight != null) musicaBossFight.Stop();
-        if (musicaLivello != null) musicaLivello.Play();
-
-        // Rimette il boss al suo posto
+        if (bossCamera != null) bossCamera.Priority = 0;
+        if (bossAudio != null) bossAudio.StopBossMusic();
         if (bossManager != null) bossManager.ResetInizio();
+    }
+
+    // CAMBIATO: Ora accetta un array di Tilemap
+    private void SetTilemapsAlpha(Tilemap[] tilemaps, float alpha)
+    {
+        if (tilemaps == null) return;
+        
+        foreach (var tm in tilemaps)
+        {
+            if (tm == null) continue;
+            Color c = tm.color;
+            c.a = alpha;
+            tm.color = c;
+        }
+    }
+
+    // CAMBIATO: Ora accetta un array di Tilemap
+    private IEnumerator FadeWall(Tilemap[] tilemaps)
+    {
+        if (tilemaps == null || tilemaps.Length == 0)
+            yield break;
+
+        SetTilemapsAlpha(tilemaps, 0f);
+
+        float timer = 0f;
+
+        while (timer < wallFadeDuration)
+        {
+            timer += Time.deltaTime;
+            float currentAlpha = Mathf.Lerp(0f, 1f, timer / wallFadeDuration);
+            SetTilemapsAlpha(tilemaps, currentAlpha);
+            yield return null;
+        }
+
+        SetTilemapsAlpha(tilemaps, 1f);
     }
 }
