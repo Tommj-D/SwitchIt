@@ -86,6 +86,28 @@ public class AudioManager : MonoBehaviour
             VolumeController.Instance.RefreshUISliders();
     }
 
+    //Per far parture la musica da altri script
+    public void PlayMusic(AudioClip clip)
+    {
+        if (clip == null || musicSource == null)
+            return;
+
+        // Evita di riavviare la stessa musica
+        if (musicSource.clip == clip && musicSource.isPlaying)
+            return;
+
+        musicSource.clip = clip;
+        musicSource.Play();
+    }
+
+    public void StopMusic()
+    {
+        if (musicSource == null)
+            return;
+
+        musicSource.Stop();
+    }
+
     public void PlaySFX(AudioClip clip)
     {
         // Riproduce l'effetto sonoro senza interrompere quello precedente
