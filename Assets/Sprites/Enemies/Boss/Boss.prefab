@@ -393,8 +393,8 @@ GameObject:
   - component: {fileID: 8906274466621097209}
   - component: {fileID: 224381946665172458}
   - component: {fileID: 2368361738985530970}
-  - component: {fileID: 9078423636030372810}
   - component: {fileID: 6553910918367281011}
+  - component: {fileID: 2583620341862235649}
   m_Layer: 0
   m_Name: Boss
   m_TagString: Enemy
@@ -609,112 +609,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!82 &9078423636030372810
-AudioSource:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6167712539984685803}
-  m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 0}
-  m_PlayOnAwake: 1
-  m_Volume: 1
-  m_Pitch: 1
-  Loop: 0
-  Mute: 0
-  Spatialize: 0
-  SpatializePostEffects: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 100
-  Pan2D: 0
-  rolloffMode: 2
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.85669434
-      value: 0.9059831
-      inSlope: -0.388919
-      outSlope: -0.388919
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.16848478
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
 --- !u!114 &6553910918367281011
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -733,7 +627,10 @@ MonoBehaviour:
     - {fileID: 0}
     - {fileID: 0}
   secondHitRewards:
-    rewardTargets: []
+    rewardTargets:
+    - {fileID: 0}
+    - {fileID: 0}
+    - {fileID: 0}
   puntiPattugliaFase1:
   - {fileID: 0}
   - {fileID: 0}
@@ -749,19 +646,25 @@ MonoBehaviour:
   velocitaSpostamento: 5
   turnCheckOffset: {x: 0, y: -2.7}
   minionPrefab: {fileID: 1228656691620093762, guid: e32cd93c624e1443b846f4883fb5fcff, type: 3}
-  spawnPoints: []
-  spawnInterval: 3
-  spawnActive: 0
   flyingMinionPrefab: {fileID: -8389419052066332428, guid: a518a8736d9c344b795d5ebea15877ec, type: 3}
   puntoMinionSinistra: {fileID: 0}
   puntoMinionDestra: {fileID: 0}
-  audioSource: {fileID: 9078423636030372810}
-  idleSound: {fileID: 0}
-  hitSound: {fileID: 8300000, guid: bdc94772d261d4dfabbf0aea17ec0bee, type: 3}
-  deathSound: {fileID: 8300000, guid: 80f19e8aabfaf9b4fa8b1a04dc78968d, type: 3}
+  spawnLoopSinistra: {fileID: 0}
+  spawnLoopDestra: {fileID: 0}
+  spawnLoopInterval: 6.5
+  portalFXPrefab: {fileID: 781622597913654072, guid: 963aa0e8b2ae84c8884bd67198384d1c, type: 3}
+  usaDashFase3: 1
+  tempoAttesaDash: 3
+  velocitaDash: 20
+  durataDash: 0.7
+  bossAudio: {fileID: 0}
   deathParticle: {fileID: 3196417285052570513}
   teleportDisappearParticle: {fileID: 1171275158391380269, guid: e46b4e69d0d324bd9968c36c87ce99ef, type: 3}
   teleportAppearParticle: {fileID: 1171275158391380269, guid: e46b4e69d0d324bd9968c36c87ce99ef, type: 3}
+  useHitShockWave: 1
+  hitShockWaveDuration: 2
+  hitShockWaveStrength: -1
+  hitShockWaveXSizeRatio: 1.5
   tempoPrimaScomparsa: 1.2
   tempoPrimaRicomparsa: 5
   dissolveTime: 0.6
@@ -770,7 +673,33 @@ MonoBehaviour:
   dissolveScale: 35
   outlineColor: {r: 0, g: 0, b: 23.968628, a: 1}
   spiralStrength: 5
+  realWorldBlock: {fileID: 0}
+  fantasyWorldBlock: {fileID: 0}
+  secondHitBlockDissolveTime: 2
+  blockOutlineThickness: 0.17
+  blockDissolveScale: 35
+  blockOutlineColor: {r: 11.984314, g: 11.231373, b: 1.882353, a: 1}
+  blockSpiralStrength: 2
+  blockUseVerticalDissolve: 0
   forzaKnockback: 10
+  muroSegretoFineLivello: {fileID: 0}
+--- !u!114 &2583620341862235649
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6167712539984685803}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59e81aeafdd31421e9df160d54c94efb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BossAudioController
+  roarSound: {fileID: 0}
+  hitSound: {fileID: 0}
+  deathSound: {fileID: 0}
+  idleSound: {fileID: 0}
+  bossMusic: {fileID: 0}
 --- !u!1 &6519754029243499685
 GameObject:
   m_ObjectHideFlags: 0

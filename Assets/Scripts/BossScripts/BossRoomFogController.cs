@@ -13,8 +13,11 @@ public class BossRoomFogController : MonoBehaviour
 
     private void Start()
     {
-        fantasyFog.SetActive(false);
-        realFog.SetActive(false);
+        if (fantasyFog != null)
+            fantasyFog.SetActive(false);
+
+        if (realFog != null)
+            realFog.SetActive(false);
 
         if (realWorldDust != null)
             realWorldDust.SetActive(false);
@@ -39,12 +42,15 @@ public class BossRoomFogController : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (!collision.CompareTag("Player")) return;
+        if (!collision || !collision.CompareTag("Player")) return;
 
         playerInside = false;
 
-        fantasyFog.SetActive(false);
-        realFog.SetActive(false);
+        if (fantasyFog != null)
+            fantasyFog.SetActive(false);
+
+        if (realFog != null)
+            realFog.SetActive(false);
 
         if (realWorldDust != null)
             realWorldDust.SetActive(false);
@@ -59,16 +65,17 @@ public class BossRoomFogController : MonoBehaviour
 
     public void UpdateBossRoomVisuals()
     {
+        if (WorldSwitch.Instance == null) return;
+
         bool isFantasy = WorldSwitch.Instance.isFantasyWorldActive;
 
-        // Fog
-        fantasyFog.SetActive(isFantasy);
-        realFog.SetActive(!isFantasy);
+        if (fantasyFog != null)
+            fantasyFog.SetActive(isFantasy);
 
-        // Dust reale SOLO nella boss room
+        if (realFog != null)
+            realFog.SetActive(!isFantasy);
+
         if (realWorldDust != null)
-        {
             realWorldDust.SetActive(!isFantasy);
-        }
     }
 }

@@ -63,7 +63,7 @@ public class ShockWaveManager : MonoBehaviour
             StopCoroutine(shockWaveCoroutine);
 
         shockWaveCoroutine = StartCoroutine(
-            ShockWaveAction(-0.1f, 1.5f, duration));
+            ShockWaveAction(-0.1f, 1.8f, duration));
     }
 
     private IEnumerator ShockWaveAction(float startPos, float endPos, float duration)
