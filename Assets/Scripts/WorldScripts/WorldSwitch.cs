@@ -26,6 +26,7 @@ public class WorldSwitch : MonoBehaviour
 
     [HideInInspector] public bool isFantasyWorldActive = false;
     [HideInInspector]  public bool isSwitching = false;
+    [HideInInspector] public bool disableGlobalMagicFog = false;
     void Awake()
     {
         if (Instance == null)
@@ -71,7 +72,7 @@ public class WorldSwitch : MonoBehaviour
         if (mainCamera != null) mainCamera.backgroundColor = isFantasyWorldActive ? fantasyWorldColor : realWorldColor;
 
         if (MagicDust != null) MagicDust.SetActive(isFantasyWorldActive);
-        if (MagicFog != null) MagicFog.SetActive(isFantasyWorldActive);
+        if (MagicFog != null) MagicFog.SetActive(isFantasyWorldActive && !disableGlobalMagicFog);
 
         // Aggiorna colori nuvole
         foreach (CloudsManager manager in CloudsManager.AllCloudManagers)

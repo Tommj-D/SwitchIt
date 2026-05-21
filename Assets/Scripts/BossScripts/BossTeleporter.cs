@@ -16,8 +16,14 @@ public class BossTeleporter : MonoBehaviour
 
     [Header("Entrata Cinematica")]
     [SerializeField] private GameObject movementBlocker;
-    [SerializeField] private float durataTransizione = 1.2f;
+    [SerializeField] private float durataFadeOut = 1.2f;
+    [SerializeField] private float durataFadeIn = 1.2f;
+
+    [SerializeField] private float tempoSchermoNero = 0.3f;
     [SerializeField] private float distanzaMinimaPerControllo = 4f;
+
+    [Header("Boss Room Effects")]
+    [SerializeField] private BossRoomFogController bossRoomFogController;
     
     private bool isTeleporting = false;
 
@@ -87,7 +93,7 @@ public class BossTeleporter : MonoBehaviour
         //==================================================
 
         yield return StartCoroutine(
-            FadeLight(0f, durataTransizione)
+            FadeLight(0f, durataFadeOut)
         );
 
         //==================================================
@@ -102,6 +108,10 @@ public class BossTeleporter : MonoBehaviour
             player.transform.localScale.z
         );
 
+        if (bossRoomFogController != null)
+        {
+            bossRoomFogController.UpdateBossRoomVisuals();
+        }
         //==================================================
         // CAMBIO CONFINER
         //==================================================
@@ -141,19 +151,29 @@ public class BossTeleporter : MonoBehaviour
         }
 
         //==================================================
-        // FADE IN
+        // CAMMINATA AUTOMATICA + FADE IN
         //==================================================
 
-        yield return StartCoroutine(
-            FadeLight(1f, durataTransizione)
-        );
-
-        //==================================================
-        // CAMMINATA AUTOMATICA
-        //==================================================
-
+        //prima un attimo di schermo nero per far avvenire tutte le azioni
+        yield return new WaitForSeconds(tempoSchermoNero);
+        
         Vector3 startPos = player.transform.position;
 
+        // Avvia subito il movimento
+        if (rb != null)
+        {
+            rb.linearVelocity = new Vector2(
+                velocitaUscita,
+                rb.linearVelocity.y
+            );
+        }
+
+        // Fade in mentre il player cammina
+        yield return StartCoroutine(
+            FadeLight(1f, durataFadeIn)
+        );
+
+        // Continua a camminare finché non arriva alla distanza richiesta
         while (
             player.transform.position.x <
             startPos.x + distanzaMinimaPerControllo

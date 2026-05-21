@@ -18,8 +18,8 @@ public class BossCameraTrigger : MonoBehaviour
     // 🧱 BLOCCO ARENA (DUE MURI)
     //==================================================
     [Header("Blocco Arena")]
-    public GameObject muroSinistro;
-    public GameObject muroDestro;
+    public GameObject muroReal;
+    public GameObject muroFantasy;
 
     //==================================================
     // 🎬 REGIA E MUSICA (NUOVO)
@@ -53,8 +53,8 @@ public class BossCameraTrigger : MonoBehaviour
             cinemachineBrain = cam.GetComponent("CinemachineBrain") as Behaviour;
         }
 
-        if (muroSinistro != null) muroSinistro.SetActive(false);
-        if (muroDestro != null) muroDestro.SetActive(false);
+        if (muroReal != null) muroReal.SetActive(false);
+        if (muroFantasy != null) muroFantasy.SetActive(false);
     }
 
     //==================================================
@@ -67,8 +67,8 @@ public class BossCameraTrigger : MonoBehaviour
             isBossFightActive = true;
 
             // ATTIVAZIONE MURI: Chiudiamo il giocatore dentro l'arena
-            if (muroSinistro != null) muroSinistro.SetActive(true);
-            if (muroDestro != null) muroDestro.SetActive(true);
+            if (muroReal != null) muroReal.SetActive(true);
+            if (muroFantasy != null) muroFantasy.SetActive(true);
 
             // Spegne temporaneamente Cinemachine
             if (cinemachineBrain != null) cinemachineBrain.enabled = false;
@@ -101,8 +101,8 @@ public class BossCameraTrigger : MonoBehaviour
         // --- DA QUI IN POI LA TELECAMERA SI È FERMATA COMPLETAMENTE ---
 
         // 3. ATTIVAZIONE MURI: Sbatte le porte e chiude il giocatore nell'arena
-        if (muroSinistro != null) muroSinistro.SetActive(true);
-        if (muroDestro != null) muroDestro.SetActive(true);
+        if (muroReal != null) muroReal.SetActive(true);
+        if (muroFantasy != null) muroFantasy.SetActive(true);
 
         // 4. Ferma la musica esplorativa
         if (musicaLivello != null) musicaLivello.Stop();
@@ -152,8 +152,8 @@ public class BossCameraTrigger : MonoBehaviour
     {
         isBossFightActive = false;
 
-        if (muroSinistro != null) muroSinistro.SetActive(false);
-        if (muroDestro != null) muroDestro.SetActive(false);
+        if (muroReal != null) muroReal.SetActive(false);
+        if (muroFantasy != null) muroFantasy.SetActive(false);
 
         if (cinemachineBrain != null) cinemachineBrain.enabled = true;
 
