@@ -10,6 +10,7 @@ public class BossTeleporter : MonoBehaviour
 
     [Header("Cambio Confiner")]
     [SerializeField] private Collider2D nuovoConfiner;
+    [SerializeField] private CinemachineCamera targetCamera;
 
     [Header("Effetto Uscita")]
     [SerializeField] private float velocitaUscita = 8f;
@@ -118,19 +119,18 @@ public class BossTeleporter : MonoBehaviour
 
         if (nuovoConfiner != null)
         {
-            CinemachineCamera activeCam =
-                FindFirstObjectByType<CinemachineCamera>();
-
-            if (activeCam != null)
+            if (targetCamera != null)
             {
                 CinemachineConfiner2D currentConfiner =
-                    activeCam.GetComponent<CinemachineConfiner2D>();
+                    targetCamera.GetComponent<CinemachineConfiner2D>();
 
                 if (currentConfiner != null)
                 {
                     currentConfiner.BoundingShape2D = nuovoConfiner;
 
                     currentConfiner.InvalidateBoundingShapeCache();
+
+                    targetCamera.PreviousStateIsValid = false;
                 }
             }
         }
