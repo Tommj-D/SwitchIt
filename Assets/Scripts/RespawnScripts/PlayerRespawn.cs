@@ -173,8 +173,30 @@ public class PlayerRespawn : MonoBehaviour
         // FADE OUT
         yield return SceneController.Instance.FadeOut(SceneController.Instance.fadeDuration);
 
-        // Prepara il player (ancora invisibile)
+        // ==========================================
+        // SEQUENZA ESATTA PER IL RESET TELECAMERA
+        // ==========================================
+        Camera mainCam = Camera.main;
+        Behaviour brain = null;
+        if (mainCam != null)
+        {
+            brain = mainCam.GetComponent("CinemachineBrain") as Behaviour;
+            if (brain != null) brain.enabled = false; // Disattiva la fluidità
+        }
+
+        // Resettiamo i trigger (la priorità va a 0, ma Cinemachine è "cieco" e non fa il blend)
+        BossCameraTrigger[] triggerCamere = FindObjectsByType<BossCameraTrigger>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        foreach (BossCameraTrigger t in triggerCamere)
+        {
+            t.ResetCamera();
+        }
+
+        // Prepara il player (Sposta fisicamente la camera e riaccende il Brain)
         yield return StartCoroutine(PrepareRespawn());
+
+        // Assicuriamoci che il brain sia acceso (nel caso in cui PrepareRespawn fallisse nel riaccenderlo)
+        if (brain != null) brain.enabled = true;
+        // ==========================================
 
         // Hold nero
         yield return new WaitForSeconds(blackScreenHoldTime);
@@ -226,12 +248,6 @@ public class PlayerRespawn : MonoBehaviour
             p.ResetPlatform();
         }
 
-        BossCameraTrigger[] triggerCamere = FindObjectsByType<BossCameraTrigger>(FindObjectsInactive.Include, FindObjectsSortMode.None);
-        foreach (BossCameraTrigger t in triggerCamere)
-        {
-            t.ResetCamera();
-        }
-
         StartCoroutine(SceneController.Instance.FadeIn(SceneController.Instance.fadeDuration));
 
         if (animator != null)
@@ -240,7 +256,6 @@ public class PlayerRespawn : MonoBehaviour
         }
 
         yield return StartCoroutine(PlayRespawnAnimation());
-
     }
 
     public IEnumerator PrepareRespawn()
@@ -261,9 +276,6 @@ public class PlayerRespawn : MonoBehaviour
         // Imposto posizione
         transform.position = respawnPoint.position;
 
-        // ========================================================
-        // 🚀 FIX TELECAMERA: SNAP ISTANTANEO
-        // ========================================================
         Camera mainCam = Camera.main;
         if (mainCam != null)
         {

@@ -186,6 +186,11 @@ public class BossManager : MonoBehaviour
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
 
+        if (anim != null)
+        {
+            anim.SetBool("isWalking", false);
+        }
+
         SetupDissolveMaterials();
     }
 
@@ -235,6 +240,10 @@ public class BossManager : MonoBehaviour
         {
             bossAudio.StartBossMusic();
         }
+        if (anim != null)
+        {
+            anim.SetBool("isWalking", true);
+        }
         isFightStarted = true; 
     }
 
@@ -247,14 +256,22 @@ public class BossManager : MonoBehaviour
         isInvulnerable = false;
         isDead = false;
 
+        // ==================================================
+        // MODIFICA 1: FAI GUARDARE IL BOSS A DESTRA
+        // ==================================================
+        transform.eulerAngles = new Vector3(0f, 0f, 0f);
+
         if (spawnLoopCoroutine != null) StopCoroutine(spawnLoopCoroutine);
         if (dashRoutine != null) StopCoroutine(dashRoutine);
         spawnLoopCoroutine = null;
         dashRoutine = null;
-
         if (portalLeftInstance != null) Destroy(portalLeftInstance.gameObject);
         if (portalRightInstance != null) Destroy(portalRightInstance.gameObject);
-
+        if (anim != null)
+        {
+            anim.SetBool("isWalking", false);
+        }
+        
         SetDissolveAmount(0f);
         
         Collider2D[] tuttiIColliders = GetComponentsInChildren<Collider2D>();
@@ -262,7 +279,6 @@ public class BossManager : MonoBehaviour
         {
             col.enabled = true;
         }
-
         transform.position = posizioneDiPartenza; 
         
         if (puntiPattugliaFase1.Length > 0 && puntiPattugliaFase1[0] != null)
@@ -270,9 +286,21 @@ public class BossManager : MonoBehaviour
             targetPos = puntiPattugliaFase1[0].position;
             indicePuntoAttuale = 0;
         }
-
         if (realWorldBlock != null) realWorldBlock.SetActive(false);
         if (fantasyWorldBlock != null) fantasyWorldBlock.SetActive(false);
+
+        // ==================================================
+        // MODIFICA 2: RESETTA I REWARD A SCHERMO
+        // Trova e distrugge tutti i reward volanti non raccolti
+        // ==================================================
+        FlyingRewardParticle[] rewardRimasti = FindObjectsByType<FlyingRewardParticle>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        foreach (FlyingRewardParticle reward in rewardRimasti)
+        {
+            if (reward != null)
+            {
+                Destroy(reward.gameObject);
+            }
+        }
     }
 
     //==================================================
