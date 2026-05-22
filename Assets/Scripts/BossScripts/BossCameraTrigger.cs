@@ -15,6 +15,11 @@ public class BossCameraTrigger : MonoBehaviour
     
     [SerializeField] private float wallFadeDuration = 1f;
 
+    [Header("Ground Check")]
+    [SerializeField] private Transform groundCheck;
+    [SerializeField] private float groundCheckRadius = 0.2f;
+    [SerializeField] private LayerMask groundLayer;
+
     // CAMBIATO: Da SpriteRenderer a Tilemap
     private Tilemap[] muroRealTilemaps;
     private Tilemap[] muroFantasyTilemaps;
@@ -87,8 +92,8 @@ public class BossCameraTrigger : MonoBehaviour
         
         if (rb != null)
         {
-            rb.linearVelocity = Vector2.zero;
-            rb.bodyType = RigidbodyType2D.Kinematic;
+            // Blocca solo il movimento orizzontale
+            rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
         }
 
         //==================================================
@@ -96,6 +101,33 @@ public class BossCameraTrigger : MonoBehaviour
         //==================================================
         if (bossCamera != null)
             bossCamera.Priority = 100;
+
+        //==================================================
+        // ASPETTA CHE IL PLAYER TOCCHI TERRA
+        //==================================================
+        while (!IsGrounded())
+        {
+            yield return null;
+        }
+
+        // Piccolo delay per sicurezza
+        yield return new WaitForSeconds(0.05f);
+
+        Animator playerAnim = player.GetComponent<Animator>();
+
+        if (playerAnim != null)
+        {
+            playerAnim.SetBool("isGrounded", true);
+            playerAnim.SetBool("isJumping", false);
+            playerAnim.SetFloat("VerticalSpeed", 0f);
+        }
+
+        // Ora blocca completamente il player
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector2.zero;
+            rb.bodyType = RigidbodyType2D.Kinematic;
+        }
 
         //==================================================
         // AUTO WALK A TEMPO
@@ -122,7 +154,6 @@ public class BossCameraTrigger : MonoBehaviour
             rb.linearVelocity = Vector2.zero;
         }
 
-        Animator playerAnim = player.GetComponent<Animator>();
         if (playerAnim != null)
         {
             playerAnim.SetFloat("Speed", 0f); 
@@ -261,5 +292,14 @@ public class BossCameraTrigger : MonoBehaviour
         }
 
         SetTilemapsAlpha(tilemaps, 1f);
+    }
+
+    private bool IsGrounded()
+    {
+        return Physics2D.OverlapCircle(
+            groundCheck.position,
+            groundCheckRadius,
+            groundLayer
+        );
     }
 }
