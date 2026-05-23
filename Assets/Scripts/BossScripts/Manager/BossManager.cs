@@ -515,7 +515,7 @@ public class BossManager : MonoBehaviour
         StartCoroutine(HitCycleRoutine());
     }
 
-    private IEnumerator HitCycleRoutine()
+   private IEnumerator HitCycleRoutine()
     {
         isTransitioning = true; 
 
@@ -532,6 +532,7 @@ public class BossManager : MonoBehaviour
 
         yield return StartCoroutine(DissolveRoutine(0f, 1.1f));
 
+        // 🟢 QUI LASCIAMO LO SPAWN LIBERO: i minion spawnano sempre quando scompare
         SpawnMinionsHit();
 
         if (hitIndex == 0)
@@ -582,7 +583,10 @@ public class BossManager : MonoBehaviour
 
         yield return StartCoroutine(DissolveRoutine(1.1f, 0f));
 
-        SpawnMinionsHit();
+        if (hitIndex == 0)
+        {
+            SpawnMinionsHit();
+        }
 
         hitIndex++;
 
