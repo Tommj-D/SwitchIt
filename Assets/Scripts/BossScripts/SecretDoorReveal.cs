@@ -1,12 +1,16 @@
 using UnityEngine;
 using System.Collections;
-using UnityEngine.Tilemaps; // Necessario per le Tilemap
+using UnityEngine.Tilemaps; 
 
 public class SecretDoorReveal : MonoBehaviour
 {
     [Header("Muri Tilemap")]
     [Tooltip("Trascina qui la Tilemap del mondo reale e quella del mondo fantasy")]
     public Tilemap[] muriTilemap;
+
+    [Header("Telecamere (Cinemachine)")]
+    [Tooltip("Inserisci qui la Virtual Camera del boss. Verrà spenta alla fine per tornare a quella base.")]
+    public GameObject bossVirtualCamera;
 
     [Header("Impostazioni Tempistiche")]
     [Tooltip("Quanti secondi aspettare dopo la morte del boss prima di iniziare il fade del muro?")]
@@ -22,7 +26,7 @@ public class SecretDoorReveal : MonoBehaviour
 
     private IEnumerator SequenzaCrollo()
     {
-        // Attesa drammatica dopo la morte del boss
+        // Attesa drammatica dopo la morte del boss (durante l'urlo/particelle)
         yield return new WaitForSeconds(ritardoPrimaDelCrollo);
 
         // Salviamo i colori iniziali di tutte le tilemap inserite nell'array
@@ -56,7 +60,13 @@ public class SecretDoorReveal : MonoBehaviour
                 }
             }
             
-            yield return null; // Aspetta il frame successivo
+            yield return null; 
+        }
+
+        //  RITORNO ALLA CAMERA BASE: Spegniamo la telecamera del boss
+        if (bossVirtualCamera != null)
+        {
+            bossVirtualCamera.SetActive(false);
         }
 
         // Spegne l'oggetto principale per disattivare definitivamente le collisioni di entrambi i muri
