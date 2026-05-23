@@ -249,57 +249,162 @@ public class BossManager : MonoBehaviour
 
     public void ResetInizio()
     {
-        isFightStarted = false; 
-        hp = 3; 
+        isFightStarted = false;
+
+        hp = 3;
         faseAttuale = 1;
         hitIndex = 0;
+
         isInvulnerable = false;
         isDead = false;
+        isTransitioning = false;
+        isDashing = false;
 
-        // ==================================================
-        // MODIFICA 1: FAI GUARDARE IL BOSS A DESTRA
-        // ==================================================
-        transform.eulerAngles = new Vector3(0f, 0f, 0f);
+        //==================================================
+        // STOP COMPLETO COROUTINE
+        //==================================================
+        StopAllCoroutines();
 
-        if (spawnLoopCoroutine != null) StopCoroutine(spawnLoopCoroutine);
-        if (dashRoutine != null) StopCoroutine(dashRoutine);
         spawnLoopCoroutine = null;
         dashRoutine = null;
-        if (portalLeftInstance != null) Destroy(portalLeftInstance.gameObject);
-        if (portalRightInstance != null) Destroy(portalRightInstance.gameObject);
+
+        //==================================================
+        // RESET VELOCITÀ
+        //==================================================
+        velocitaSpostamento = velocitaOriginale;
+
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector2.zero;
+            rb.angularVelocity = 0f;
+        }
+
+        //==================================================
+        // RESET ROTAZIONE / POSIZIONE
+        //==================================================
+        transform.position = posizioneDiPartenza;
+
+        //==================================================
+        // RESET PATROL
+        //==================================================
+        if (puntiPattugliaFase1.Length > 0 && puntiPattugliaFase1[0] != null)
+        {
+            indicePuntoAttuale = 0;
+            targetPos = puntiPattugliaFase1[0].position;
+            if (targetPos.x < transform.position.x)
+            {
+                transform.eulerAngles = new Vector3(0f, 0f, 0f);
+            }
+            else
+            {
+                transform.eulerAngles = new Vector3(0f, 180f, 0f);
+            }
+        }
+
+        //==================================================
+        // RESET ANIMATOR
+        //==================================================
         if (anim != null)
         {
+            anim.Rebind();
+            anim.Update(0f);
+
             anim.SetBool("isWalking", false);
         }
-        
+
+        //==================================================
+        // RESET DISSOLVE
+        //==================================================
         SetDissolveAmount(0f);
-        
+
+        //==================================================
+        // RESET COLLIDER
+        //==================================================
         Collider2D[] tuttiIColliders = GetComponentsInChildren<Collider2D>();
+
         foreach (Collider2D col in tuttiIColliders)
         {
             col.enabled = true;
         }
-        transform.position = posizioneDiPartenza; 
-        
-        if (puntiPattugliaFase1.Length > 0 && puntiPattugliaFase1[0] != null)
-        {
-            targetPos = puntiPattugliaFase1[0].position;
-            indicePuntoAttuale = 0;
-        }
-        if (realWorldBlock != null) realWorldBlock.SetActive(false);
-        if (fantasyWorldBlock != null) fantasyWorldBlock.SetActive(false);
 
-        // ==================================================
-        // MODIFICA 2: RESETTA I REWARD A SCHERMO
-        // Trova e distrugge tutti i reward volanti non raccolti
-        // ==================================================
-        FlyingRewardParticle[] rewardRimasti = FindObjectsByType<FlyingRewardParticle>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        //==================================================
+        // RESET BLOCCHI SECONDA HIT
+        //==================================================
+        if (realWorldBlock != null)
+            realWorldBlock.SetActive(false);
+
+        if (fantasyWorldBlock != null)
+            fantasyWorldBlock.SetActive(false);
+
+        //==================================================
+        // STOP MUSICA BOSS
+        //==================================================
+        if (bossAudio != null)
+        {
+            bossAudio.StopBossMusic();
+        }
+
+        //==================================================
+        // DISTRUGGI PORTALI
+        //==================================================
+        if (portalLeftInstance != null)
+            Destroy(portalLeftInstance.gameObject);
+
+        if (portalRightInstance != null)
+            Destroy(portalRightInstance.gameObject);
+
+        //==================================================
+        // DISTRUGGI MINION
+        //==================================================
+        GameObject[] minions = GameObject.FindGameObjectsWithTag("Minion");
+
+        foreach (GameObject m in minions)
+        {
+            Destroy(m);
+        }
+
+        //==================================================
+        // DISTRUGGI PARTICELLE MINION
+        //==================================================
+        FlyingMinionParticle[] minionParticles =
+            FindObjectsByType<FlyingMinionParticle>(
+                FindObjectsInactive.Include,
+                FindObjectsSortMode.None
+            );
+
+        foreach (FlyingMinionParticle p in minionParticles)
+        {
+            if (p != null)
+            {
+                Destroy(p.gameObject);
+            }
+        }
+
+        //==================================================
+        // DISTRUGGI REWARD VOLANTI
+        //==================================================
+        FlyingRewardParticle[] rewardRimasti =
+            FindObjectsByType<FlyingRewardParticle>(
+                FindObjectsInactive.Include,
+                FindObjectsSortMode.None
+            );
+
         foreach (FlyingRewardParticle reward in rewardRimasti)
         {
             if (reward != null)
             {
                 Destroy(reward.gameObject);
             }
+        }
+
+        if (firstHitRewards != null)
+        {
+            firstHitRewards.ResetRewards();
+        }
+
+        if (secondHitRewards != null)
+        {
+            secondHitRewards.ResetRewards();
         }
     }
 

@@ -38,4 +38,14 @@ public class RewardTarget : MonoBehaviour
             );
         }
     }
+
+    public void ResetReward()
+    {
+        revealed = false;
+
+        if (visualObject != null)
+        {
+            visualObject.SetActive(false);
+        }
+    }
 }
