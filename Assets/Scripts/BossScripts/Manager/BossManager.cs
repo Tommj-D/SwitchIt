@@ -482,7 +482,7 @@ public class BossManager : MonoBehaviour
     
         if (bossAudio != null) bossAudio.PlayHit();
         
-         if (useHitShockWave && ShockWaveManager.Instance != null)
+         if (useHitShockWave && ShockWaveManager.Instance != null && !(hp<=0))
         {
             ShockWaveManager.Instance.SetXSizeRatio(hitShockWaveXSizeRatio);
 
@@ -693,7 +693,7 @@ public class BossManager : MonoBehaviour
     {
         isDead = true;
 
-        // 🌟 AGGIUNTO: APRE LA PORTA
+        //APRE LA PORTA
         if (muroSegretoFineLivello != null)
         {
             muroSegretoFineLivello.ApriPassaggioSegreto();
@@ -705,6 +705,22 @@ public class BossManager : MonoBehaviour
             bossAudio.StopBossMusic();
         }
 
+        if (useRoarShockWave && ShockWaveManager.Instance != null)
+        {
+            ShockWaveManager.Instance.SetXSizeRatio(roarShockWaveXSizeRatio);
+            ShockWaveManager.Instance.CallShockWave(
+                transform.position,
+                roarShockWaveStrength,
+                roarShockWaveDuration
+            );
+        }
+
+        SpriteRenderer[] renderers = GetComponentsInChildren<SpriteRenderer>();
+        foreach (SpriteRenderer sr in renderers)
+        {
+            sr.enabled = false;
+        }
+
         if (deathParticle != null)
             Instantiate(deathParticle, transform.position, transform.rotation).Play();
 
@@ -714,7 +730,19 @@ public class BossManager : MonoBehaviour
         GameObject[] minions = GameObject.FindGameObjectsWithTag("Minion");
         foreach (GameObject m in minions)
         {
-            Destroy(m);
+            // Cerchiamo lo script sul minion
+            MiniSpawnBoss minionScript = m.GetComponent<MiniSpawnBoss>();
+            
+            if (minionScript != null)
+            {
+                // Se ha lo script, chiamiamo la sua funzione di morte (particelle + audio)
+                minionScript.Die();
+            }
+            else
+            {
+                // Fallback di sicurezza: se per qualche motivo un minion non ha lo script, distruggilo e basta
+                Destroy(m);
+            }
         }
 
         if (portalLeftInstance != null) Destroy(portalLeftInstance.gameObject);

@@ -1,17 +1,14 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.Tilemaps; // Necessario per usare la Tilemap
 
 public class SecretDoorReveal : MonoBehaviour
 {
-    [Header("Effetti Visivi e Sonori")]
-    [Tooltip("Trascina qui un Particle System per l'effetto polvere/esplosione rocce (Opzionale)")]
-    public ParticleSystem esplosioneRocce;
-    
-    [Tooltip("Il suono del muro che si frantuma (Opzionale)")]
-    public AudioClip suonoCrollo;
-    
-    [Tooltip("Quanti secondi aspettare dopo la morte del boss prima di far crollare il muro?")]
+    [Tooltip("Quanti secondi aspettare dopo la morte del boss prima di iniziare il fade del muro?")]
     public float ritardoPrimaDelCrollo = 2f;
+    
+    [Tooltip("Durata in secondi dell'effetto di fade (scomparsa graduale).")]
+    public float durataFade = 1.5f;
 
     public void ApriPassaggioSegreto()
     {
@@ -20,22 +17,34 @@ public class SecretDoorReveal : MonoBehaviour
 
     private IEnumerator SequenzaCrollo()
     {
-        // 1. Attesa drammatica dopo la morte del boss
+        // Attesa drammatica dopo la morte del boss
         yield return new WaitForSeconds(ritardoPrimaDelCrollo);
 
-        // 2. Audio del crollo
-        if (AudioManager.Instance != null && suonoCrollo != null)
+        // Recuperiamo la Tilemap attaccata a questo GameObject
+        Tilemap tilemap = GetComponent<Tilemap>();
+        
+        if (tilemap != null)
         {
-            AudioManager.Instance.sfxSource.PlayOneShot(suonoCrollo);
+            Color coloreIniziale = tilemap.color;
+            float tempoTrascorso = 0f;
+
+            // Effetto Fade-out sull'Alpha del colore
+            while (tempoTrascorso < durataFade)
+            {
+                tempoTrascorso += Time.deltaTime;
+                float nuovoAlpha = Mathf.Lerp(1f, 0f, tempoTrascorso / durataFade);
+                
+                tilemap.color = new Color(coloreIniziale.r, coloreIniziale.g, coloreIniziale.b, nuovoAlpha);
+                
+                yield return null; // Aspetta il frame successivo
+            }
+        }
+        else
+        {
+            Debug.LogWarning("Nessuna Tilemap trovata su " + gameObject.name + " per fare il fade!");
         }
 
-        // 3. Particelle
-        if (esplosioneRocce != null)
-        {
-            esplosioneRocce.Play();
-        }
-
-        // 4. SPEGNE L'OGGETTO (Così sparisce sia la grafica che il muro invisibile!)
+        // SPEGNE L'OGGETTO definitivamente (rimuove collisioni etc.)
         gameObject.SetActive(false);
     }
 }
