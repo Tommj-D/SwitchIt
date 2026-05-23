@@ -40,7 +40,7 @@ public class BossRoomFogController : MonoBehaviour
         UpdateBossRoomVisuals();
     }
 
-    private void OnTriggerExit2D(Collider2D collision)
+    /*private void OnTriggerExit2D(Collider2D collision)
     {
         if (!collision || !collision.CompareTag("Player")) return;
 
@@ -54,7 +54,7 @@ public class BossRoomFogController : MonoBehaviour
 
         if (realWorldDust != null)
             realWorldDust.SetActive(false);
-    }
+    }*/
 
     private void Update()
     {
