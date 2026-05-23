@@ -123,6 +123,7 @@ public class PlayerRespawn : MonoBehaviour
         // Blocca movimento e collisioni
         rb.linearVelocity = Vector2.zero;
         col.enabled = false;
+        DisableAttackHitboxes();
 
         var movement = GetComponent<PlayerMovement>();
         if (movement != null)
@@ -533,6 +534,19 @@ public class PlayerRespawn : MonoBehaviour
         {
             p.sortingLayerName = sortingLayer;
             p.sortingOrder = order;
+        }
+    }
+
+
+    //
+    private void DisableAttackHitboxes()
+    {
+        Collider2D[] cols = GetComponentsInChildren<Collider2D>(true);
+
+        foreach (var c in cols)
+        {
+            if (c.isTrigger)
+                c.enabled = false;
         }
     }
 }
