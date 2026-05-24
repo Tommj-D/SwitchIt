@@ -33,6 +33,7 @@ public class BossTeleporter : MonoBehaviour
         if (collision.CompareTag("Player") && !isTeleporting)
         {
             StartCoroutine(TeleportSequence(collision.gameObject));
+            AudioManager.Instance.playerEnteredBossCorridor = true;
         }
     }
 

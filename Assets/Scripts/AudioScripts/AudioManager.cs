@@ -50,6 +50,8 @@ public class AudioManager : MonoBehaviour
     public AudioMixerGroup sfxTransitionGroup;
     public AudioMixerGroup musicFantasyGroup;
     public AudioMixerGroup sfxFantasyGroup;
+
+    [HideInInspector] public bool playerEnteredBossCorridor;
     public enum AudioState
     {
         Normal,

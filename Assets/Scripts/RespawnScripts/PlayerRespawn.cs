@@ -398,7 +398,10 @@ public class PlayerRespawn : MonoBehaviour
 
         if (!musicResetCalled) {
             //Rimetto la musica al volume normale chimanando un metodo che sta in AudioManager che resetta i parametri di transizione
-            StartCoroutine(AudioManager.Instance.ResetAudioOnPlayerSpawn());
+            if (!AudioManager.Instance.playerEnteredBossCorridor)
+            {
+                StartCoroutine(AudioManager.Instance.ResetAudioOnPlayerSpawn());
+            }
         }
 
         isDying = false;

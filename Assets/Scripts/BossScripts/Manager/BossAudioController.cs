@@ -53,6 +53,18 @@ public class BossAudioController : MonoBehaviour
 
     public void StopBossMusic()
     {
+        if (AudioManager.Instance == null)
+            return;
+
         AudioManager.Instance.StopMusic();
+
+        // Ripristina la musica normale SOLO se il player
+        // non è più nel corridoio boss
+        if (!AudioManager.Instance.playerEnteredBossCorridor)
+        {
+            AudioManager.Instance.PlayMusic(
+                AudioManager.Instance.backgroundMusic
+            );
+        }
     }
 }
