@@ -99,7 +99,7 @@ public class PlayerRespawn : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         // Stessa cosa qui per i trigger
-        if (!isDying && (other.gameObject.CompareTag("Death") || other.gameObject.CompareTag("Enemy") || other.gameObject.CompareTag("Minion") || other.gameObject.GetComponent<BossManager>() != null))
+        if (!isDying && (other.gameObject.CompareTag("Death") || other.gameObject.CompareTag("Minion") || other.gameObject.GetComponent<BossManager>() != null))
         {
             StartCoroutine(DeathSequence());
         }

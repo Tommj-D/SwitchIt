@@ -4,12 +4,21 @@ public class Slime_Green : Enemy
 {
     [Header("Direction (1 = right, -1 = left)")]
     [SerializeField] private int initialDirection = 1; 
+    [SerializeField] private bool upsideDown;
 
     protected bool isGrounded = false;
 
     protected override void Start()
     {
         base.Start();
+        if (upsideDown)
+        {
+            transform.localScale = new Vector3(
+                transform.localScale.x,
+                -Mathf.Abs(transform.localScale.y),
+                transform.localScale.z
+            );
+        }
         ApplyInitialDirection();
     }
 
@@ -43,12 +52,19 @@ public class Slime_Green : Enemy
     {
         foreach (var contact in collision.contacts)
         {
-            if (contact.normal.y > 0.5f)
+            if (!upsideDown && contact.normal.y > 0.5f)
+            {
+                isGrounded = true;
+                break;
+            }
+
+            if (upsideDown && contact.normal.y < -0.5f)
             {
                 isGrounded = true;
                 break;
             }
         }
+
         base.OnCollisionEnter2D(collision);
     }
 
