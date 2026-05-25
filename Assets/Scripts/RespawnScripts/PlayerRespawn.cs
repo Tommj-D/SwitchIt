@@ -412,16 +412,6 @@ public class PlayerRespawn : MonoBehaviour
             WorldSwitch.Instance.canSwitchWorld = true;
         }
 
-        BossPuzzleController[] puzzles =
-        FindObjectsByType<BossPuzzleController>(
-            FindObjectsInactive.Include,
-            FindObjectsSortMode.None
-        );
-
-    foreach (BossPuzzleController puzzle in puzzles)
-    {
-        puzzle.ResetPuzzle();
-    }
 
         isDying = false;
     }
