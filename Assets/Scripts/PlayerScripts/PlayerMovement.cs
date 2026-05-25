@@ -382,6 +382,11 @@ public class PlayerMovement : MonoBehaviour
         
         // Resetta la nostra variabile di direzione
         gravityDirection = 1;
+
+        canSwitchDimension = true;
+        ignoreDimensionLock = false;
+        canFlipGravity = true;
+        isGrounded = false;
         
         // Raddrizza il giocatore
         transform.rotation = Quaternion.identity;

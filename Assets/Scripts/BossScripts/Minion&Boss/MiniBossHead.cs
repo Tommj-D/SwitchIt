@@ -2,26 +2,28 @@ using UnityEngine;
 
 public class MiniBossHead : MonoBehaviour
 {
-    private MiniSpawnBoss boss;
+    private MiniSpawnBoss miniBoss;
 
     private void Start()
     {
         // Trova lo script principale del boss sul genitore
-        boss = GetComponentInParent<MiniSpawnBoss>();
+        miniBoss = GetComponentInParent<MiniSpawnBoss>();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if(collision.CompareTag("Enemy")) miniBoss.Die();
+
         // Se non è il giocatore, non fare nulla
         if (!collision.CompareTag("Player")) return;
-
+        
         // ==================================================
-        // 🛡️ SICUREZZA ANTI-MORTE CONTEMPORANEA
+        // SICUREZZA ANTI-MORTE CONTEMPORANEA
         // ==================================================
-        if (boss != null)
+        if (miniBoss != null)
         {
             // Troviamo TUTTI i collider presenti sul minion (corpo e testa)
-            Collider2D[] allColliders = boss.GetComponentsInChildren<Collider2D>();
+            Collider2D[] allColliders = miniBoss.GetComponentsInChildren<Collider2D>();
             
             // Li disattiviamo immediatamente. Diventando intangibile, 
             // il minion non potrà più attivare lo script di danno sul giocatore.
@@ -31,16 +33,16 @@ public class MiniBossHead : MonoBehaviour
             }
 
             // Ordiniamo al boss di morire
-            boss.Die();
+            miniBoss.Die();
         }
 
         // ==================================================
-        // 🚀 GESTIONE RIMBALZO GIOCATORE
+        // GESTIONE RIMBALZO GIOCATORE
         // ==================================================
         Rigidbody2D rb = collision.GetComponent<Rigidbody2D>();
         PlayerMovement player = collision.GetComponent<PlayerMovement>();
 
-        // 👉 bounce player (spinta verso l'alto)
+        // bounce player (spinta verso l'alto)
         if (rb != null)
         {
             // Azzeriamo la velocità verticale attuale per avere sempre un rimbalzo costante
@@ -48,7 +50,7 @@ public class MiniBossHead : MonoBehaviour
             rb.AddForce(Vector2.up * 7f, ForceMode2D.Impulse);
         }
 
-        // 👉 reset salti
+        // reset salti
         if (player != null)
         {
             player.ResetJumps();

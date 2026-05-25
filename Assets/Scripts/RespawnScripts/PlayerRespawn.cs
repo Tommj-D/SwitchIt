@@ -393,6 +393,9 @@ public class PlayerRespawn : MonoBehaviour
 
         // riattivo collisioni e movimento
         col.enabled = true;
+
+        EnableAttackHitboxes();
+
         GetComponent<PlayerMovement>().enabled = true;
         playerInput.enabled = true;
 
@@ -403,6 +406,22 @@ public class PlayerRespawn : MonoBehaviour
                 StartCoroutine(AudioManager.Instance.ResetAudioOnPlayerSpawn());
             }
         }
+
+        if (WorldSwitch.Instance != null)
+        {
+            WorldSwitch.Instance.canSwitchWorld = true;
+        }
+
+        BossPuzzleController[] puzzles =
+        FindObjectsByType<BossPuzzleController>(
+            FindObjectsInactive.Include,
+            FindObjectsSortMode.None
+        );
+
+    foreach (BossPuzzleController puzzle in puzzles)
+    {
+        puzzle.ResetPuzzle();
+    }
 
         isDying = false;
     }
@@ -550,6 +569,17 @@ public class PlayerRespawn : MonoBehaviour
         {
             if (c.isTrigger)
                 c.enabled = false;
+        }
+    }
+
+    private void EnableAttackHitboxes()
+    {
+        Collider2D[] cols = GetComponentsInChildren<Collider2D>(true);
+
+        foreach (var c in cols)
+        {
+            if (c.isTrigger)
+                c.enabled = true;
         }
     }
 }

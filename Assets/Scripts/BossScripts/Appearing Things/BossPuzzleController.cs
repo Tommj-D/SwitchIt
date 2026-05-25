@@ -7,6 +7,8 @@ public class BossPuzzleController : MonoBehaviour, IButtonPuzzle
     [Header("Buttons")]
     [SerializeField] private int totalButtons = 3;
 
+    private GameObject[] originalBlocks;
+
     private int pressedButtons = 0;
 
     [Header("Targets")]
@@ -49,6 +51,11 @@ public class BossPuzzleController : MonoBehaviour, IButtonPuzzle
     private int outlineColorID = Shader.PropertyToID("_OutlineColor");
     private int spiralStrengthID = Shader.PropertyToID("_SpiralStrength");
     private int dissolveScaleID = Shader.PropertyToID("_DissolveScale");
+
+    private void Start()
+    {
+        originalBlocks = blocksToRemove;
+    }
 
     public void PressButton(Transform buttonTransform, int targetCircleIndex)
     {
@@ -179,5 +186,51 @@ public class BossPuzzleController : MonoBehaviour, IButtonPuzzle
         mat.SetFloat("_DissolveAmount", end);
 
         block.SetActive(false);
+    }
+
+    public void ResetPuzzle()
+    {
+        pressedButtons = 0;
+        arrivedParticles = 0;
+
+        // Riattiva i blocchi
+        foreach (GameObject block in blocksToRemove)
+        {
+            if (block == null)
+                continue;
+
+            block.SetActive(true);
+
+            TilemapRenderer tilemapRenderer = block.GetComponent<TilemapRenderer>();
+
+            if (tilemapRenderer != null)
+            {
+                Material mat = tilemapRenderer.material;
+
+                if (mat.HasProperty(dissolveAmountID))
+                {
+                    mat.SetFloat(dissolveAmountID, 0f);
+                }
+
+                if (mat.HasProperty(verticalDissolveID))
+                {
+                    mat.SetFloat(
+                        verticalDissolveID,
+                        useVerticalDissolve ? 0f : 0f
+                    );
+                }
+            }
+        }
+
+        // Resetta tutti i pulsanti collegati
+        Button[] buttons = FindObjectsByType<Button>(
+            FindObjectsInactive.Include,
+            FindObjectsSortMode.None
+        );
+
+        foreach (Button b in buttons)
+        {
+            b.ResetButton();
+        }
     }
 }

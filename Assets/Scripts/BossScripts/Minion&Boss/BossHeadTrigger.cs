@@ -12,6 +12,11 @@ public class BossHeadTrigger : MonoBehaviour
     {
         if (!collision.CompareTag("Player")) return;
 
+        if (bossManager != null)
+        {
+            bossManager.DisableAllColliders();
+        }
+
         // 1. Boss prende danno
         if (bossManager != null)
         {

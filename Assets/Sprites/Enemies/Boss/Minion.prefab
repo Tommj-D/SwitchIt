@@ -67,7 +67,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.04515025, y: 0.2670315}
+  m_Offset: {x: -0.047623813, y: 0.24532387}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -77,7 +77,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.67376393, y: 0.18251118}
+  m_Size: {x: 0.7461709, y: 0.1986534}
   m_EdgeRadius: 0
 --- !u!114 &7384240329260580206
 MonoBehaviour:
@@ -317,7 +317,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.07062775, y: -0.17736043}
+  m_Offset: {x: -0.07631034, y: -0.18927836}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -327,7 +327,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.82761526, y: 0.6665356}
+  m_Size: {x: 0.7936498, y: 0.6426997}
   m_EdgeRadius: 0
 --- !u!114 &5950395278951918483
 MonoBehaviour:
@@ -506,7 +506,7 @@ MonoBehaviour:
   player: {fileID: 0}
   hoverAmplitude: 0.5
   hoverFrequency: 2
-  dashSpeed: 15
+  dashSpeed: 12
   dashCooldown: 3.5
   chargeTime: 0.9
   dashDuration: 0.5

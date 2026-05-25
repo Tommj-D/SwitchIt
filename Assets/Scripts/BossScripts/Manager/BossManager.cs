@@ -65,6 +65,8 @@ public class BossManager : MonoBehaviour
     [SerializeField] private float velocitaDash = 20f;
     [SerializeField] private float durataDash = 0.35f;
 
+    private bool isPreparingDash = false;
+
     private bool isDashing = false;
     private Coroutine dashRoutine;
 
@@ -423,7 +425,7 @@ public class BossManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (isDead || isTransitioning || isDashing || !isFightStarted) return;
+        if (isDead || isTransitioning || !isFightStarted ||isPreparingDash) return;
 
         Transform[] punti = GetPuntiFaseCorrente();
 
@@ -532,7 +534,6 @@ public class BossManager : MonoBehaviour
 
         yield return StartCoroutine(DissolveRoutine(0f, 1.1f));
 
-        // 🟢 QUI LASCIAMO LO SPAWN LIBERO: i minion spawnano sempre quando scompare
         SpawnMinionsHit();
 
         if (hitIndex == 0)
@@ -660,16 +661,23 @@ public class BossManager : MonoBehaviour
             if (isDead || isTransitioning)
                 yield break;
 
-            isDashing = true;
+            // FERMA IL BOSS
+            isPreparingDash = true;
 
             float velocitaNormale = velocitaSpostamento;
+            velocitaSpostamento = 0f;
+
+            yield return new WaitForSeconds(0.4f);
+
+            // DASH
+            isPreparingDash = false;
+
             velocitaSpostamento = velocitaDash;
 
             yield return new WaitForSeconds(durataDash);
 
+            // RITORNO NORMALE
             velocitaSpostamento = velocitaNormale;
-
-            isDashing = false;
         }
     }
 
@@ -868,5 +876,23 @@ public class BossManager : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawSphere(transform.position + (Vector3)turnCheckOffset, 0.15f);
+    }
+
+    public void DisableAllColliders()
+    {
+        Collider2D[] colliders =
+            GetComponentsInChildren<Collider2D>(true);
+
+        foreach (Collider2D col in colliders)
+        {
+            col.enabled = false;
+        }
+
+        Collider2D mainCollider = GetComponent<Collider2D>();
+
+        if (mainCollider != null)
+        {
+            mainCollider.enabled = false;
+        }
     }
 }
