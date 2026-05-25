@@ -62,6 +62,7 @@ public class BossManager : MonoBehaviour
     [Header("Dash Fase 3")]
     [SerializeField] private bool usaDashFase3 = true;
     [SerializeField] private float tempoAttesaDash = 2f;
+    [SerializeField] private float tempoPreparazioneDash = 0.4f;
     [SerializeField] private float velocitaDash = 20f;
     [SerializeField] private float durataDash = 0.35f;
 
@@ -664,7 +665,7 @@ public class BossManager : MonoBehaviour
         }
     }
 
-    private IEnumerator DashRoutine()
+private IEnumerator DashRoutine()
     {
         while (!isDead)
         {
@@ -679,7 +680,8 @@ public class BossManager : MonoBehaviour
             float velocitaNormale = velocitaSpostamento;
             velocitaSpostamento = 0f;
 
-            yield return new WaitForSeconds(0.4f);
+            // SOSTITUITO IL VALORE HARDCODED (0.4f) CON LA VARIABILE
+            yield return new WaitForSeconds(tempoPreparazioneDash); 
 
             // DASH
             isPreparingDash = false;
@@ -772,6 +774,19 @@ public class BossManager : MonoBehaviour
         if (portalLeftInstance != null) Destroy(portalLeftInstance.gameObject);
         if (portalRightInstance != null) Destroy(portalRightInstance.gameObject);
 
+        // ==================================================
+        // DISATTIVA I PULSANTI (REWARD TARGETS) ALLA MORTE
+        // ==================================================
+        if (firstHitRewards != null)
+        {
+            firstHitRewards.ResetRewards();
+        }
+
+        if (secondHitRewards != null)
+        {
+            secondHitRewards.ResetRewards();
+        }
+        
         Destroy(gameObject, 3f);
     }
 

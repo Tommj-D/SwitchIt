@@ -69,6 +69,18 @@ public class SecretDoorReveal : MonoBehaviour
             bossVirtualCamera.SetActive(false);
         }
 
+        for (int i = 0; i < muriTilemap.Length; i++)
+        {
+            if (muriTilemap[i] != null)
+            {
+                // Spegne l'oggetto della Tilemap, eliminando renderer e collider!
+                muriTilemap[i].gameObject.SetActive(false); 
+            }
+        }
+
+        // Spegne l'oggetto principale (questo script) per pulizia
+        gameObject.SetActive(false);
+
         // Spegne l'oggetto principale per disattivare definitivamente le collisioni di entrambi i muri
         gameObject.SetActive(false);
     }

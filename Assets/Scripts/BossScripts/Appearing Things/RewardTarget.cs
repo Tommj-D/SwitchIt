@@ -12,7 +12,7 @@ public class RewardTarget : MonoBehaviour
 
     private void Start()
     {
-        if (visualObject != null)
+        if (visualObject != null && !revealed)
         {
             visualObject.SetActive(false);
         }
@@ -31,11 +31,13 @@ public class RewardTarget : MonoBehaviour
 
         if (revealBurst != null)
         {
+            // Nota: Se l'oggetto è in una dimensione spenta, le particelle Burst 
+            // potrebbero non vedersi o bloccarsi. È normale e inevitabile, ma la logica funzionerà.
             Instantiate(
                 revealBurst,
                 transform.position,
                 Quaternion.identity
-            );
+            ).Play();
         }
     }
 
