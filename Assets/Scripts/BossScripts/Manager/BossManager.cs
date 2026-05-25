@@ -70,6 +70,10 @@ public class BossManager : MonoBehaviour
     private bool isDashing = false;
     private Coroutine dashRoutine;
 
+    //PUZZLE RESET
+    [Header("Puzzle Level")]
+    public BossPuzzleController bossPuzzle;
+
     //==================================================
     //  AUDIO + FX
     //==================================================
@@ -407,6 +411,14 @@ public class BossManager : MonoBehaviour
         if (secondHitRewards != null)
         {
             secondHitRewards.ResetRewards();
+        }
+
+        //==================================================
+        // RESET PUZZLE PULSANTI
+        //==================================================
+        if (bossPuzzle != null)
+        {
+            bossPuzzle.ResetPuzzle();
         }
     }
 

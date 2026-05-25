@@ -53,4 +53,37 @@ public class Button : MonoBehaviour
             }
         }
     }
+
+    public void ResetButton()
+    {
+        // Il funzionamento del puzzle (la logica) si resetta SEMPRE, 
+        // sia che il pulsante sia attivo sia che sia disattivato.
+        activated = false;
+
+        // L'aspetto grafico (l'animazione) si resetta SUBITO solo se l'oggetto è attivo.
+        // Se è disattivato, l'Animator è spento e Unity darebbe un errore.
+        if (animator != null && isAnimated && gameObject.activeInHierarchy)
+        {
+            ResetAnimation();
+        }
+    }
+
+    // Eseguiamo questo metodo nativo di Unity
+    private void OnEnable()
+    {
+        // Ogni volta che il pulsante viene riattivato tramite SetActive(true),
+        // se la logica era stata resettata (activated == false), allora forza
+        // l'animazione a tornare allo stato originale (non premuto).
+        if (!activated && animator != null && isAnimated)
+        {
+            ResetAnimation();
+        }
+    }
+
+    // Un piccolo metodo di supporto per evitare di duplicare lo stesso codice
+    private void ResetAnimation()
+    {
+        animator.Rebind();
+        animator.Update(0f);
+    }
 }

@@ -6,7 +6,8 @@ public class BossPuzzleController : MonoBehaviour, IButtonPuzzle
 {
     [Header("Buttons")]
     [SerializeField] private int totalButtons = 3;
-
+    [Header("Buttons Reference")]
+    [SerializeField] private Button[] puzzleButtons; 
     private GameObject[] originalBlocks;
 
     private int pressedButtons = 0;
@@ -186,5 +187,24 @@ public class BossPuzzleController : MonoBehaviour, IButtonPuzzle
         mat.SetFloat("_DissolveAmount", end);
 
         block.SetActive(false);
+    }
+
+    public void ResetPuzzle()
+    {
+        // 1. Ferma le coroutine di dissolvenza se il player muore mentre i blocchi stanno scomparendo
+        StopAllCoroutines();
+
+        // 2. Azzera i contatori
+        pressedButtons = 0;
+        arrivedParticles = 0;
+
+        // 3. Resetta fisicamente tutti i bottoni
+        if (puzzleButtons != null)
+        {
+            foreach (Button btn in puzzleButtons)
+            {
+                if (btn != null) btn.ResetButton();
+            }
+        }
     }
 }
