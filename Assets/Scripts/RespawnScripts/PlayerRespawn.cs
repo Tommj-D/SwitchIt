@@ -295,11 +295,26 @@ public class PlayerRespawn : MonoBehaviour
         int targetLayer = GetCurrentPlayerLayer();
         string targetSortingLayer = GetCurrentSortingLayer();
 
+        int targetOrderInLayer = defaultSortingOrder;
+
+        if (RespawnManager.Instance != null)
+        {
+            int overrideOrder = RespawnManager.Instance.GetOverrideOrderInLayer();
+
+            if (overrideOrder != int.MinValue)
+            {
+                targetOrderInLayer = overrideOrder;
+            }
+        }
+
         SetLayerRecursively(gameObject, targetLayer);
 
         if (fullSpriteRenderer != null)
         {
-            ApplySortingRecursively(gameObject, targetSortingLayer, defaultSortingOrder);
+            ApplySortingRecursively(
+                gameObject,
+                targetSortingLayer,
+                targetOrderInLayer);
         }
 
         //RESETTA LA GRAVITÀ DEL GIOCATORE
@@ -483,6 +498,12 @@ public class PlayerRespawn : MonoBehaviour
         if (RespawnManager.Instance == null)
             return defaultSortingLayer;
 
+        string overrideLayer =
+            RespawnManager.Instance.GetOverrideSortingLayer();
+
+        if (!string.IsNullOrEmpty(overrideLayer))
+            return overrideLayer;
+
         Transform point = RespawnManager.Instance.GetRespawnPoint();
         if (point == null)
             return defaultSortingLayer;
@@ -492,6 +513,8 @@ public class PlayerRespawn : MonoBehaviour
 
         return PLAYER_SORTING;
     }
+
+    
 
     private void ApplyLayerFromPlayer(GameObject target, GameObject player)
     {

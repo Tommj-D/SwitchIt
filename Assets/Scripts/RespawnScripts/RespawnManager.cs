@@ -18,6 +18,8 @@ public class RespawnManager : MonoBehaviour
     public Collider2D defaultConfiner; // Il confiner iniziale del livello
     private Collider2D currentConfiner; // Il confiner associato al checkpoint salvato
 
+    private Checkpoint currentCheckpoint;
+
     private void Awake()
     {
         Instance = this;
@@ -86,10 +88,17 @@ public class RespawnManager : MonoBehaviour
     {
         currentRespawnPoint = newPoint;
         
+        currentCheckpoint = newPoint.GetComponent<Checkpoint>();
+
         if (newConfiner != null)
         {
             currentConfiner = newConfiner;
         }
+    }
+
+    public Checkpoint GetCurrentCheckpoint()
+    {
+        return currentCheckpoint;
     }
 
     public Transform GetRespawnPoint()
@@ -101,5 +110,27 @@ public class RespawnManager : MonoBehaviour
         }
 
         return currentRespawnPoint != null ? currentRespawnPoint : defaultRespawnPoint;
+    }
+
+    public string GetOverrideSortingLayer()
+    {
+        if (currentCheckpoint != null &&
+            currentCheckpoint.overrideRespawnSortingLayer)
+        {
+            return currentCheckpoint.respawnSortingLayer;
+        }
+
+        return null;
+    }
+
+    public int GetOverrideOrderInLayer()
+    {
+        if (currentCheckpoint != null &&
+            currentCheckpoint.overrideRespawnSortingLayer)
+        {
+            return currentCheckpoint.respawnOrderInLayer;
+        }
+
+        return int.MinValue;
     }
 }

@@ -10,6 +10,11 @@ public class Checkpoint : MonoBehaviour
     [Tooltip("Inserisci qui il Collider2D del recinto in cui si trova questo checkpoint")]
     public Collider2D confinerDiQuestoCheckpoint;
 
+    [Header("Respawn Sorting Layer")]
+    public bool overrideRespawnSortingLayer = false;
+    public string respawnSortingLayer = "Default";
+    public int respawnOrderInLayer = 0;
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (activated) return;
