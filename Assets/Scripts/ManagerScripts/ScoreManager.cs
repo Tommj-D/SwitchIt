@@ -128,17 +128,41 @@ public class ScoreManager : MonoBehaviour
 
     private void SbloccaLivelloSuccessivo(int livelloDaSbloccare)
     {
-        var request = new UpdateUserDataRequest
-        {
-            Data = new Dictionary<string, string>
+        PlayFabClientAPI.GetUserData(
+            new GetUserDataRequest(),
+            result =>
             {
-                {"MaxLevelUnlocked", livelloDaSbloccare.ToString()} 
-            }
-        };
+                int livelloMassimo = 1;
 
-        PlayFabClientAPI.UpdateUserData(request, 
-            result => Debug.Log("Progresso salvato! Livello " + livelloDaSbloccare + " sbloccato."), 
-            error => Debug.LogError("Errore salvataggio progresso: " + error.ErrorMessage)
+                if (result.Data != null &&
+                    result.Data.ContainsKey("MaxLevelUnlocked"))
+                {
+                    int.TryParse(result.Data["MaxLevelUnlocked"].Value, out livelloMassimo);
+                }
+
+                // Se il giocatore ha già sbloccato questo livello o uno superiore,
+                // non facciamo nulla.
+                if (livelloMassimo >= livelloDaSbloccare)
+                {
+                    Debug.Log("Livello già sbloccato, nessun aggiornamento necessario.");
+                    return;
+                }
+
+                var request = new UpdateUserDataRequest
+                {
+                    Data = new Dictionary<string, string>
+                    {
+                        { "MaxLevelUnlocked", livelloDaSbloccare.ToString() }
+                    }
+                };
+
+                PlayFabClientAPI.UpdateUserData(
+                    request,
+                    r => Debug.Log("Progresso salvato! Livello " + livelloDaSbloccare + " sbloccato."),
+                    error => Debug.LogError("Errore salvataggio progresso: " + error.ErrorMessage)
+                );
+            },
+            error => Debug.LogError("Errore lettura progresso: " + error.ErrorMessage)
         );
     }
 }
