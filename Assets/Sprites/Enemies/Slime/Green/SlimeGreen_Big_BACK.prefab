@@ -93,6 +93,37 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHead
   enemy: {fileID: 430935990253754505}
   jumpingForce: 12
+--- !u!1 &3548104522905305725
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2210295699792528706}
+  m_Layer: 10
+  m_Name: GroundCheck
+  m_TagString: Untagged
+  m_Icon: {fileID: -5442936267250999957, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2210295699792528706
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3548104522905305725}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.501, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6941335478527101161}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7691166722382384841
 GameObject:
   m_ObjectHideFlags: 0
@@ -129,6 +160,7 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 398486286013477059}
+  - {fileID: 2210295699792528706}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &5063652461872559378
@@ -177,7 +209,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1287656843
-  m_SortingLayer: -2
+  m_SortingLayer: -3
   m_SortingOrder: 99
   m_MaskInteraction: 0
   m_Sprite: {fileID: -9074539206338946419, guid: c80534141f80d28489b1ef92f8ff7d99, type: 3}
@@ -335,6 +367,12 @@ MonoBehaviour:
   isKillable: 1
   flipCooldown: 0.2
   initialDirection: -1
+  upsideDown: 0
+  groundCheck: {fileID: 2210295699792528706}
+  groundRadius: 0.1
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 2048
   smallEnemyPrefab: {fileID: 3562695539695015166, guid: 2fadc72b2700345429553c6d683c5a80, type: 3}
   spawnCount: 2
   spawnOffset: 0.5

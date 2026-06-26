@@ -6,6 +6,10 @@ public class Slime_Green : Enemy
     [SerializeField] private int initialDirection = 1; 
     [SerializeField] private bool upsideDown;
 
+    [SerializeField] private Transform groundCheck;
+    [SerializeField] private float groundRadius = 0.1f;
+    [SerializeField] private LayerMask groundMask;
+
     protected bool isGrounded = false;
 
     protected override void Start()
@@ -29,6 +33,17 @@ public class Slime_Green : Enemy
         if (sr != null)
             sr.flipX = direction < 0;
     }
+
+    protected override void Update()
+    {
+        isGrounded = Physics2D.OverlapCircle(
+            groundCheck.position,
+            groundRadius,
+            groundMask
+        );
+
+        base.Update();
+    }
     
     protected override void Move()
     {
@@ -47,29 +62,9 @@ public class Slime_Green : Enemy
         base.ResetEnemy();
         ApplyInitialDirection();
     }
-
-    protected override void OnCollisionEnter2D(Collision2D collision)
-    {
-        foreach (var contact in collision.contacts)
-        {
-            if (!upsideDown && contact.normal.y > 0.5f)
-            {
-                isGrounded = true;
-                break;
-            }
-
-            if (upsideDown && contact.normal.y < -0.5f)
-            {
-                isGrounded = true;
-                break;
-            }
-        }
-
-        base.OnCollisionEnter2D(collision);
-    }
-
     protected override void OnTriggerEnter2D(Collider2D collision)
     {
+        
         if (collision.CompareTag("Death"))
         {
             OnStomped();
