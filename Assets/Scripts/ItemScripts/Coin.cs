@@ -26,7 +26,15 @@ public class Coin : MonoBehaviour
     }
 
     void OnTriggerEnter2D(Collider2D other)
-    {
+    {   
+         PlayerRespawn respawn = other.GetComponent<PlayerRespawn>();
+
+        if (respawn == null)
+            return;
+
+        if (respawn.IsDying())
+            return;
+            
         if (other.CompareTag("Player") && !collected)
         {
             Collect(); 

@@ -11,15 +11,15 @@ public class Chest : MonoBehaviour
     public bool needKey = false;
     private bool isOpen = false;
 
-    public GameObject dropPrefab;        // prefab dell’oggetto che esce (moneta/chiave/pozione)
-    public int amount = 1;               // quantità (es: monete = 1)
+    public GameObject dropPrefab;        // prefab dellï¿½oggetto che esce (moneta/chiave/pozione)
+    public int amount = 1;               // quantitï¿½ (es: monete = 1)
 
-    public float finalPosition = 1.5f;   // altezza finale dell’oggetto che esce
-    public float duration = 0.4f;              // durata dell’animazione di uscita
-    public float waitingTime = 0.05f;     // tempo di attesa tra un’uscita e l’altra
+    public float finalPosition = 1.5f;   // altezza finale dellï¿½oggetto che esce
+    public float duration = 0.4f;              // durata dellï¿½animazione di uscita
+    public float waitingTime = 0.05f;     // tempo di attesa tra unï¿½uscita e lï¿½altra
 
-    public float startDimension = 0.6f;   // dimensione iniziale dell’oggetto che esce
-    public float endDimension = 1.7f;     // dimensione finale dell’oggetto che esce
+    public float startDimension = 0.6f;   // dimensione iniziale dellï¿½oggetto che esce
+    public float endDimension = 1.7f;     // dimensione finale dellï¿½oggetto che esce
 
     [Header("Single Object Settings")]
     public bool stayVisible = false;       // se true, l'oggetto rimane visibile per un po' prima di scomparire
@@ -38,6 +38,14 @@ public class Chest : MonoBehaviour
         if (!isOpen && other.CompareTag("Player"))
         {
             PlayerInventory inv = other.GetComponent<PlayerInventory>();
+
+             PlayerRespawn respawn = other.GetComponent<PlayerRespawn>();
+
+            if (respawn == null)
+                return;
+
+            if (respawn.IsDying())
+                return;
 
             if (needKey)
             {
@@ -78,7 +86,7 @@ public class Chest : MonoBehaviour
 
         for (int i = 0; i < amount; i++)
         {
-            // crea l’oggetto
+            // crea lï¿½oggetto
             GameObject drop = Instantiate(dropPrefab, transform.position, Quaternion.identity);
             spawnedDrops.Add(drop);
 
@@ -127,7 +135,7 @@ public class Chest : MonoBehaviour
                     // forziamo la posizione ad ogni frame per evitare spostamenti indesiderati
                     drop.transform.position = end;
 
-                    // mantieni visibilità piena mentre resta sospesa
+                    // mantieni visibilitï¿½ piena mentre resta sospesa
                     if (sr != null)
                         sr.color = originalColor;
 

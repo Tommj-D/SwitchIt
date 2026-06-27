@@ -42,7 +42,15 @@ public class Mace_Fall : MonoBehaviour
     } 
 
     private void OnTriggerEnter2D(Collider2D other)
-    {
+    {   
+         PlayerRespawn respawn = other.GetComponent<PlayerRespawn>();
+
+        if (respawn == null)
+            return;
+
+        if (respawn.IsDying())
+            return;
+            
         if (other.CompareTag("Player") && !isActivated)
         {
             isActivated = true;

@@ -24,6 +24,15 @@ public class Button : MonoBehaviour
         if (activated) return;
         if (!other.CompareTag("Player")) return;
 
+         PlayerRespawn respawn = other.GetComponent<PlayerRespawn>();
+
+        if (respawn == null)
+            return;
+
+        if (respawn.IsDying())
+            return;
+        
+
         if (puzzleControllers == null || puzzleControllers.Length == 0)
         {
             Debug.LogWarning("Il Button non ha PuzzleController assegnati!");

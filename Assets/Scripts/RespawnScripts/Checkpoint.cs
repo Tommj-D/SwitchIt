@@ -20,6 +20,14 @@ public class Checkpoint : MonoBehaviour
         if (activated) return;
         if (!other.CompareTag("Player")) return;
 
+        PlayerRespawn respawn = other.GetComponent<PlayerRespawn>();
+
+        if (respawn == null)
+            return;
+
+        if (respawn.IsDying())
+            return;
+
         if (makeSound)
             AudioManager.Instance.PlaySFX(AudioManager.Instance.checkpointSound);
 

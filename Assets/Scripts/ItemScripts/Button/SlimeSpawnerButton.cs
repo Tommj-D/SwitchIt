@@ -39,6 +39,14 @@ public class SlimeSpawnerButton : MonoBehaviour
         if (!other.CompareTag("Player")) return;
         if (!canPress) return;
 
+         PlayerRespawn respawn = other.GetComponent<PlayerRespawn>();
+
+        if (respawn == null)
+            return;
+
+        if (respawn.IsDying())
+            return;
+            
         canPress = false;
         lastPressTime = Time.time;
 

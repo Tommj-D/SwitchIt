@@ -86,6 +86,14 @@ public class AddColorEffect : MonoBehaviour
     {
         if (!other.CompareTag("Player")) return;
 
+         PlayerRespawn respawn = other.GetComponent<PlayerRespawn>();
+
+        if (respawn == null)
+            return;
+
+        if (respawn.IsDying())
+            return;
+            
         runeColor = runeColor_Then;
         particlesColor = particlesColor_Then;
         rockLight.color = rockLightColor;
