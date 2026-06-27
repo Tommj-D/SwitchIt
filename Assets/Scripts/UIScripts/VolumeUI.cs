@@ -34,7 +34,7 @@ public class VolumeUI : MonoBehaviour
 
         if (VolumeController.Instance != null)
         {
-            VolumeController.Instance.StopMusic();
+            AudioManager.Instance.StopMusic();
         }
 
         SceneManager.LoadScene("Menu"); 

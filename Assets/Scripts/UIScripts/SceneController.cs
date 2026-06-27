@@ -54,7 +54,14 @@ public class SceneController : MonoBehaviour
         LightManager.Instance.ForceIntensity(startLight);
         sceneFade.SetAlphaFromLight(startLight);
 
+        // Fai ripartire la musica ora
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayMusic(AudioManager.Instance.backgroundMusic);
+        }
+
         float targetLight = LightManager.Instance.outsideIntensity;
+
         // Fade in
         yield return FadeInWithLight(fadeDuration, targetLight);
     }

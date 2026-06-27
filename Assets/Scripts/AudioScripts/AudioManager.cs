@@ -94,10 +94,18 @@ public class AudioManager : MonoBehaviour
         if (clip == null || musicSource == null)
             return;
 
-        // Evita di riavviare la stessa musica
+        // Se è la stessa clip ed è già in riproduzione non fare nulla
         if (musicSource.clip == clip && musicSource.isPlaying)
             return;
 
+        // Se è la stessa clip ma era stata fermata, falla ripartire
+        if (musicSource.clip == clip && !musicSource.isPlaying)
+        {
+            musicSource.Play();
+            return;
+        }
+
+        // Altrimenti cambia clip e falla partire
         musicSource.clip = clip;
         musicSource.Play();
     }
