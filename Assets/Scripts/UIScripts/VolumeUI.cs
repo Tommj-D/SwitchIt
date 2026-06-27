@@ -31,6 +31,12 @@ public class VolumeUI : MonoBehaviour
     public void LoadLevelSelection()
     {
         Time.timeScale = 1f; 
+
+        if (VolumeController.Instance != null)
+        {
+            VolumeController.Instance.StopMusic();
+        }
+
         SceneManager.LoadScene("Menu"); 
     }
 }
