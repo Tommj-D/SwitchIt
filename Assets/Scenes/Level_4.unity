@@ -191664,11 +191664,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7491255520955738167, guid: bdadba3121c353d4fbdfc9de8f2bb0de, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7831485771967566884, guid: bdadba3121c353d4fbdfc9de8f2bb0de, type: 3}
       propertyPath: m_ColliderPaths.Array.size
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7831485771967566884, guid: bdadba3121c353d4fbdfc9de8f2bb0de, type: 3}
       propertyPath: m_CompositePaths.m_Paths.Array.size
