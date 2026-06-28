@@ -55,7 +55,8 @@ public class SceneController : MonoBehaviour
         sceneFade.SetAlphaFromLight(startLight);
 
         // Fai ripartire la musica ora
-        if (AudioManager.Instance != null)
+        if (AudioManager.Instance != null &&
+            sceneName.StartsWith("Level_"))
         {
             AudioManager.Instance.PlayMusic(AudioManager.Instance.backgroundMusic);
         }
