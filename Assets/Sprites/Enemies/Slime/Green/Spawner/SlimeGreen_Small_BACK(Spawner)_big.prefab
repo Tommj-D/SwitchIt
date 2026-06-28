@@ -93,6 +93,37 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHead
   enemy: {fileID: 7425046998773835069}
   jumpingForce: 4
+--- !u!1 &3210825221338594211
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7880540337275810387}
+  m_Layer: 10
+  m_Name: GroundCheck
+  m_TagString: Untagged
+  m_Icon: {fileID: -5442936267250999957, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7880540337275810387
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3210825221338594211}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.51, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3305055157240757653}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6548371519159934191
 GameObject:
   m_ObjectHideFlags: 0
@@ -128,6 +159,7 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 595704354342122074}
+  - {fileID: 7880540337275810387}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &5420226251908434402
@@ -227,6 +259,12 @@ MonoBehaviour:
   isKillable: 1
   flipCooldown: 0.2
   initialDirection: -1
+  upsideDown: 0
+  groundCheck: {fileID: 7880540337275810387}
+  groundRadius: 0.1
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 2048
 --- !u!60 &6339242032055415749
 PolygonCollider2D:
   m_ObjectHideFlags: 0
