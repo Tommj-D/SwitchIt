@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 827496643190701382}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Spikes_Up
-  m_TagString: Untagged
+  m_TagString: Spike
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -74,7 +74,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3397108675521673997}
   - component: {fileID: 1371946146370498454}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Floor
   m_TagString: Spike
   m_Icon: {fileID: 0}
@@ -206,7 +206,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: Spike_Up (2)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 8453177972068815886, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 5848931768858510837, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -280,7 +285,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: Spike_Up (3)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 8453177972068815886, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 5848931768858510837, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -354,7 +364,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: Spike_Up (3)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 8453177972068815886, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 5848931768858510837, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -428,7 +443,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: Spike_Up (1)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 8453177972068815886, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 5848931768858510837, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -502,7 +522,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: Spike_Up (1)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 8453177972068815886, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 5848931768858510837, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -576,7 +601,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: Spike_Up (1)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 8453177972068815886, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 5848931768858510837, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -650,7 +680,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: Spike_Up (2)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 8453177972068815886, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 5848931768858510837, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -724,7 +759,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: Spike_Up
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 8453177972068815886, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 5848931768858510837, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -798,7 +838,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: Spike_Up (2)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 8453177972068815886, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 5848931768858510837, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -872,7 +917,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: Spike_Up (2)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 8453177972068815886, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 5848931768858510837, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -946,7 +996,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: Spike_Up (2)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 8453177972068815886, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 5848931768858510837, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -1020,7 +1075,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: Spike_Up
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 8453177972068815886, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 5848931768858510837, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -1098,7 +1158,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: Spike_Up
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 8453177972068815886, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 5848931768858510837, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -1172,7 +1237,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: Spike_Up
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 8453177972068815886, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 5848931768858510837, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -1250,7 +1320,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: Spike_Up (2)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 8453177972068815886, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 5848931768858510837, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -1324,7 +1399,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: Spike_Up (2)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 8453177972068815886, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 5848931768858510837, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -1398,7 +1478,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: Spike_Up
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 8453177972068815886, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 5848931768858510837, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -1472,7 +1557,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: Spike_Up (3)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 8453177972068815886, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 5848931768858510837, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -1546,7 +1636,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: Spike_Up (1)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 8453177972068815886, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 5848931768858510837, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -1620,7 +1715,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: Spike_Up
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 8453177972068815886, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 5848931768858510837, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -1698,7 +1798,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: Spike_Up (3)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 8453177972068815886, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 5848931768858510837, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -1772,7 +1877,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: Spike_Up (3)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 8453177972068815886, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 5848931768858510837, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -1846,7 +1956,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: Spike_Up (3)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 8453177972068815886, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 5848931768858510837, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -1920,7 +2035,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: Spike_Up (2)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 8453177972068815886, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 5848931768858510837, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -1994,7 +2114,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: Spike_Up
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 8453177972068815886, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 5848931768858510837, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -2068,7 +2193,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: Spike_Up (3)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 8453177972068815886, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 5848931768858510837, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -2142,7 +2272,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: Spike_Up (1)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 8453177972068815886, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 5848931768858510837, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -2220,7 +2355,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: Spike_Up (1)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 8453177972068815886, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 5848931768858510837, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -2294,7 +2434,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: Spike_Up (1)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 8453177972068815886, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 5848931768858510837, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -2368,7 +2513,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: Spike_Up (1)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 8453177972068815886, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 5848931768858510837, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -2442,7 +2592,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: Spike_Up
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 8453177972068815886, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 5848931768858510837, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -2516,7 +2671,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: Spike_Up (3)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 8453177972068815886, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 5848931768858510837, guid: 08cfc54112048f04a973c6b08ad9dbcb, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

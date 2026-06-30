@@ -8,8 +8,9 @@ public class TutorialTextFade : MonoBehaviour
     [Header("Impostazioni Testo")]
     public TextMeshPro testoTutorial;
     public float durataFade = 1f;
-    public Key tastoScomparsa; 
-    public static bool tutorialCompletato = false; 
+    public Key tastoScomparsa;
+    private bool tutorialCompletato = false;
+    private bool testoGiaMostrato = false;
 
     [Header("Floating Effect")]
     public  float floatAmplitude = 0.2f;
@@ -27,13 +28,10 @@ public class TutorialTextFade : MonoBehaviour
             // Se il tutorial è già stato fatto in una vita precedente, 
             // cerca il giocatore e sbloccagli l'abilità all'istante prima di sparire.
             PlayerMovement player = FindAnyObjectByType<PlayerMovement>();
-            if (player != null) 
+            if (player != null)
             {
                 player.gravityUnlocked = true;
             }
-
-            gameObject.SetActive(false);
-            return;
         }
 
         startPos = transform.position;
@@ -56,7 +54,10 @@ public class TutorialTextFade : MonoBehaviour
         transform.position = startPos + new Vector3(offsetX, offsetY, 0f);
 
         // MODIFICA: Il tasto funziona SOLO se il giocatore è nell'area del tutorial
-        if (playerInArea && Keyboard.current != null && Keyboard.current[tastoScomparsa].wasPressedThisFrame)
+        if (playerInArea &&
+             testoGiaMostrato &&
+             Keyboard.current != null &&
+             Keyboard.current[tastoScomparsa].wasPressedThisFrame)
         {
             tutorialCompletato = true;
 
@@ -78,7 +79,8 @@ public class TutorialTextFade : MonoBehaviour
 
         if (collision.CompareTag("Player"))
         {
-            playerInArea = true; // IL GIOCATORE È ENTRATO
+            playerInArea = true;
+            testoGiaMostrato = true;
 
             PlayerMovement player = collision.GetComponent<PlayerMovement>();
             if (player != null)
@@ -127,12 +129,5 @@ public class TutorialTextFade : MonoBehaviour
         {
             gameObject.SetActive(false);
         }
-    }
-
-    // Questo comando dice a Unity di eseguire questa funzione nel momento esatto in cui premi PLAY
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-    private static void ResetPerTestEditor()
-    {
-        tutorialCompletato = false;
     }
 }
