@@ -2,6 +2,10 @@ using UnityEngine;
 
 public class MiniBossHead : MonoBehaviour
 {
+    [Header("Impostazioni Boss")]
+    [Tooltip("Scrivi qui il nome esatto del GameObject del Boss nella scena")]
+    public string nomeDelBoss = "Boss"; // Sostituisci questo con il nome reale del tuo Boss!
+
     private MiniSpawnBoss miniBoss;
 
     private void Start()
@@ -12,9 +16,19 @@ public class MiniBossHead : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.CompareTag("Enemy")) miniBoss.Die();
+        // ==================================================
+        // GESTIONE NEMICI (Il Boss viene ignorato)
+        // ==================================================
+        if (collision.CompareTag("Enemy"))
+        {
+            // Controlla se il nemico toccato NON ha il nome del Boss
+            if (collision.gameObject.name != nomeDelBoss)
+            {
+                miniBoss.Die();
+            }
+        }
 
-        // Se non è il giocatore, non fare nulla
+        // Se non è il giocatore, non fare nulla e ferma lo script qui
         if (!collision.CompareTag("Player")) return;
         
         // ==================================================
