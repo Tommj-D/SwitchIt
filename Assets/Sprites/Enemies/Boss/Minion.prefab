@@ -170,6 +170,7 @@ GameObject:
   - component: {fileID: 1549291279894567589}
   - component: {fileID: 1084590554387102165}
   - component: {fileID: 4202094336121432924}
+  - component: {fileID: 2977024053701294279}
   m_Layer: 0
   m_Name: Minion
   m_TagString: Minion
@@ -532,6 +533,73 @@ MonoBehaviour:
   dissolveScale: 35
   outlineColor: {r: 11.984314, g: 11.231373, b: 1.882353, a: 1}
   spiralStrength: 10
+--- !u!114 &2977024053701294279
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1228656691620093762}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7db70e0ea77f5ac47a8f4565a9406397, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.2D.Runtime::UnityEngine.Rendering.Universal.ShadowCaster2D
+  m_ShadowGroup: 0
+  m_Priority: 99
+  m_ComponentVersion: 5
+  m_HasRenderer: 1
+  m_UseRendererSilhouette: 1
+  m_CastsShadows: 1
+  m_SelfShadows: 0
+  m_AlphaCutoff: 0.1
+  m_ApplyToSortingLayers: 8919a0b28b15c04c3b87e7ad4d187ee000000000f3794d9827d06ce23b5e14a0a922291a45ce73b0154e6300
+  m_ShapePath:
+  - {x: -0.4259133, y: -0.41939718, z: 0}
+  - {x: -0.49170277, y: -0.32758746, z: 0}
+  - {x: -0.48842615, y: -0.17940052, z: 0}
+  - {x: -0.4589365, y: 0.06787218, z: 0}
+  - {x: -0.26452348, y: 0.2473316, z: 0}
+  - {x: 0.063974164, y: 0.6024117, z: 0}
+  - {x: 0.17210276, y: 0.5936419, z: 0}
+  - {x: -0.117653616, y: 0.3068409, z: 0}
+  - {x: -0.10557508, y: 0.22682059, z: 0}
+  - {x: 0.09352803, y: 0.21634823, z: 0}
+  - {x: 0.29789945, y: 0.5517204, z: 0}
+  - {x: 0.5891335, y: 0.55973524, z: 0}
+  - {x: 0.5180115, y: 0.27399433, z: 0}
+  - {x: 0.31884414, y: 0.27397826, z: 0}
+  - {x: 0.35032544, y: 0.059134517, z: 0}
+  - {x: 0.32051456, y: -0.37392598, z: 0}
+  - {x: 0.2296043, y: -0.50447696, z: 0}
+  - {x: -0.25135273, y: -0.5054246, z: 0}
+  - {x: -0.3567187, y: -0.4659124, z: 0}
+  m_ShapePathHash: -514998428
+  m_InstanceId: 0
+  m_ShadowShape2DComponent: {fileID: 0}
+  m_ShadowShape2DProvider:
+    rid: -2
+  m_ShadowCastingSource: 1
+  m_ShadowMesh:
+    m_Mesh: {fileID: 0}
+    m_LocalBounds:
+      m_Center: {x: 0.048715383, y: 0.048493505, z: 0}
+      m_Extent: {x: 0.54041815, y: 0.5539181, z: 0}
+    m_EdgeProcessing: 1
+    m_TrimEdge: 0.09
+    m_FlipX: 0
+    m_FlipY: 0
+    m_InitialTrim: 0.09
+  m_CastingOption: 1
+  m_PreviousTrimEdge: 0.09
+  m_PreviousEdgeProcessing: 1
+  m_PreviousShadowCastingSource: 1
+  m_PreviousShadowShape2DSource: {fileID: 5950395278951918483}
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
 --- !u!1 &1497056118472623125
 GameObject:
   m_ObjectHideFlags: 0

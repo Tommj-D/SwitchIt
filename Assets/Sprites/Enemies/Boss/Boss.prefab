@@ -98,7 +98,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.044225097, y: 0.17736971}
+  m_Offset: {x: -0.043899596, y: 0.17736971}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -108,7 +108,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.6659138, y: 0.101908326}
+  m_Size: {x: 0.7742716, y: 0.101908326}
   m_EdgeRadius: 0
 --- !u!114 &1374563655558168154
 MonoBehaviour:
@@ -123,7 +123,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   bossManager: {fileID: 6553910918367281011}
-  bounceForce: 15
+  bounceForce: 11
 --- !u!1 &921587041741454039
 GameObject:
   m_ObjectHideFlags: 0
@@ -276,7 +276,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3665274217505154694}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: -0.060903333, w: 0.99814373}
+  m_LocalRotation: {x: -0, y: -0, z: -0.06470732, w: 0.9979043}
   m_LocalPosition: {x: 0.28763667, y: -0.00000008163449, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -284,7 +284,7 @@ Transform:
   - {fileID: 4100466653874494040}
   - {fileID: 8881038170578138308}
   m_Father: {fileID: 7822121466930433737}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -7.42}
 --- !u!1 &3753598709196558888
 GameObject:
   m_ObjectHideFlags: 0
@@ -395,6 +395,7 @@ GameObject:
   - component: {fileID: 2368361738985530970}
   - component: {fileID: 6553910918367281011}
   - component: {fileID: 2583620341862235649}
+  - component: {fileID: 8078229885405360587}
   m_Layer: 0
   m_Name: Boss
   m_TagString: Enemy
@@ -542,7 +543,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.06877142, y: -0.19248527}
+  m_Offset: {x: -0.06877142, y: -0.20564002}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -552,7 +553,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.78715, y: 0.6362859}
+  m_Size: {x: 0.78715, y: 0.5896323}
   m_EdgeRadius: 0
 --- !u!114 &224381946665172458
 MonoBehaviour:
@@ -643,7 +644,7 @@ MonoBehaviour:
   puntiPattugliaFase3:
   - {fileID: 0}
   - {fileID: 0}
-  velocitaSpostamento: 5
+  velocitaSpostamento: 7.6
   turnCheckOffset: {x: 0, y: -2.7}
   minionPrefab: {fileID: 1228656691620093762, guid: e32cd93c624e1443b846f4883fb5fcff, type: 3}
   flyingMinionPrefab: {fileID: -8389419052066332428, guid: a518a8736d9c344b795d5ebea15877ec, type: 3}
@@ -651,13 +652,15 @@ MonoBehaviour:
   puntoMinionDestra: {fileID: 0}
   spawnLoopSinistra: {fileID: 0}
   spawnLoopDestra: {fileID: 0}
-  spawnLoopInterval: 6.5
+  spawnLoopInterval: 8
   portalFXPrefab: {fileID: 781622597913654072, guid: 963aa0e8b2ae84c8884bd67198384d1c, type: 3}
   usaDashFase3: 1
-  tempoAttesaDash: 3
-  velocitaDash: 20
+  tempoAttesaDash: 2.4
+  tempoPreparazioneDash: 0.9
+  velocitaDash: 28
   durataDash: 0.7
-  bossAudio: {fileID: 0}
+  bossPuzzle: {fileID: 0}
+  bossAudio: {fileID: 2583620341862235649}
   deathParticle: {fileID: 3196417285052570513}
   teleportDisappearParticle: {fileID: 1171275158391380269, guid: e46b4e69d0d324bd9968c36c87ce99ef, type: 3}
   teleportAppearParticle: {fileID: 1171275158391380269, guid: e46b4e69d0d324bd9968c36c87ce99ef, type: 3}
@@ -665,8 +668,12 @@ MonoBehaviour:
   hitShockWaveDuration: 2
   hitShockWaveStrength: -1
   hitShockWaveXSizeRatio: 1.5
+  useRoarShockWave: 1
+  roarShockWaveDuration: 2.5
+  roarShockWaveStrength: -1.5
+  roarShockWaveXSizeRatio: 1.5
   tempoPrimaScomparsa: 1.2
-  tempoPrimaRicomparsa: 5
+  tempoPrimaRicomparsa: 6
   dissolveTime: 0.6
   useVerticalDissolve: 0
   outlineThickness: 0.05
@@ -695,11 +702,91 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59e81aeafdd31421e9df160d54c94efb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BossAudioController
-  roarSound: {fileID: 0}
-  hitSound: {fileID: 0}
-  deathSound: {fileID: 0}
-  idleSound: {fileID: 0}
-  bossMusic: {fileID: 0}
+  roarSound: {fileID: 8300000, guid: 8685d97d671cc4f209770ebc4415cfb0, type: 3}
+  hitSound: {fileID: 8300000, guid: bdc94772d261d4dfabbf0aea17ec0bee, type: 3}
+  deathSound: {fileID: 8300000, guid: df020acb616ea4f0c81559bf2837873c, type: 3}
+  bossMusic: {fileID: 8300000, guid: 9304a98c806364ef386819e7143b3fcd, type: 3}
+--- !u!114 &8078229885405360587
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6167712539984685803}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7db70e0ea77f5ac47a8f4565a9406397, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.2D.Runtime::UnityEngine.Rendering.Universal.ShadowCaster2D
+  m_ShadowGroup: 0
+  m_Priority: 99
+  m_ComponentVersion: 5
+  m_HasRenderer: 1
+  m_UseRendererSilhouette: 1
+  m_CastsShadows: 1
+  m_SelfShadows: 0
+  m_AlphaCutoff: 0.1
+  m_ApplyToSortingLayers: 8919a0b28b15c04c3b87e7ad4d187ee000000000f3794d9827d06ce23b5e14a0a922291a45ce73b0154e6300
+  m_ShapePath:
+  - {x: -0.48737842, y: -0.29361358, z: 0}
+  - {x: -0.46544644, y: -0.0035389122, z: 0}
+  - {x: -0.4411748, y: 0.085780956, z: 0}
+  - {x: -0.4212977, y: 0.11964021, z: 0}
+  - {x: -0.26950327, y: 0.21744905, z: 0}
+  - {x: -0.20273079, y: 0.2917746, z: 0}
+  - {x: -0.1798833, y: 0.35329297, z: 0}
+  - {x: -0.06879931, y: 0.44835523, z: 0}
+  - {x: 0.018623384, y: 0.55887973, z: 0}
+  - {x: 0.18360141, y: 0.59352225, z: 0}
+  - {x: 0.15554559, y: 0.56712455, z: 0}
+  - {x: -0.10839078, y: 0.32133597, z: 0}
+  - {x: -0.11168668, y: 0.21905631, z: 0}
+  - {x: 0.11265822, y: 0.21576041, z: 0}
+  - {x: 0.285876, y: 0.5209362, z: 0}
+  - {x: 0.5493241, y: 0.5280468, z: 0}
+  - {x: 0.49866492, y: 0.35432547, z: 0}
+  - {x: 0.5234045, y: 0.29494336, z: 0}
+  - {x: 0.35020706, y: 0.28834137, z: 0}
+  - {x: 0.36505893, y: 0.36422336, z: 0}
+  - {x: 0.29403436, y: 0.3774222, z: 0}
+  - {x: 0.2997513, y: 0.31185517, z: 0}
+  - {x: 0.27830765, y: 0.20871593, z: 0}
+  - {x: 0.29767612, y: 0.14346935, z: 0}
+  - {x: 0.33110306, y: 0.092332065, z: 0}
+  - {x: 0.34701288, y: 0.026032621, z: 0}
+  - {x: 0.33458206, y: -0.17119232, z: 0}
+  - {x: 0.31871292, y: -0.36164236, z: 0}
+  - {x: 0.28430942, y: -0.4489328, z: 0}
+  - {x: 0.18529005, y: -0.50170785, z: 0}
+  - {x: -0.18387093, y: -0.50183505, z: 0}
+  - {x: -0.31875864, y: -0.47538647, z: 0}
+  - {x: -0.42192838, y: -0.40397024, z: 0}
+  m_ShapePathHash: -1078012702
+  m_InstanceId: 0
+  m_ShadowShape2DComponent: {fileID: 0}
+  m_ShadowShape2DProvider:
+    rid: -2
+  m_ShadowCastingSource: 1
+  m_ShadowMesh:
+    m_Mesh: {fileID: 0}
+    m_LocalBounds:
+      m_Center: {x: 0.030972838, y: 0.0458436, z: 0}
+      m_Extent: {x: 0.51835126, y: 0.54767865, z: 0}
+    m_EdgeProcessing: 1
+    m_TrimEdge: 0.3
+    m_FlipX: 0
+    m_FlipY: 0
+    m_InitialTrim: 0.3
+  m_CastingOption: 1
+  m_PreviousTrimEdge: 0.3
+  m_PreviousEdgeProcessing: 1
+  m_PreviousShadowCastingSource: 1
+  m_PreviousShadowShape2DSource: {fileID: 8906274466621097209}
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
 --- !u!1 &6519754029243499685
 GameObject:
   m_ObjectHideFlags: 0
